@@ -1,21 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import OverviewList from './views/OverviewList';
+import Settings from './views/Settings';
+import NewEntry from './views/NewEntry';
+import Optimization from './views/Optimization';
+import FinanceAnalysis from './views/FinanceAnalysis';
 
 export default function App() {
+  const Tab = createBottomTabNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Overview" component={OverviewList} />
+        <Tab.Screen name="Optimization" component={Optimization} />
+        <Tab.Screen name="NewEntry" component={NewEntry} />
+        <Tab.Screen name="Analysis" component={FinanceAnalysis} />
+        <Tab.Screen name="Settings" component={Settings} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
