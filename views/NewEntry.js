@@ -10,6 +10,11 @@ import {
 
 export default function NewEntry() {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState(100);
+  const [date, setDate] = useState(new Date());
+  const [category, setCategory] = useState("");
+  const selectableCategories = [];
   return (
     <SafeAreaView style={styles.container}>
       <Text
@@ -35,7 +40,7 @@ export default function NewEntry() {
         <TextInput
           placeholder="Beschreibung"
           style={styles.inputView_textInput}
-          onChangeText={(val) => setTitle(val)}
+          onChangeText={(val) => setDescription(val)}
         />
       </View>
       <View style={styles.inputView}>
@@ -43,7 +48,7 @@ export default function NewEntry() {
         <TextInput
           placeholder="Betrag"
           style={styles.inputView_textInput}
-          onChangeText={(val) => setTitle(val)}
+          onChangeText={(val) => setAmount(val)}
         />
       </View>
       <View style={styles.inputView}>
@@ -51,7 +56,7 @@ export default function NewEntry() {
         <TextInput
           placeholder="Datum"
           style={styles.inputView_textInput}
-          onChangeText={(val) => setTitle(val)}
+          onChangeText={(val) => setDate(val)}
         />
       </View>
       <View style={styles.inputView}>
@@ -59,7 +64,7 @@ export default function NewEntry() {
         <TextInput
           placeholder="Kategorie"
           style={styles.inputView_textInput}
-          onChangeText={(val) => setTitle(val)}
+          onChangeText={(val) => setCategory(val)}
         />
       </View>
       <Pressable onPress={() => alert(title)} style={styles.submitButton}>
@@ -100,6 +105,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 5,
     width: "50%",
+    marginVertical: 5,
     padding: 5,
   },
 });
