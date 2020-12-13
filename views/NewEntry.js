@@ -12,7 +12,16 @@ export default function NewEntry() {
   const [title, setTitle] = useState("");
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ alignSelf: "center" }}>Hello from NewEntry</Text>
+      <Text
+        style={{
+          fontSize: 40,
+          fontWeight: "bold",
+          alignSelf: "flex-start",
+          paddingVertical: 10,
+        }}
+      >
+        Neuer Eintrag
+      </Text>
       <View style={styles.inputView}>
         <Text style={styles.inputView_text}>Titel</Text>
         <TextInput
@@ -21,8 +30,40 @@ export default function NewEntry() {
           onChangeText={(val) => setTitle(val)}
         />
       </View>
+      <View style={styles.inputView}>
+        <Text style={styles.inputView_text}>Beschreibung</Text>
+        <TextInput
+          placeholder="Beschreibung"
+          style={styles.inputView_textInput}
+          onChangeText={(val) => setTitle(val)}
+        />
+      </View>
+      <View style={styles.inputView}>
+        <Text style={styles.inputView_text}>Betrag</Text>
+        <TextInput
+          placeholder="Betrag"
+          style={styles.inputView_textInput}
+          onChangeText={(val) => setTitle(val)}
+        />
+      </View>
+      <View style={styles.inputView}>
+        <Text style={styles.inputView_text}>Datum</Text>
+        <TextInput
+          placeholder="Datum"
+          style={styles.inputView_textInput}
+          onChangeText={(val) => setTitle(val)}
+        />
+      </View>
+      <View style={styles.inputView}>
+        <Text style={styles.inputView_text}>Kategorie</Text>
+        <TextInput
+          placeholder="Kategorie"
+          style={styles.inputView_textInput}
+          onChangeText={(val) => setTitle(val)}
+        />
+      </View>
       <Pressable onPress={() => alert(title)} style={styles.submitButton}>
-        <Text style={{ fontSize: 18 }}>Anlegen</Text>
+        <Text style={{ fontSize: 18, alignSelf: "center" }}>Anlegen</Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -37,26 +78,28 @@ const styles = StyleSheet.create({
   },
   inputView_text: {
     alignSelf: "center",
-    fontSize: 18
+    fontSize: 16,
   },
   inputView_textInput: {
     backgroundColor: "white",
-    minWidth: 200,
+    minWidth: 220,
     padding: 10,
-    borderRadius: 18,
+    borderRadius: 16,
     marginHorizontal: 10,
   },
   inputView: {
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "flex-start",
-    backgroundColor: "cyan",
+    justifyContent: "space-between",
+    backgroundColor: "#f3f3f3",
     width: "100%",
     padding: 10,
   },
   submitButton: {
     backgroundColor: "grey",
+    alignSelf: "center",
     borderRadius: 5,
+    width: "50%",
     padding: 5,
   },
 });
