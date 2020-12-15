@@ -7,6 +7,7 @@ import {
   View,
   Pressable,
 } from "react-native";
+import AppSafeAreaView from "../components/AppSafeAreaView";
 
 export default function NewEntry() {
   const [title, setTitle] = useState("");
@@ -16,71 +17,88 @@ export default function NewEntry() {
   const [category, setCategory] = useState("");
   const selectableCategories = [];
   return (
-    <SafeAreaView style={styles.container}>
-      <Text
+    <AppSafeAreaView title="Neuer Eintrag">
+      <View
         style={{
-          fontSize: 40,
-          fontWeight: "bold",
-          alignSelf: "flex-start",
-          paddingVertical: 10,
+          margin: 10,
+          flexDirection: "row",
         }}
       >
-        Neuer Eintrag
-      </Text>
-      <View style={styles.inputView}>
-        <Text style={styles.inputView_text}>Titel</Text>
-        <TextInput
-          placeholder="Titel"
-          style={styles.inputView_textInput}
-          onChangeText={(val) => setTitle(val)}
-        />
+        <Pressable
+          style={{
+            padding: 10,
+            backgroundColor: "yellow",
+            borderRadius: 5,
+          }}
+        >
+          <Text>Template 1</Text>
+        </Pressable>
+        <Pressable
+          style={{
+            padding: 10,
+            backgroundColor: "yellow",
+            borderRadius: 5,
+          }}
+        >
+          <Text>Template 2</Text>
+        </Pressable>
       </View>
-      <View style={styles.inputView}>
-        <Text style={styles.inputView_text}>Beschreibung</Text>
-        <TextInput
-          placeholder="Beschreibung"
-          style={styles.inputView_textInput}
-          onChangeText={(val) => setDescription(val)}
-        />
+
+      <View
+        style={{
+          flexDirection: "column",
+          width: "100%",
+        }}
+      >
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Titel</Text>
+          <TextInput
+            placeholder="Titel"
+            style={styles.inputView_textInput}
+            onChangeText={(val) => setTitle(val)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Beschreibung</Text>
+          <TextInput
+            placeholder="Beschreibung"
+            style={styles.inputView_textInput}
+            onChangeText={(val) => setDescription(val)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Betrag</Text>
+          <TextInput
+            placeholder="Betrag"
+            style={styles.inputView_textInput}
+            onChangeText={(val) => setAmount(val)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Datum</Text>
+          <TextInput
+            placeholder="Datum"
+            style={styles.inputView_textInput}
+            onChangeText={(val) => setDate(val)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Kategorie</Text>
+          <TextInput
+            placeholder="Kategorie"
+            style={styles.inputView_textInput}
+            onChangeText={(val) => setCategory(val)}
+          />
+        </View>
+        <Pressable onPress={() => alert(title)} style={styles.submitButton}>
+          <Text style={{ fontSize: 18, alignSelf: "center" }}>Anlegen</Text>
+        </Pressable>
       </View>
-      <View style={styles.inputView}>
-        <Text style={styles.inputView_text}>Betrag</Text>
-        <TextInput
-          placeholder="Betrag"
-          style={styles.inputView_textInput}
-          onChangeText={(val) => setAmount(val)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.inputView_text}>Datum</Text>
-        <TextInput
-          placeholder="Datum"
-          style={styles.inputView_textInput}
-          onChangeText={(val) => setDate(val)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.inputView_text}>Kategorie</Text>
-        <TextInput
-          placeholder="Kategorie"
-          style={styles.inputView_textInput}
-          onChangeText={(val) => setCategory(val)}
-        />
-      </View>
-      <Pressable onPress={() => alert(title)} style={styles.submitButton}>
-        <Text style={{ fontSize: 18, alignSelf: "center" }}>Anlegen</Text>
-      </Pressable>
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    backgroundColor: "gainsboro",
-  },
   inputView_text: {
     alignSelf: "center",
     fontSize: 16,
