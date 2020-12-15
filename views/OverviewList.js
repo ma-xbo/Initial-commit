@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+import OverviewList_ExpenseItem from "../components/OverviewList_ExpenseItem";
 
 export default function OverviewList() {
   const Stack = createStackNavigator();
@@ -20,19 +21,22 @@ export default function OverviewList() {
 function List(props) {
   const navigation = props.navigation;
 
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{item.title}</Text>
-    </View>
-  );
-
   return (
     <AppSafeAreaView title="Übersicht">
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      <View
+        style={{
+          width: "100%",
+          backgroundColor: "#fff",
+        }}
+      >
+        <FlatList
+          data={DATA}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <OverviewList_ExpenseItem title={item.title} />
+          )}
+        />
+      </View>
     </AppSafeAreaView>
   );
 }
@@ -42,7 +46,6 @@ function Details({ navigation, route }) {
   return (
     <View style={styles.container}>
       <Text>{"Details" + id}</Text>
-      <Button title="Edit" onPress={() => navigation.navigate("Edit")} />
     </View>
   );
 }
