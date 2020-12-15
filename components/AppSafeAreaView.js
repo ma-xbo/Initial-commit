@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, Text, StyleSheet } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View } from "react-native";
 
 export default function AppSafeAreaView(props) {
   const { title } = props;
