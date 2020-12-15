@@ -9,7 +9,7 @@ export default function AppSafeAreaView(props) {
       <View>
         <Text style={styles.text}>{title}</Text>
       </View>
-      <View>{props.children}</View>
+      <View style={styles.childContainer}>{props.children}</View>
     </SafeAreaView>
   );
 }
@@ -20,6 +20,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     backgroundColor: "gainsboro",
+  },
+  childContainer: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    width: "100%"
   },
   text: {
     fontSize: 40,
