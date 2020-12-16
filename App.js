@@ -8,6 +8,8 @@ import NewEntry from "./views/NewEntry";
 import Optimization from "./views/Optimization";
 import FinanceAnalysis from "./views/FinanceAnalysis";
 
+const colorDefinitions = require("./assets/colorDefinition.json");
+
 export default function App() {
   const Tab = createBottomTabNavigator();
 
@@ -19,25 +21,27 @@ export default function App() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             switch (route.name) {
-              case "Overview":
-                iconName = focused
-                  ? "ios-list"
-                  : "ios-list-outline";
+              case "Übersicht" || "Overview":
+                iconName = focused ? "ios-list" : "ios-list-outline";
+                size = 25;
                 break;
-              case "Optimization":
+              case "Kategorien" || "Optimization":
                 iconName = focused ? "ios-pie-chart" : "ios-pie-chart-outline";
+                size = 25;
                 break;
-              case "NewEntry":
+              case "Hinzufügen" || "NewEntry":
                 iconName = focused
                   ? "ios-add-circle"
                   : "ios-add-circle-outline";
-                size = 30;
+                size = 32;
                 break;
-              case "Analysis":
+              case "Analyse" || "Analysis":
                 iconName = focused ? "ios-analytics" : "ios-analytics-outline";
+                size = 25;
                 break;
-              case "Settings":
+              case "Einstellungen" || "Settings":
                 iconName = focused ? "ios-settings" : "ios-settings-outline";
+                size = 25;
                 break;
               default:
                 break;
@@ -48,16 +52,16 @@ export default function App() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: "#6097f0",
-          inactiveTintColor: "gray",
-          style: { backgroundColor: "lavender" },
+          activeTintColor: colorDefinitions.light.teal,
+          inactiveTintColor: colorDefinitions.light.gray ,
+          style: { backgroundColor: colorDefinitions.light.gray6 },
         }}
       >
-        <Tab.Screen name="Overview" component={OverviewList} />
-        <Tab.Screen name="Optimization" component={Optimization} />
-        <Tab.Screen name="NewEntry" component={NewEntry} />
-        <Tab.Screen name="Analysis" component={FinanceAnalysis} />
-        <Tab.Screen name="Settings" component={Settings} />
+        <Tab.Screen name="Übersicht" component={OverviewList} />
+        <Tab.Screen name="Kategorien" component={Optimization} />
+        <Tab.Screen name="Hinzufügen" component={NewEntry} />
+        <Tab.Screen name="Analyse" component={FinanceAnalysis} />
+        <Tab.Screen name="Einstellungen" component={Settings} />
       </Tab.Navigator>
     </NavigationContainer>
   );
