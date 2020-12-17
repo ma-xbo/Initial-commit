@@ -1,5 +1,6 @@
 import React from "react";
 import { SafeAreaView, Text, StyleSheet, View } from "react-native";
+const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function AppSafeAreaView(props) {
   const { title } = props;
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    backgroundColor: "gainsboro",
+    backgroundColor: colorDefinitions.light.gray6,
   },
   childContainer: {
     flex: 1,
