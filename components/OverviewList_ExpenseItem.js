@@ -1,25 +1,18 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import PaymentMethodIcon from "./PaymentMethodIcon";
 
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function OverviewList_ExpenseItem(props) {
-  //const { title } = props;
-  const onPress = props.onPress;
-  const title = props.itemObject.title;
-  const amount = props.itemObject.amount;
+  const { onPress, itemObject } = props;
+  const { title, amount, paymentMethod } = itemObject;
 
   const text = "Hello from " + title;
 
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <Ionicons
-        name="ios-construct"
-        size={25}
-        color={colorDefinitions.light.black}
-        style={{ paddingRight: 8 }}
-      />
+      <PaymentMethodIcon paymentMethod={paymentMethod} />
       <View>
         <Text>{text}</Text>
       </View>
