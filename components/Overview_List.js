@@ -1,33 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
-import AppSafeAreaView from "../components/AppSafeAreaView";
-import OverviewList_ExpenseItem from "../components/OverviewList_ExpenseItem";
+import AppSafeAreaView from "./AppSafeAreaView";
+import OverviewList_ExpenseItem from "./OverviewList_ExpenseItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function OverviewList() {
-  const Stack = createStackNavigator();
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: colorDefinitions.light.black },
-        headerTintColor: colorDefinitions.light.white,
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    >
-      <Stack.Screen
-        name="Übersicht"
-        component={List}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="Details" component={Details} />
-    </Stack.Navigator>
-  );
-}
-
-function List(props) {
+export default function Overview_List(props) {
   const navigation = props.navigation;
 
   return (
@@ -56,28 +33,6 @@ function List(props) {
     </AppSafeAreaView>
   );
 }
-
-function Details(props) {
-  const route = props.route;
-  const item = JSON.parse(route.params.itemObject);
-
-  return (
-    <View style={styles.container}>
-      <Text>{"Title " + item.title}</Text>
-      <Text>{"Amount " + item.amount}</Text>
-      <Pressable>
-        <Text>Edit</Text>
-      </Pressable>
-      <Pressable>
-        <Text>Delete</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  dummy: {},
-});
 
 const DATA = [
   {

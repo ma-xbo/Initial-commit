@@ -2,11 +2,11 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import OverviewList from "./views/OverviewList";
-import Settings from "./views/Settings";
-import NewEntry from "./views/NewEntry";
-import Optimization from "./views/Optimization";
-import FinanceAnalysis from "./views/FinanceAnalysis";
+import OverviewList from "./screens/Overview";
+import Settings from "./screens/Settings";
+import NewEntry from "./screens/NewEntry";
+import Optimization from "./screens/Optimization";
+import FinanceAnalysis from "./screens/Analysis";
 
 const colorDefinitions = require("./assets/colorDefinition.json");
 
@@ -53,7 +53,7 @@ export default function App() {
         })}
         tabBarOptions={{
           activeTintColor: colorDefinitions.light.teal,
-          inactiveTintColor: colorDefinitions.light.gray ,
+          inactiveTintColor: colorDefinitions.light.gray,
           style: { backgroundColor: colorDefinitions.light.gray6 },
         }}
       >
