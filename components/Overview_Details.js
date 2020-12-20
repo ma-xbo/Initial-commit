@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import AppSafeAreaView from "./AppSafeAreaView";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
@@ -21,6 +22,11 @@ export default function Overview_Details(props) {
               { backgroundColor: colorDefinitions.light.green },
             ]}
           >
+            <Ionicons
+              name="construct"
+              size={22}
+              color={colorDefinitions.light.white}
+            />
             <Text style={styles.controlButtonText}>Edit</Text>
           </Pressable>
           <Pressable
@@ -29,6 +35,11 @@ export default function Overview_Details(props) {
               { backgroundColor: colorDefinitions.light.red },
             ]}
           >
+            <Ionicons
+              name="trash"
+              size={22}
+              color={colorDefinitions.light.white}
+            />
             <Text style={styles.controlButtonText}>Delete</Text>
           </Pressable>
         </View>
@@ -56,45 +67,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   controlButton: {
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
     width: 150,
     padding: 6,
     marginVertical: 1,
     borderRadius: 5,
   },
   controlButtonText: {
-    fontSize: 20,
+    fontSize: 22,
+    marginHorizontal: 6,
     color: colorDefinitions.light.white,
   },
 });
-
-/* 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    flex: 1,
-  },
-  bottom: {
-    height: 100,
-  },
-  buttonContainer: {
-    height:100,
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    margin: 5,
-    backgroundColor: "cyan",
-  },
-  controlButton: {
-    alignItems: "center",
-    width: 150,
-    padding: 6,
-    borderRadius: 5,
-  },
-  controlButtonText: {
-    fontSize: 20,
-  },
-});
- */
