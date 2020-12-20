@@ -8,6 +8,14 @@ export default function Overview_Details(props) {
   const route = props.route;
   const item = JSON.parse(route.params.itemObject);
 
+  const onPressEdit = () => {
+    alert("Greetings from edit");
+  };
+
+  const onPressDelete = () => {
+    alert("Greetings from delete");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -21,6 +29,7 @@ export default function Overview_Details(props) {
               styles.controlButton,
               { backgroundColor: colorDefinitions.light.green },
             ]}
+            onPress={onPressEdit}
           >
             <Ionicons
               name="construct"
@@ -34,6 +43,7 @@ export default function Overview_Details(props) {
               styles.controlButton,
               { backgroundColor: colorDefinitions.light.red },
             ]}
+            onPress={onPressDelete}
           >
             <Ionicons
               name="trash"
