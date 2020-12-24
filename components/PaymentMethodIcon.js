@@ -4,9 +4,8 @@ import { Ionicons, Entypo, FontAwesome } from "@expo/vector-icons";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function PaymentMethodIcon(props) {
-  const { paymentMethod } = props;
+  const { paymentMethod, iconColor} = props;
 
-  const iconColor = colorDefinitions.light.black;
   const iconSize = 25;
 
   switch (paymentMethod) {
