@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import PaymentMethodIcon from "./PaymentMethodIcon";
+import PaymentAmountText from "./PaymentAmountText";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function OverviewList_ExpenseItem(props) {
@@ -9,46 +10,17 @@ export default function OverviewList_ExpenseItem(props) {
 
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <PaymentMethodIcon paymentMethod={paymentMethod} />
+      <PaymentMethodIcon
+        paymentMethod={paymentMethod}
+        iconColor={colorDefinitions.light.white}
+      />
       <View>
-        <Text>{title}</Text>
-        <Text>{description}</Text>
+        <Text style={styles.titleText}>{title}</Text>
+        <Text style={styles.descriptionText}>{description}</Text>
       </View>
-      <AmountText value={amount} currency={currency} />
+      <PaymentAmountText value={amount} currency={currency} fontSize={15} />
     </Pressable>
   );
-}
-
-function AmountText(props) {
-  const { value, currency } = props;
-
-  if (value < 0) {
-    return (
-      <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.textStyle, { color: colorDefinitions.light.red }]}>
-          {value}
-        </Text>
-        <Text style={[styles.textStyle, { color: colorDefinitions.light.red }]}>
-          {currency}
-        </Text>
-      </View>
-    );
-  } else {
-    return (
-      <View style={{ flexDirection: "row" }}>
-        <Text
-          style={[styles.textStyle, { color: colorDefinitions.light.green }]}
-        >
-          {value}
-        </Text>
-        <Text
-          style={[styles.textStyle, { color: colorDefinitions.light.green }]}
-        >
-          {currency}
-        </Text>
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -62,7 +34,14 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
   },
-  textStyle: {
+  titleText: {
     fontSize: 15,
+    fontWeight: "bold",
+    color: colorDefinitions.light.white,
+  },
+  descriptionText: {
+    fontSize: 15,
+    fontWeight: "normal",
+    color: colorDefinitions.light.white,
   },
 });
