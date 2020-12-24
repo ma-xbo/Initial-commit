@@ -10,15 +10,17 @@ export default function OverviewList_ExpenseItem(props) {
 
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <PaymentMethodIcon
-        paymentMethod={paymentMethod}
-        iconColor={colorDefinitions.light.white}
-      />
-      <View>
-        <Text style={styles.titleText}>{title}</Text>
-        <Text style={styles.descriptionText}>{description}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <PaymentMethodIcon
+          paymentMethod={paymentMethod}
+          iconColor={colorDefinitions.light.white}
+        />
+        <View>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.descriptionText}>{description}</Text>
+        </View>
       </View>
-      <PaymentAmountText value={amount} currency={currency} fontSize={15} />
+      <PaymentAmountText value={amount} currency={currency} fontSize={20} />
     </Pressable>
   );
 }
@@ -35,12 +37,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   titleText: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: "bold",
     color: colorDefinitions.light.white,
   },
   descriptionText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "normal",
     color: colorDefinitions.light.white,
   },
