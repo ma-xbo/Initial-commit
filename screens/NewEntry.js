@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  SafeAreaView,
   Text,
   TextInput,
   StyleSheet,
@@ -8,6 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+import NewEntry_Template from "../components/NewEntry_Template";
 
 export default function NewEntry() {
   const [title, setTitle] = useState("");
@@ -18,21 +18,14 @@ export default function NewEntry() {
   const selectableCategories = [];
   return (
     <AppSafeAreaView title="Neuer Eintrag">
+      {/* Templates */}
       <View
         style={{
           margin: 10,
           flexDirection: "row",
         }}
       >
-        <Pressable
-          style={{
-            padding: 10,
-            backgroundColor: "yellow",
-            borderRadius: 5,
-          }}
-        >
-          <Text>Template 1</Text>
-        </Pressable>
+        <NewEntry_Template  text="Template 1" />
         <Pressable
           style={{
             padding: 10,
