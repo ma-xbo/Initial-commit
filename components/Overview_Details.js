@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 import PaymentAmountText from "./PaymentAmountText";
+import Hr from "./HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function Overview_Details(props) {
@@ -31,9 +32,10 @@ export default function Overview_Details(props) {
           }}
         >
           <CardItem title="Titel" text={item.title} />
+          <Hr />
           <CardItem title="Beschreibung" text={item.description} />
-
-          <CardItem title="Ausgaben">
+          <Hr />
+          <CardItem title="Betrag">
             <View
               style={{
                 flexDirection: "row",
@@ -52,7 +54,7 @@ export default function Overview_Details(props) {
               />
             </View>
           </CardItem>
-
+          <Hr />
           <CardItem title="Datum" text={item.date.toLocaleString("en-GB")} />
         </View>
       </View>
@@ -98,7 +100,7 @@ function CardItem(props) {
   return (
     <View
       style={{
-        backgroundColor: colorDefinitions.light.gray6,
+        backgroundColor: colorDefinitions.light.gray5,
         padding: 10,
         marginVertical: 6,
         marginHorizontal: 4,
