@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import {
-  Text,
-  TextInput,
-  StyleSheet,
-  View,
-  Pressable,
-} from "react-native";
+import { Text, TextInput, StyleSheet, View, Pressable } from "react-native";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NewEntry_Template from "../components/NewEntry_Template";
+const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function NewEntry() {
   const [title, setTitle] = useState("");
@@ -16,30 +11,22 @@ export default function NewEntry() {
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState("");
   const selectableCategories = [];
+
   return (
     <AppSafeAreaView title="Neuer Eintrag">
       {/* Templates */}
       <View
         style={{
-          margin: 10,
           flexDirection: "row",
         }}
       >
-        <NewEntry_Template  text="Template 1" />
-        <Pressable
-          style={{
-            padding: 10,
-            backgroundColor: "yellow",
-            borderRadius: 5,
-          }}
-        >
-          <Text>Template 2</Text>
-        </Pressable>
+        <NewEntry_Template text="Template 1" />
+        <NewEntry_Template text="Template 2" />
       </View>
 
       <View
         style={{
-          flexDirection: "column",
+          flex: 1,
           width: "100%",
         }}
       >
@@ -83,8 +70,25 @@ export default function NewEntry() {
             onChangeText={(val) => setCategory(val)}
           />
         </View>
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Kategorie</Text>
+          <TextInput
+            placeholder="Kategorie"
+            style={styles.inputView_textInput}
+            onChangeText={(val) => setCategory(val)}
+          />
+        </View>
         <Pressable onPress={() => alert(title)} style={styles.submitButton}>
-          <Text style={{ fontSize: 18, alignSelf: "center" }}>Anlegen</Text>
+          <Text
+            style={{
+              fontSize: 18,
+              alignSelf: "center",
+              color: "white",
+              paddingVertical: 5,
+            }}
+          >
+            Anlegen
+          </Text>
         </Pressable>
       </View>
     </AppSafeAreaView>
@@ -93,30 +97,27 @@ export default function NewEntry() {
 
 const styles = StyleSheet.create({
   inputView_text: {
-    alignSelf: "center",
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingVertical: 10,
   },
   inputView_textInput: {
     backgroundColor: "white",
-    minWidth: 220,
     padding: 10,
-    borderRadius: 16,
-    marginHorizontal: 10,
+    borderRadius: 15,
   },
   inputView: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    backgroundColor: "#f3f3f3",
-    width: "100%",
-    padding: 10,
+    flex: 1,
+    flexDirection: "column",
+    margin: 10,
   },
   submitButton: {
-    backgroundColor: "grey",
+    backgroundColor: colorDefinitions.light.blue,
     alignSelf: "center",
     borderRadius: 5,
     width: "50%",
     marginVertical: 5,
+    marginBottom: 10,
     padding: 5,
   },
 });
