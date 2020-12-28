@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import AppSafeAreaView from "./AppSafeAreaView";
+import PaymentMethodIcon from "./PaymentMethodIcon";
+import PaymentAmountText from "./PaymentAmountText";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function Overview_Details(props) {
@@ -19,15 +20,48 @@ export default function Overview_Details(props) {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Text>{"Title " + item.title}</Text>
-        <Text>{"Amount " + item.amount}</Text>
+        <View
+          style={{
+            flex: 1,
+            margin: 8,
+            padding: 5,
+            borderRadius: 10,
+            borderColor: colorDefinitions.light.gray5,
+            borderWidth: 0.5,
+          }}
+        >
+          <CardItem title="Titel" text={item.title} />
+          <CardItem title="Beschreibung" text={item.description} />
+
+          <CardItem title="Ausgaben">
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                padding: 10,
+                marginHorizontal: 4,
+                borderRadius: 10,
+              }}
+            >
+              <PaymentMethodIcon paymentMethod={item.paymentMethod} />
+              <PaymentAmountText
+                value={item.amount}
+                currency={item.currency}
+                fontSize={20}
+              />
+            </View>
+          </CardItem>
+
+          <CardItem title="Datum" text={item.date.toLocaleString("en-GB")} />
+        </View>
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
           <Pressable
             style={[
               styles.controlButton,
-              { backgroundColor: colorDefinitions.light.green },
+              { backgroundColor: colorDefinitions.light.blue },
             ]}
             onPress={onPressEdit}
           >
@@ -54,6 +88,42 @@ export default function Overview_Details(props) {
           </Pressable>
         </View>
       </View>
+    </View>
+  );
+}
+
+function CardItem(props) {
+  const { title, text, children } = props;
+
+  return (
+    <View
+      style={{
+        backgroundColor: colorDefinitions.light.gray6,
+        padding: 10,
+        marginVertical: 6,
+        marginHorizontal: 4,
+        borderRadius: 10,
+      }}
+    >
+      <Text
+        style={{
+          color: colorDefinitions.light.black,
+          fontSize: 20,
+          fontWeight: "bold",
+          marginBottom: 4,
+        }}
+      >
+        {title}
+      </Text>
+      <Text
+        style={{
+          color: colorDefinitions.light.black,
+          fontSize: 18,
+        }}
+      >
+        {text}
+      </Text>
+      {children}
     </View>
   );
 }
