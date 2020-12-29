@@ -7,11 +7,14 @@ import {
   StyleSheet,
   View,
   Pressable,
+  Platform,
 } from "react-native";
+import { BlurView } from "expo-blur";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NewEntry_Template from "../components/NewEntry_Template";
+import NewEntry_CategorySelection from "../components/NewEntry_CategorySelection";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function NewEntry() {
@@ -20,12 +23,17 @@ export default function NewEntry() {
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
-  const selectableCategories = [];
+  const selectableCategories = [
+    { label: "Test 1", value: "test1" },
+    { label: "Test 2", value: "test2" },
+    { label: "Test 3", value: "test3" },
+    { label: "Test 4", value: "test4" },
+    { label: "Test 5", value: "test5" },
+  ];
 
   const submitForm = () => {
-    alert(title);
+    alert("Hello World " + date);
   };
 
   return (
@@ -67,6 +75,7 @@ export default function NewEntry() {
 
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Betrag</Text>
+          {/* TODO */}
           <TextInput
             placeholder="Betrag"
             style={styles.inputView_textInput}
@@ -75,61 +84,44 @@ export default function NewEntry() {
         </View>
 
         <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Datum</Text>
+          <Text style={styles.inputView_text}>Kategorie</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.inputView_textInput}>{category}</Text>
+            <Button
+              title="Auswahl öffnen"
+              style={{ marginHorizontal: 10 }}
+              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+            />
+          </View>
+        </View>
 
-          {/* TODO */}
-          {/* https://github.com/react-native-datetimepicker/datetimepicker#linking */}
+        <View style={styles.inputView}>
+          <Text style={styles.inputView_text}>Datum</Text>
+          {/* https://github.com/react-native-datetimepicker/datetimepicker */}
           <DateTimePicker
             testID="dateTimePicker"
             value={date}
             is24Hour={true}
             display="default"
+            onChange={(event, date) => setDate(date)}
           />
         </View>
+      </View>
 
-        <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Kategorie</Text>
-          <Button
-            title="Show Category"
-            onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-          />
-        </View>
-
+      <View style={styles.submitButtonView}>
         <Pressable onPress={submitForm} style={styles.submitButton}>
           <Text style={styles.submitButtonText}>Anlegen</Text>
         </Pressable>
       </View>
 
-      {/* TODO */}
-      <Modal
-        animationType="slide"
-        transparent={true}
+      <NewEntry_CategorySelection
+        categories={selectableCategories}
         visible={showCategoryPicker}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+        onPress={(category) => {
+          setCategory(category);
+          setShowCategoryPicker(!showCategoryPicker);
         }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Wählen Sie die Kategorie aus</Text>
-            <Text style={styles.modalText}>{category}</Text>
-            <View style={{ padding: 10, marginVertical: 10 }}>
-              <Picker
-                selectedValue={category}
-                style={{ height: 50, width: 100 }}
-                onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
-              >
-                <Picker.Item label="Java" value="java" />
-                <Picker.Item label="JavaScript" value="js" />
-              </Picker>
-            </View>
-            <Button
-              title="Show Category"
-              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-            />
-          </View>
-        </View>
-      </Modal>
+      />
     </AppSafeAreaView>
   );
 }
@@ -150,9 +142,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     margin: 10,
   },
+  submitButtonView: {
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+  },
   submitButton: {
     backgroundColor: colorDefinitions.light.blue,
-    alignSelf: "center",
     borderRadius: 5,
     width: "50%",
     marginVertical: 5,
