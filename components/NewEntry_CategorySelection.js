@@ -34,7 +34,7 @@ export default function NewEntry_CategorySelection(props) {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Wählen Sie die Kategorie aus</Text>
+              <Text style={styles.modalText}>Wählen Sie eine Kategorie:</Text>
               <Picker
                 selectedValue={selectedCategory}
                 style={{ height: 50, width: 200, marginBottom: 150 }}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: colorDefinitions.light.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -83,5 +83,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

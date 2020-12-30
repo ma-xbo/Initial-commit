@@ -86,7 +86,14 @@ export default function NewEntry() {
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Kategorie</Text>
           <View style={{ flexDirection: "row" }}>
-            <Text style={styles.inputView_textInput}>{category}</Text>
+            <View
+              style={[
+                { minWidth: 100, alignItems: "center" },
+                styles.inputView_textInput,
+              ]}
+            >
+              <Text>{category}</Text>
+            </View>
             <Button
               title="Auswahl öffnen"
               style={{ marginHorizontal: 10 }}
@@ -160,26 +167,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colorDefinitions.light.white,
     paddingVertical: 5,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
 });
