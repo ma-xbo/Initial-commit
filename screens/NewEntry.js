@@ -117,8 +117,8 @@ export default function NewEntry() {
       <NewEntry_CategorySelection
         categories={selectableCategories}
         visible={showCategoryPicker}
-        onPress={(category) => {
-          setCategory(category);
+        onPress={(selectedCategory) => {
+          setCategory(selectedCategory);
           setShowCategoryPicker(!showCategoryPicker);
         }}
       />

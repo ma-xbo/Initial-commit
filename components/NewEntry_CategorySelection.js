@@ -6,7 +6,11 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function NewEntry_CategorySelection(props) {
   const { categories, visible, onPress } = props;
-  const [category, setCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
+
+  const returnCategoryToParent = () => {
+    onPress(selectedCategory);
+  };
 
   return (
     <View>
@@ -32,21 +36,24 @@ export default function NewEntry_CategorySelection(props) {
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Wählen Sie die Kategorie aus</Text>
               <Picker
-                selectedValue={category}
+                selectedValue={selectedCategory}
                 style={{ height: 50, width: 200, marginBottom: 150 }}
-                onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedCategory(itemValue)
+                }
               >
-                {categories.map((val) => (
-                  <Picker.Item label={val} value="js" />
+                {categories.map((cat, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={cat.label}
+                    value={cat.value}
+                  />
                 ))}
-                {/*           <Picker.Item label="Java" value="java" />
-                <Picker.Item label="JavaScript" value="js" />
-                <Picker.Item label="JavaScript" value="js2" />
-                <Picker.Item label="JavaScript" value="js3" />
-                <Picker.Item label="JavaScript" value="js4" />
-                <Picker.Item label="JavaScript" value="js5" /> */}
               </Picker>
-              <Button title="Auswahl bestätigen" onPress={onPress} />
+              <Button
+                title="Auswahl bestätigen"
+                onPress={() => returnCategoryToParent()}
+              />
             </View>
           </View>
         </BlurView>
