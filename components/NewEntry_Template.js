@@ -6,8 +6,13 @@ export default function NewEntry_Template(props) {
   const { text } = props;
 
   return (
-    <Pressable style={[styles.container, { backgroundColor: randomColor() }]}>
-      <Text>{text}</Text>
+    <Pressable
+      style={[
+        styles.container,
+        { backgroundColor: colorDefinitions.light.blue },
+      ]}
+    >
+      <Text style={styles.textStyle}>{text}</Text>
     </Pressable>
   );
 }
@@ -43,8 +48,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
     borderRadius: 10,
-    width: 90,
+    width: 180,
     height: 90,
     margin: 5,
+    shadowColor: colorDefinitions.light.black,
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  textStyle: {
+    fontSize: 20,
+    color: colorDefinitions.light.white,
   },
 });
