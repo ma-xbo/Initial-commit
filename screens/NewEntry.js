@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Button,
   Text,
   TextInput,
   StyleSheet,
@@ -13,7 +12,6 @@ import NumberInput from "../components/NumberInput";
 import ItemPicker from "../components/ItemPicker";
 import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
-import NewEntry_CategorySelection from "../components/NewEntry_CategorySelection";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function NewEntry() {
@@ -23,7 +21,6 @@ export default function NewEntry() {
   const [date, setDate] = useState(new Date());
   const [currency, setCurrency] = useState("euro");
   const [category, setCategory] = useState("");
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const selectableCategories = [
     { label: "Test 1", value: "test1" },
     { label: "Test 2", value: "test2" },
@@ -130,12 +127,12 @@ export default function NewEntry() {
 
 const styles = StyleSheet.create({
   inputView_text: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
     paddingVertical: 10,
   },
   inputView_textInput: {
-    fontSize: 15,
+    fontSize: 18,
     backgroundColor: "white",
     padding: 10,
     borderRadius: 15,

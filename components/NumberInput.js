@@ -21,6 +21,8 @@ export default function NumberInput(props) {
 
 const styles = StyleSheet.create({
   numberInput: {
+    fontSize: 18,
+    fontWeight: "normal",
     backgroundColor: "white",
     minWidth: 100,
     padding: 10,
