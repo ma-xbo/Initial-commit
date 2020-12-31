@@ -10,6 +10,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NumberInput from "../components/NumberInput";
+import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 import NewEntry_CategorySelection from "../components/NewEntry_CategorySelection";
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -19,6 +20,7 @@ export default function NewEntry() {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState(new Date());
+  const [currency, setCurrency] = useState("euro");
   const [category, setCategory] = useState("");
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const selectableCategories = [
@@ -85,15 +87,22 @@ export default function NewEntry() {
             }}
           >
             <NumberInput
-              placeholder="Betrag"
+              placeholder="Betrag"            
               onChangeValue={(val) => setAmount(val)}
+            />
+            <CurrencyDropdown
+              defaultValue={currency}
+              onChangeValue={(val) => setCurrency(val)}
             />
           </View>
         </View>
 
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Kategorie</Text>
-          <View style={{ flexDirection: "row", width: "100%" }}>
+          <Pressable
+            style={{ flexDirection: "row", width: "100%" }}
+            onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+          >
             <View
               style={[
                 { minWidth: 100, alignItems: "center" },
@@ -107,7 +116,7 @@ export default function NewEntry() {
               style={{ marginHorizontal: 10 }}
               onPress={() => setShowCategoryPicker(!showCategoryPicker)}
             />
-          </View>
+          </Pressable>
         </View>
 
         <View style={styles.inputView}>
@@ -148,6 +157,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   inputView_textInput: {
+    fontSize: 15,
     backgroundColor: "white",
     padding: 10,
     borderRadius: 15,
