@@ -10,6 +10,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NumberInput from "../components/NumberInput";
+import ItemPicker from "../components/ItemPicker";
 import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 import NewEntry_CategorySelection from "../components/NewEntry_CategorySelection";
@@ -99,24 +100,10 @@ export default function NewEntry() {
 
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Kategorie</Text>
-          <Pressable
-            style={{ flexDirection: "row", width: "100%" }}
-            onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-          >
-            <View
-              style={[
-                { minWidth: 100, alignItems: "center" },
-                styles.inputView_textInput,
-              ]}
-            >
-              <Text>{category}</Text>
-            </View>
-            <Button
-              title="Auswahl öffnen"
-              style={{ marginHorizontal: 10 }}
-              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-            />
-          </Pressable>
+          <ItemPicker
+            selectableItems={selectableCategories}
+            onPress={(cat) => setCategory(cat)}
+          />
         </View>
 
         <View style={styles.inputView}>
@@ -137,15 +124,6 @@ export default function NewEntry() {
           <Text style={styles.submitButtonText}>Anlegen</Text>
         </Pressable>
       </View>
-
-      <NewEntry_CategorySelection
-        categories={selectableCategories}
-        visible={showCategoryPicker}
-        onPress={(selectedCategory) => {
-          setCategory(selectedCategory);
-          setShowCategoryPicker(!showCategoryPicker);
-        }}
-      />
     </AppSafeAreaView>
   );
 }
