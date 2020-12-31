@@ -1,12 +1,11 @@
 import React from "react";
-import { Text, TextInput, StyleSheet, View, Pressable } from "react-native";
-const colorDefinitions = require("../assets/colorDefinition.json");
+import { TextInput, StyleSheet } from "react-native";
 
-export default function NewEntry_Template(props) {
+export default function NumberInput(props) {
   const { placeholder, style = styles.numberInput, onChangeValue } = props;
 
   const onChanged = (text) => {
-    const value = text.replace(/[^0-9]/g, '');
+    const value = text.replace(/[^0-9]/g, "");
     onChangeValue(value);
   };
 
