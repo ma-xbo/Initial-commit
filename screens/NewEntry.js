@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  TextInput,
-  StyleSheet,
-  View,
-  Pressable,
-} from "react-native";
+import { Text, TextInput, StyleSheet, View, Pressable } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NumberInput from "../components/NumberInput";
@@ -36,6 +30,13 @@ export default function NewEntry() {
     console.log("Betrag :" + amount);
     console.log("Datum :" + date);
     console.log("Kategorie :" + category);
+
+    //reset inputs
+    setTitle("");
+    setDescription("");
+    setAmount(0);
+    setDate(new Date());
+    setCategory(selectableCategories[0].value);
   };
 
   return (
