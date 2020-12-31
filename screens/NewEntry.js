@@ -2,16 +2,12 @@ import React, { useState } from "react";
 import {
   Button,
   Text,
-  Modal,
   TextInput,
   StyleSheet,
   View,
   Pressable,
-  Platform,
 } from "react-native";
-import { BlurView } from "expo-blur";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NewEntry_Template from "../components/NewEntry_Template";
 import NewEntry_CategorySelection from "../components/NewEntry_CategorySelection";
@@ -33,7 +29,12 @@ export default function NewEntry() {
   ];
 
   const submitForm = () => {
-    alert("Hello World " + date);
+    console.log("Log submitted data")
+    console.log("Titel :" + title);
+    console.log("Beschreibung :" + description);
+    console.log("Betrag :" + amount);
+    console.log("Datum :" + date);
+    console.log("Kategorie :" + category);
   };
 
   return (
