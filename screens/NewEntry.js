@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+import NumberInput from "../components/NumberInput";
 import NewEntry_Template from "../components/NewEntry_Template";
 import NewEntry_CategorySelection from "../components/NewEntry_CategorySelection";
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -29,7 +30,7 @@ export default function NewEntry() {
   ];
 
   const submitForm = () => {
-    console.log("Log submitted data")
+    console.log("Log submitted data");
     console.log("Titel :" + title);
     console.log("Beschreibung :" + description);
     console.log("Betrag :" + amount);
@@ -77,16 +78,22 @@ export default function NewEntry() {
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Betrag</Text>
           {/* TODO */}
-          <TextInput
-            placeholder="Betrag"
-            style={styles.inputView_textInput}
-            onChangeText={(val) => setAmount(val)}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+            }}
+          >
+            <NumberInput
+              placeholder="Betrag"
+              onChangeValue={(val) => setAmount(val)}
+            />
+          </View>
         </View>
 
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Kategorie</Text>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", width: "100%" }}>
             <View
               style={[
                 { minWidth: 100, alignItems: "center" },
