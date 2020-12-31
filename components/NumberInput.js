@@ -22,6 +22,7 @@ export default function NumberInput(props) {
 const styles = StyleSheet.create({
   numberInput: {
     backgroundColor: "white",
+    minWidth: 100,
     padding: 10,
     borderRadius: 15,
   },
