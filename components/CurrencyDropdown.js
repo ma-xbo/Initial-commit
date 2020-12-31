@@ -8,12 +8,14 @@ export default function CurrencyDropdown(props) {
     selectableItems = defaultCurrency,
     defaultValue = selectableItems[0].value,
     onChangeValue,
+    disabled = false,
   } = props;
 
   return (
     <DropDownPicker
       items={selectableItems}
       defaultValue={defaultValue}
+      disabled={disabled}
       containerStyle={{ height: 40, width: 60, marginHorizontal: 10 }}
       style={{ backgroundColor: "#fafafa" }}
       itemStyle={{

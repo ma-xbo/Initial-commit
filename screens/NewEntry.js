@@ -79,7 +79,6 @@ export default function NewEntry() {
 
         <View style={styles.inputView}>
           <Text style={styles.inputView_text}>Betrag</Text>
-          {/* TODO */}
           <View
             style={{
               flexDirection: "row",
@@ -87,11 +86,12 @@ export default function NewEntry() {
             }}
           >
             <NumberInput
-              placeholder="Betrag"            
+              placeholder="Betrag"
               onChangeValue={(val) => setAmount(val)}
             />
             <CurrencyDropdown
               defaultValue={currency}
+              disabled={true}
               onChangeValue={(val) => setCurrency(val)}
             />
           </View>
