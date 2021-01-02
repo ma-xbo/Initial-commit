@@ -25,11 +25,11 @@ Zum erstellen von Demo-Daten wurde die Webseite: https://www.json-generator.com/
     amount: '{{integer(-1000, 999)}}',
     currency:'€',
     paymentMethod: '{{random("cash", "card", "paypal")}}',
-    date:'{{date(new Date(2020,10, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}',
+    date:'{{date(new Date(2020,10, 1), new Date())}}',
     createdBy: "Max",
-    createdAt:'{{date(new Date(2020,10, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}',
+    createdAt:'{{date(new Date(2020,10, 1), new Date())}}',
     modifiedBy: "Max",
-    modifiedAt:'{{date(new Date(2020,10, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}'
+    modifiedAt:'{{date(new Date(2020,10, 1), new Date())}}'
   }
 ]
 ```
