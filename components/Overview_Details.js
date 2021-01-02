@@ -1,12 +1,16 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import AppSafeAreaView from "./AppSafeAreaView";
+import PaymentMethodIcon from "./PaymentMethodIcon";
+import PaymentAmountText from "./PaymentAmountText";
+import Hr from "./HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function Overview_Details(props) {
   const route = props.route;
   const item = JSON.parse(route.params.itemObject);
+  const dateText = new Date(item.date).toDateString();
+  const amountBackColor = item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
     alert("Greetings from edit");
@@ -19,15 +23,61 @@ export default function Overview_Details(props) {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Text>{"Title " + item.title}</Text>
-        <Text>{"Amount " + item.amount}</Text>
+        <View
+          style={{
+            flex: 1,
+            margin: 8,
+            padding: 5,
+          }}
+        >
+          <CardItem title="Titel" text={item.title} />
+          <Hr />
+          <CardItem title="Beschreibung" text={item.description} />
+          <View
+            style={{
+              marginVertical: 30,
+              borderRadius: 10,
+            }}
+          >
+            <View
+              style={{
+                alignSelf: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 250,
+                width: 250,
+                marginHorizontal: 4,
+                padding: 20,
+                borderRadius: 200,
+                backgroundColor: amountBackColor,
+                shadowColor: colorDefinitions.light.gray,
+                shadowOpacity: 0.5,
+                shadowRadius: 20,
+                opacity: 0.9,
+              }}
+            >
+              <Text style={{ fontSize: 30, color: "white" }}>
+                {item.amount}{item.currency}
+              </Text>
+            </View>
+          </View>
+          <CardItem title="Bezahlmethode">
+            <View style={{ flexDirection: "row" }}>
+              <PaymentMethodIcon paymentMethod={item.paymentMethod} />
+              <Text>{item.paymentMethod}</Text>
+            </View>
+          </CardItem>
+          <Hr />
+          <CardItem title="Datum" text={dateText} />
+        </View>
       </View>
+
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
           <Pressable
             style={[
               styles.controlButton,
-              { backgroundColor: colorDefinitions.light.green },
+              { backgroundColor: colorDefinitions.light.blue },
             ]}
             onPress={onPressEdit}
           >
@@ -58,6 +108,42 @@ export default function Overview_Details(props) {
   );
 }
 
+function CardItem(props) {
+  const { title, text, children } = props;
+
+  return (
+    <View
+      style={{
+        /*  backgroundColor: colorDefinitions.light.gray5, */
+        padding: 10,
+        marginVertical: 6,
+        marginHorizontal: 4,
+        borderRadius: 10,
+      }}
+    >
+      <Text
+        style={{
+          color: colorDefinitions.light.black,
+          fontSize: 20,
+          fontWeight: "bold",
+          marginBottom: 4,
+        }}
+      >
+        {title}
+      </Text>
+      <Text
+        style={{
+          color: colorDefinitions.light.black,
+          fontSize: 18,
+        }}
+      >
+        {text}
+      </Text>
+      {children}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -67,11 +153,9 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     width: "100%",
-    position: "absolute",
     bottom: 0,
   },
   buttonContainer: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginVertical: 10,
