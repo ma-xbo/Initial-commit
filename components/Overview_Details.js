@@ -9,7 +9,8 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 export default function Overview_Details(props) {
   const route = props.route;
   const item = JSON.parse(route.params.itemObject);
-  const date = new Date(item.date);
+  const dateText = new Date(item.date).toDateString();
+  const amountBackColor = item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
     alert("Greetings from edit");
@@ -32,28 +33,42 @@ export default function Overview_Details(props) {
           <CardItem title="Titel" text={item.title} />
           <Hr />
           <CardItem title="Beschreibung" text={item.description} />
-          <Hr />
-          <CardItem title="Betrag">
+          <View
+            style={{
+              marginVertical: 30,
+              borderRadius: 10,
+            }}
+          >
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
+                alignSelf: "center",
                 alignItems: "center",
-                padding: 10,
+                justifyContent: "center",
+                height: 250,
+                width: 250,
                 marginHorizontal: 4,
-                borderRadius: 10,
+                padding: 20,
+                borderRadius: 200,
+                backgroundColor: amountBackColor,
+                shadowColor: colorDefinitions.light.gray,
+                shadowOpacity: 0.5,
+                shadowRadius: 20,
+                opacity: 0.9,
               }}
             >
+              <Text style={{ fontSize: 30, color: "white" }}>
+                {item.amount}{item.currency}
+              </Text>
+            </View>
+          </View>
+          <CardItem title="Bezahlmethode">
+            <View style={{ flexDirection: "row" }}>
               <PaymentMethodIcon paymentMethod={item.paymentMethod} />
-              <PaymentAmountText
-                value={item.amount}
-                currency={item.currency}
-                fontSize={20}
-              />
+              <Text>{item.paymentMethod}</Text>
             </View>
           </CardItem>
           <Hr />
-          <CardItem title="Datum" text={date.toDateString()} />
+          <CardItem title="Datum" text={dateText} />
         </View>
       </View>
 
@@ -99,7 +114,7 @@ function CardItem(props) {
   return (
     <View
       style={{
-        backgroundColor: colorDefinitions.light.gray5,
+        /*  backgroundColor: colorDefinitions.light.gray5, */
         padding: 10,
         marginVertical: 6,
         marginHorizontal: 4,
