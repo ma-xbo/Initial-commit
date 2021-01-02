@@ -9,6 +9,7 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 export default function Overview_Details(props) {
   const route = props.route;
   const item = JSON.parse(route.params.itemObject);
+  const date = new Date(item.date);
 
   const onPressEdit = () => {
     alert("Greetings from edit");
@@ -26,9 +27,6 @@ export default function Overview_Details(props) {
             flex: 1,
             margin: 8,
             padding: 5,
-            borderRadius: 10,
-            borderColor: colorDefinitions.light.gray5,
-            borderWidth: 0.5,
           }}
         >
           <CardItem title="Titel" text={item.title} />
@@ -55,9 +53,10 @@ export default function Overview_Details(props) {
             </View>
           </CardItem>
           <Hr />
-          <CardItem title="Datum" text={item.date.toLocaleString("en-GB")} />
+          <CardItem title="Datum" text={date.toDateString()} />
         </View>
       </View>
+
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
           <Pressable
@@ -139,11 +138,9 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     width: "100%",
-    position: "absolute",
     bottom: 0,
   },
   buttonContainer: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginVertical: 10,
