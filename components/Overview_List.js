@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, Button, Text } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import SegmentedControl from "@react-native-community/segmented-control";
 import AppSafeAreaView from "./AppSafeAreaView";
@@ -52,13 +52,6 @@ export default function Overview_List(props) {
     allData.sort(function (a, b) {
       return new Date(b.date) - new Date(a.date);
     });
-
-    console.log("Reload");
-    console.log("Wochen Array");
-    console.log(weekData.length);
-
-    console.log("Monat Array");
-    console.log(monthData.length);
 
     setWeekData(weekData);
     setMonthData(monthData);
@@ -175,9 +168,9 @@ const styles = StyleSheet.create({
 /* copied from https://www.w3resource.com/javascript-exercises/javascript-date-exercise-24.php */
 function getWeekNumber(dt) {
   let tdt = new Date(dt.valueOf());
-  var dayn = (dt.getDay() + 6) % 7;
+  let dayn = (dt.getDay() + 6) % 7;
   tdt.setDate(tdt.getDate() - dayn + 3);
-  var firstThursday = tdt.valueOf();
+  let firstThursday = tdt.valueOf();
   tdt.setMonth(0, 1);
   if (tdt.getDay() !== 4) {
     tdt.setMonth(0, 1 + ((4 - tdt.getDay() + 7) % 7));
