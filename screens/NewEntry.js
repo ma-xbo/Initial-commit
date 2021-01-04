@@ -31,6 +31,7 @@ export default function NewEntry() {
   ];
 
   const submitForm = () => {
+    alert("Clicked");
     console.log("Log submitted data");
     console.log("Titel :" + title);
     console.log("Beschreibung :" + description);
@@ -55,14 +56,15 @@ export default function NewEntry() {
         }}
       >
         {/* Templates */}
-        <View
-          style={{
-            flexDirection: "row",
-          }}
+        <ScrollView
+          horizontal
+          style={{ paddingVertical: 10 }}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
         >
           <NewEntry_Template text="Template 1" />
           <NewEntry_Template text="Template 2" />
-        </View>
+          <NewEntry_Template text="Template 3" />
+        </ScrollView>
 
         {/* Form */}
         <View>
