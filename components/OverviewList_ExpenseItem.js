@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import PaymentMethodIcon from "./PaymentMethodIcon";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import PaymentAmountText from "./PaymentAmountText";
+import PaymentMethodIcon from "./PaymentMethodIcon";
+
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function OverviewList_ExpenseItem(props) {
