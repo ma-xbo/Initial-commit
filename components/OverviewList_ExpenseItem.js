@@ -8,6 +8,14 @@ export default function OverviewList_ExpenseItem(props) {
   const { onPress, itemObject } = props;
   const { title, description, amount, paymentMethod, currency } = itemObject;
 
+  const minimizeText = (text) => {
+    if (text.length > 100) {
+      text = text.substring(0, 100);
+      text = text + "...";
+    }
+    return text;
+  };
+
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <PaymentMethodIcon
@@ -16,7 +24,7 @@ export default function OverviewList_ExpenseItem(props) {
       />
       <View style={styles.containerText}>
         <Text style={styles.textTitle}>{title}</Text>
-        <Text style={styles.textDescr}>{description}</Text>
+        <Text style={styles.textDescr}>{minimizeText(description)}</Text>
       </View>
       <PaymentAmountText value={amount} currency={currency} fontSize={20} />
     </Pressable>
