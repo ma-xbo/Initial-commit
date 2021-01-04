@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Text, TextInput, StyleSheet, View, Pressable } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import NumberInput from "../components/NumberInput";
@@ -24,6 +31,7 @@ export default function NewEntry() {
   ];
 
   const submitForm = () => {
+    alert("Clicked");
     console.log("Log submitted data");
     console.log("Titel :" + title);
     console.log("Beschreibung :" + description);
@@ -41,87 +49,90 @@ export default function NewEntry() {
 
   return (
     <AppSafeAreaView title="Neuer Eintrag">
-      {/* Templates */}
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
-        <NewEntry_Template text="Template 1" />
-        <NewEntry_Template text="Template 2" />
-      </View>
-
-      {/* Form */}
-      <View
+      <ScrollView
         style={{
           flex: 1,
           width: "100%",
         }}
       >
-        <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Titel</Text>
-          <TextInput
-            placeholder="Titel"
-            style={styles.inputView_textInput}
-            onChangeText={(val) => setTitle(val)}
-          />
-        </View>
+        {/* Templates */}
+        <ScrollView
+          horizontal
+          style={{ paddingVertical: 10 }}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+        >
+          <NewEntry_Template text="Template 1" />
+          <NewEntry_Template text="Template 2" />
+          <NewEntry_Template text="Template 3" />
+        </ScrollView>
 
-        <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Beschreibung</Text>
-          <TextInput
-            placeholder="Beschreibung"
-            style={styles.inputView_textInput}
-            onChangeText={(val) => setDescription(val)}
-          />
-        </View>
-
-        <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Betrag</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-            }}
-          >
-            <NumberInput
-              placeholder="Betrag"
-              onChangeValue={(val) => setAmount(val)}
+        {/* Form */}
+        <View>
+          <View style={styles.inputView}>
+            <Text style={styles.inputView_text}>Titel</Text>
+            <TextInput
+              placeholder="Titel"
+              style={styles.inputView_textInput}
+              onChangeText={(val) => setTitle(val)}
             />
-            <CurrencyDropdown
-              defaultValue={currency}
-              disabled={true}
-              onChangeValue={(val) => setCurrency(val)}
+          </View>
+
+          <View style={styles.inputView}>
+            <Text style={styles.inputView_text}>Beschreibung</Text>
+            <TextInput
+              placeholder="Beschreibung"
+              style={styles.inputView_textInput}
+              onChangeText={(val) => setDescription(val)}
+            />
+          </View>
+
+          <View style={styles.inputView}>
+            <Text style={styles.inputView_text}>Betrag</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+              }}
+            >
+              <NumberInput
+                placeholder="Betrag"
+                onChangeValue={(val) => setAmount(val)}
+              />
+              <CurrencyDropdown
+                defaultValue={currency}
+                disabled={true}
+                onChangeValue={(val) => setCurrency(val)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputView}>
+            <Text style={styles.inputView_text}>Kategorie</Text>
+            <ItemPicker
+              selectableItems={selectableCategories}
+              onPress={(cat) => setCategory(cat)}
+            />
+          </View>
+
+          <View style={styles.inputView}>
+            <Text style={styles.inputView_text}>Datum</Text>
+            {/* https://github.com/react-native-datetimepicker/datetimepicker */}
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              is24Hour={true}
+              display="default"
+              onChange={(event, date) => setDate(date)}
             />
           </View>
         </View>
 
-        <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Kategorie</Text>
-          <ItemPicker
-            selectableItems={selectableCategories}
-            onPress={(cat) => setCategory(cat)}
-          />
+        <View style={styles.submitButtonView}>
+          <Pressable onPress={submitForm} style={styles.submitButton}>
+            <Text style={styles.submitButtonText}>Anlegen</Text>
+          </Pressable>
         </View>
-
-        <View style={styles.inputView}>
-          <Text style={styles.inputView_text}>Datum</Text>
-          {/* https://github.com/react-native-datetimepicker/datetimepicker */}
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            is24Hour={true}
-            display="default"
-            onChange={(event, date) => setDate(date)}
-          />
-        </View>
-      </View>
-
-      <View style={styles.submitButtonView}>
-        <Pressable onPress={submitForm} style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Anlegen</Text>
-        </Pressable>
-      </View>
+      </ScrollView>
     </AppSafeAreaView>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 import PaymentAmountText from "./PaymentAmountText";
@@ -10,7 +10,8 @@ export default function Overview_Details(props) {
   const route = props.route;
   const item = JSON.parse(route.params.itemObject);
   const dateText = new Date(item.date).toDateString();
-  const amountBackColor = item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
+  const amountBackColor =
+    item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
     alert("Greetings from edit");
@@ -21,7 +22,7 @@ export default function Overview_Details(props) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.contentContainer}>
         <View
           style={{
@@ -57,7 +58,8 @@ export default function Overview_Details(props) {
               }}
             >
               <Text style={{ fontSize: 30, color: "white" }}>
-                {item.amount}{item.currency}
+                {item.amount}
+                {item.currency}
               </Text>
             </View>
           </View>
@@ -104,7 +106,7 @@ export default function Overview_Details(props) {
           </Pressable>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

@@ -27,12 +27,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    width: "100%"
+    width: "100%",
   },
   text: {
     fontSize: 40,
     fontWeight: "bold",
     alignSelf: "flex-start",
     paddingVertical: 10,
+    paddingHorizontal: 5,
   },
 });
