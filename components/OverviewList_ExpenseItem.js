@@ -10,15 +10,13 @@ export default function OverviewList_ExpenseItem(props) {
 
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <PaymentMethodIcon
-          paymentMethod={paymentMethod}
-          iconColor={colorDefinitions.light.white}
-        />
-        <View>
-          <Text style={styles.titleText}>{title}</Text>
-          <Text style={styles.descriptionText}>{description}</Text>
-        </View>
+      <PaymentMethodIcon
+        paymentMethod={paymentMethod}
+        iconColor={colorDefinitions.light.white}
+      />
+      <View style={styles.containerText}>
+        <Text style={styles.textTitle}>{title}</Text>
+        <Text style={styles.textDescr}>{description}</Text>
       </View>
       <PaymentAmountText value={amount} currency={currency} fontSize={20} />
     </Pressable>
@@ -28,20 +26,25 @@ export default function OverviewList_ExpenseItem(props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: colorDefinitions.light.black,
-    marginVertical: 4,
-    marginHorizontal: 6,
-    padding: 8,
+    marginVertical: 2.5,
+    marginHorizontal: 5,
+    padding: 10,
     borderRadius: 5,
   },
-  titleText: {
+  containerText: {
+    flex: 1,
+    flexDirection: "column",
+    paddingHorizontal: 10,
+  },
+  textTitle: {
     fontSize: 18,
     fontWeight: "bold",
     color: colorDefinitions.light.white,
   },
-  descriptionText: {
+  textDescr: {
     fontSize: 16,
     fontWeight: "normal",
     color: colorDefinitions.light.white,
