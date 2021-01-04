@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import {
-  Keyboard,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -44,12 +43,17 @@ export default function NewEntry() {
 
   return (
     <AppSafeAreaView title="Neuer Eintrag">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS == "ios" ? 120 : 20}
+        style={{ flex: 1 }}
+      >
         <ScrollView
           style={{
             flex: 1,
             width: "100%",
           }}
+          keyboardShouldPersistTaps="handled"
         >
           {/* Templates */}
           <ScrollView
@@ -129,7 +133,7 @@ export default function NewEntry() {
             </Pressable>
           </View>
         </ScrollView>
-      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </AppSafeAreaView>
   );
 }
