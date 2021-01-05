@@ -1,5 +1,12 @@
-import React from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Button,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 import PaymentAmountText from "./PaymentAmountText";
@@ -8,10 +15,23 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function Overview_Details(props) {
   const route = props.route;
+  const navigation = props.navigation;
   const item = JSON.parse(route.params.itemObject);
+
   const dateText = new Date(item.date).toDateString();
   const amountBackColor =
     item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <OptionButtons
+          onPressEdit={onPressEdit}
+          onPressDelete={onPressDelete}
+        />
+      ),
+    });
+  }, [navigation]);
 
   const onPressEdit = () => {
     alert("Greetings from edit");
@@ -107,6 +127,53 @@ export default function Overview_Details(props) {
         </View>
       </View>
     </ScrollView>
+  );
+}
+
+function OptionButtons(props) {
+  const { onPressEdit, onPressDelete } = props;
+  const [displayMoreView, setDisplayMoreView] = useState(false);
+
+  return (
+    <View style={{ flex: 1, alignItems: "center" }}>
+      <Pressable
+        onPress={() => setDisplayMoreView(!displayMoreView)}
+        style={{
+          padding: 10,
+        }}
+      >
+        <Ionicons name="ellipsis-horizontal-sharp" size={24} color="white" />
+      </Pressable>
+      {displayMoreView && (
+        <View
+          style={{
+            alignItems: "center",
+            backgroundColor: "cyan",
+            margin: 10,
+            borderRadius: 10,
+          }}
+        >
+          <Pressable
+            onPress={onPressEdit}
+            style={{
+              flexDirection: "row",
+              padding: 10,
+            }}
+          >
+            <Text>Edit</Text>
+          </Pressable>
+          <Pressable
+            onPress={onPressDelete}
+            style={{
+              flexDirection: "row",
+              padding: 10,
+            }}
+          >
+            <Text>Delete</Text>
+          </Pressable>
+        </View>
+      )}
+    </View>
   );
 }
 
