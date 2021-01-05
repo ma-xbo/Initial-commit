@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,7 +19,7 @@ export default function Overview_Details(props) {
   const item = JSON.parse(route.params.itemObject);
   const [displayHeaderMenu, setDisplayHeaderMenu] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <HeaderMenu
