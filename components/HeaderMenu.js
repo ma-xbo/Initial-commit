@@ -5,18 +5,19 @@ import Hr from "./HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function HeaderMenu(props) {
-  const { onPressEdit, onPressDelete } = props;
-  const [displayMoreView, setDisplayMoreView] = useState(false);
+  const { onDisplayToggle, onPressEdit, onPressDelete, displayMenu } = props;
 
   return (
     <View style={styles.componentContainer}>
       <Pressable
-        onPress={() => setDisplayMoreView(!displayMoreView)}
+        onPress={() => {
+          onDisplayToggle();
+        }}
         style={styles.headerItem}
       >
         <Ionicons name="ellipsis-horizontal-sharp" size={24} color="white" />
       </Pressable>
-      {displayMoreView && (
+      {displayMenu && (
         <View style={styles.menuContainer}>
           <Pressable onPress={onPressEdit} style={styles.menuItem}>
             <Text style={styles.menuItemText}>Edit</Text>

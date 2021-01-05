@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,21 +18,24 @@ export default function Overview_Details(props) {
   const route = props.route;
   const navigation = props.navigation;
   const item = JSON.parse(route.params.itemObject);
+  const [displayHeaderMenu, setDisplayHeaderMenu] = useState(false);
 
-  const dateText = new Date(item.date).toDateString();
-  const amountBackColor =
-    item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
-
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <HeaderMenu
           onPressEdit={onPressEdit}
           onPressDelete={onPressDelete}
+          onDisplayToggle={() => setDisplayHeaderMenu(!displayHeaderMenu)}
+          displayMenu={displayHeaderMenu}
         />
       ),
     });
-  }, [navigation]);
+  }, [navigation, displayHeaderMenu]);
+
+  const dateText = new Date(item.date).toDateString();
+  const amountBackColor =
+    item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
     alert("Greetings from edit");
@@ -43,7 +47,10 @@ export default function Overview_Details(props) {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.contentContainer}>
+      <Pressable
+        style={styles.contentContainer}
+        onPress={() => setDisplayHeaderMenu(false)}
+      >
         <View
           style={{
             flex: 1,
@@ -92,7 +99,7 @@ export default function Overview_Details(props) {
           <Hr />
           <CardItem title="Datum" text={dateText} />
         </View>
-      </View>
+      </Pressable>
 
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
