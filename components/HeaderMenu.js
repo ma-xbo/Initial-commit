@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Hr from "./HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -9,43 +9,53 @@ export default function HeaderMenu(props) {
   const [displayMoreView, setDisplayMoreView] = useState(false);
 
   return (
-    <View style={{ flex: 1, alignItems: "flex-end" }}>
+    <View style={styles.componentContainer}>
       <Pressable
         onPress={() => setDisplayMoreView(!displayMoreView)}
-        style={{
-          padding: 10,
-        }}
+        style={styles.headerItem}
       >
         <Ionicons name="ellipsis-horizontal-sharp" size={24} color="white" />
       </Pressable>
       {displayMoreView && (
-        <View
-          style={{
-            alignItems: "center",
-            backgroundColor: "cyan",
-            borderRadius: 10,
-          }}
-        >
-          <Pressable
-            onPress={onPressEdit}
-            style={{
-              flexDirection: "row",
-              padding: 10,
-            }}
-          >
-            <Text>Edit</Text>
+        <View style={styles.menuContainer}>
+          <Pressable onPress={onPressEdit} style={styles.menuItem}>
+            <Text style={styles.menuItemText}>Edit</Text>
           </Pressable>
-          <Pressable
-            onPress={onPressDelete}
-            style={{
-              flexDirection: "row",
-              padding: 10,
-            }}
-          >
-            <Text>Delete</Text>
+          <Hr thickness={0.7} />
+          <Pressable onPress={onPressDelete} style={styles.menuItem}>
+            <Text style={styles.menuItemText}>Delete</Text>
           </Pressable>
         </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  componentContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  headerItem: {
+    padding: 10,
+  },
+  menuContainer: {
+    alignSelf: "center",
+    backgroundColor: colorDefinitions.light.gray5,
+    width: 150,
+    marginRight: 5,
+    borderRadius: 10,
+    shadowColor: colorDefinitions.light.black,
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  menuItem: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  menuItemText: {
+    fontSize: 20,
+    color: colorDefinitions.light.blue,
+  },
+});
