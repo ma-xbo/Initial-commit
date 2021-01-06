@@ -5,15 +5,16 @@ import { Picker } from "@react-native-picker/picker";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function ItemPicker(props) {
-  const { selectableItems, onPress } = props;
+  const { title, selectableItems, onValueChange } = props;
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(
     selectableItems[0].value
   );
 
   const closeModal = () => {
     setShowCategoryPicker(!showCategoryPicker);
-    onPress(selectedCategory);
+    onValueChange(selectedCategory);
   };
 
   return (
@@ -27,7 +28,7 @@ export default function ItemPicker(props) {
         onPress={() => setShowCategoryPicker(!showCategoryPicker)}
       >
         <Text style={{ color: colorDefinitions.light.blue, fontSize: 18 }}>
-          {selectedCategory}
+          {selectableItems[selectedIndex].label}
         </Text>
       </Pressable>
 
@@ -48,13 +49,14 @@ export default function ItemPicker(props) {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Wählen Sie ein Item aus:</Text>
+              <Text style={styles.modalText}>{title}</Text>
               <Picker
                 selectedValue={selectedCategory}
                 style={{ height: 50, width: 200, marginBottom: 150 }}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedCategory(itemValue)
-                }
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedCategory(itemValue);
+                  setSelectedIndex(itemIndex);
+                }}
               >
                 {selectableItems.map((cat, index) => (
                   <Picker.Item
