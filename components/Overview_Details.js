@@ -136,7 +136,7 @@ export default function Overview_Details(props) {
         </View>
       </ScrollView>
       {displayHeaderMenu && (
-        <OverflowMenuContainer closeAction={() => setDisplayHeaderMenu(false)} bottom>
+        <OverflowMenuContainer menuType="topRight" closeAction={() => setDisplayHeaderMenu(false)} bottom>
           <OverflowMenuItem text="Edit" action={onPressEdit} />
           <Hr />
           <OverflowMenuItem text="Delete" action={onPressDelete} />
