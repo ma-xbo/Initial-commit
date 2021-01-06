@@ -104,7 +104,8 @@ export default function NewEntry() {
                 }}
               >
                 <NumberInput
-                  placeholder="Betrag"
+                  placeholderText="Betrag"
+                  isNegativ={isExpense}
                   onChangeValue={(val) => setAmount(val)}
                 />
                 <CurrencyDropdown
