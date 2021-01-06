@@ -1,8 +1,16 @@
 import React from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet, Text, View } from "react-native";
 
 export default function NumberInput(props) {
-  const { placeholder, style = styles.numberInput, onChangeValue } = props;
+  const {
+    placeholderText,
+    isNegativ = true,
+    unit = "€",
+    delimiter = ".",
+    separator = ",",
+    precision = 2,
+    onChangeValue,
+  } = props;
 
   const onChanged = (text) => {
     const value = text.replace(/[^0-9]/g, "");
@@ -10,22 +18,34 @@ export default function NumberInput(props) {
   };
 
   return (
-    <TextInput
-      placeholder={placeholder}
-      keyboardType="number-pad"
-      style={style}
-      onChangeText={(val) => onChanged(val)}
-    />
+    <View style={styles.containerStyle}>
+      {isNegativ && <Text style={styles.textStyle}>-</Text>}
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          placeholder={placeholderText}
+          keyboardType="number-pad"
+          style={styles.textStyle}
+          onChangeText={(val) => onChanged(val)}
+        />
+        {unit && <Text style={styles.textStyle}>{unit}</Text>}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  numberInput: {
-    fontSize: 18,
-    fontWeight: "normal",
+  containerStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     backgroundColor: "white",
-    minWidth: 100,
     padding: 10,
     borderRadius: 15,
+  },
+  textStyle: {
+    fontSize: 18,
+    fontWeight: "normal",
+    color: "black",
+    paddingHorizontal: 5,
   },
 });
