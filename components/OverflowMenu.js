@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { BlurView } from "expo-blur";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
@@ -7,6 +7,26 @@ export function OverflowMenuContainer(props) {
   const { closeAction, menuType } = props;
   const [viewBottom, setViewBottom] = useState(false);
   const [viewTopRight, setViewTopRight] = useState(false);
+  const opacity = useState(new Animated.Value(0))[0];
+
+  function fadeIn() {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function fadeOut() {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      /* completion callback */
+      closeAction();
+    });
+  }
 
   useEffect(() => {
     switch (menuType) {
@@ -16,33 +36,35 @@ export function OverflowMenuContainer(props) {
       case "topRight":
         setViewTopRight(true);
         break;
-
       default:
         setViewBottom(true);
         break;
     }
+    fadeIn();
   }, []);
 
   return (
-    <Pressable onPress={closeAction} style={StyleSheet.absoluteFill}>
-      <BlurView
-        intensity={90}
-        style={[
-          StyleSheet.absoluteFill,
-          viewTopRight && styles.component_Right,
-          viewBottom && styles.component_Bottom,
-        ]}
-      >
-        <View
+    <Pressable onPress={fadeOut} style={StyleSheet.absoluteFill}>
+      <Animated.View style={[StyleSheet.absoluteFill, { opacity: opacity }]}>
+        <BlurView
+          intensity={90}
           style={[
-            styles.menuContainer,
-            viewTopRight && styles.menu_Right,
-            viewBottom && styles.menu_Bottom,
+            StyleSheet.absoluteFill,
+            viewTopRight && styles.component_Right,
+            viewBottom && styles.component_Bottom,
           ]}
         >
-          {props.children}
-        </View>
-      </BlurView>
+          <View
+            style={[
+              styles.menuContainer,
+              viewTopRight && styles.menu_Right,
+              viewBottom && styles.menu_Bottom,
+            ]}
+          >
+            {props.children}
+          </View>
+        </BlurView>
+      </Animated.View>
     </Pressable>
   );
 }
