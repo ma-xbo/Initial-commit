@@ -1,6 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
 import {
-  Button,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -8,7 +7,6 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import HeaderMenu from "./HeaderMenu";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 import PaymentAmountText from "./PaymentAmountText";
 import { OverflowMenuContainer, OverflowMenuItem } from "./OverflowMenu";
