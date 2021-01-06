@@ -1,5 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
 import {
+  Button,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HeaderMenu from "./HeaderMenu";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 import PaymentAmountText from "./PaymentAmountText";
+import { OverflowMenuContainer, OverflowMenuItem } from "./OverflowMenu";
 import Hr from "./HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
@@ -22,12 +24,12 @@ export default function Overview_Details(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderMenu
-          onPressEdit={onPressEdit}
-          onPressDelete={onPressDelete}
-          onDisplayToggle={() => setDisplayHeaderMenu(!displayHeaderMenu)}
-          displayMenu={displayHeaderMenu}
-        />
+        <Pressable
+          onPress={() => setDisplayHeaderMenu(!displayHeaderMenu)}
+          style={{ padding: 10 }}
+        >
+          <Ionicons name="ellipsis-horizontal-sharp" size={24} color="white" />
+        </Pressable>
       ),
     });
   }, [navigation, displayHeaderMenu]);
@@ -45,94 +47,104 @@ export default function Overview_Details(props) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Pressable
-        style={styles.contentContainer}
-        onPress={() => setDisplayHeaderMenu(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            margin: 8,
-            padding: 5,
-          }}
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        <Text>{displayHeaderMenu}</Text>
+        <Pressable
+          style={styles.contentContainer}
+          onPress={() => setDisplayHeaderMenu(false)}
         >
-          <CardItem title="Titel" text={item.title} />
-          <Hr />
-          <CardItem title="Beschreibung" text={item.description} />
           <View
             style={{
-              marginVertical: 30,
-              borderRadius: 10,
+              flex: 1,
+              margin: 8,
+              padding: 5,
             }}
           >
+            <CardItem title="Titel" text={item.title} />
+            <Hr />
+            <CardItem title="Beschreibung" text={item.description} />
             <View
               style={{
-                alignSelf: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 250,
-                width: 250,
-                marginHorizontal: 4,
-                padding: 20,
-                borderRadius: 200,
-                backgroundColor: amountBackColor,
-                shadowColor: colorDefinitions.light.gray,
-                shadowOpacity: 0.5,
-                shadowRadius: 20,
-                opacity: 0.9,
+                marginVertical: 30,
+                borderRadius: 10,
               }}
             >
-              <Text style={{ fontSize: 30, color: "white" }}>
-                {item.amount}
-                {item.currency}
-              </Text>
+              <View
+                style={{
+                  alignSelf: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 250,
+                  width: 250,
+                  marginHorizontal: 4,
+                  padding: 20,
+                  borderRadius: 200,
+                  backgroundColor: amountBackColor,
+                  shadowColor: colorDefinitions.light.gray,
+                  shadowOpacity: 0.5,
+                  shadowRadius: 20,
+                  opacity: 0.9,
+                }}
+              >
+                <Text style={{ fontSize: 30, color: "white" }}>
+                  {item.amount}
+                  {item.currency}
+                </Text>
+              </View>
             </View>
+            <CardItem title="Bezahlmethode">
+              <View style={{ flexDirection: "row" }}>
+                <PaymentMethodIcon paymentMethod={item.paymentMethod} />
+                <Text>{item.paymentMethod}</Text>
+              </View>
+            </CardItem>
+            <Hr />
+            <CardItem title="Datum" text={dateText} />
           </View>
-          <CardItem title="Bezahlmethode">
-            <View style={{ flexDirection: "row" }}>
-              <PaymentMethodIcon paymentMethod={item.paymentMethod} />
-              <Text>{item.paymentMethod}</Text>
-            </View>
-          </CardItem>
-          <Hr />
-          <CardItem title="Datum" text={dateText} />
-        </View>
-      </Pressable>
+        </Pressable>
 
-      <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainer}>
-          <Pressable
-            style={[
-              styles.controlButton,
-              { backgroundColor: colorDefinitions.light.blue },
-            ]}
-            onPress={onPressEdit}
-          >
-            <Ionicons
-              name="construct"
-              size={22}
-              color={colorDefinitions.light.white}
-            />
-            <Text style={styles.controlButtonText}>Edit</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.controlButton,
-              { backgroundColor: colorDefinitions.light.red },
-            ]}
-            onPress={onPressDelete}
-          >
-            <Ionicons
-              name="trash"
-              size={22}
-              color={colorDefinitions.light.white}
-            />
-            <Text style={styles.controlButtonText}>Delete</Text>
-          </Pressable>
+        <View style={styles.bottomContainer}>
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={[
+                styles.controlButton,
+                { backgroundColor: colorDefinitions.light.blue },
+              ]}
+              onPress={onPressEdit}
+            >
+              <Ionicons
+                name="construct"
+                size={22}
+                color={colorDefinitions.light.white}
+              />
+              <Text style={styles.controlButtonText}>Edit</Text>
+            </Pressable>
+            <Pressable
+              style={[
+                styles.controlButton,
+                { backgroundColor: colorDefinitions.light.red },
+              ]}
+              onPress={onPressDelete}
+            >
+              <Ionicons
+                name="trash"
+                size={22}
+                color={colorDefinitions.light.white}
+              />
+              <Text style={styles.controlButtonText}>Delete</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {displayHeaderMenu && (
+        <OverflowMenuContainer closeAction={() => setDisplayHeaderMenu(false)} bottom>
+          <OverflowMenuItem text="Edit" action={onPressEdit} />
+          <Hr />
+          <OverflowMenuItem text="Delete" action={onPressDelete} />
+        </OverflowMenuContainer>
+      )}
+    </View>
   );
 }
 
