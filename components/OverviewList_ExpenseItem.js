@@ -7,7 +7,15 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function OverviewList_ExpenseItem(props) {
   const { onPress, itemObject } = props;
-  const { title, description, amount, paymentMethod, currency } = itemObject;
+  const {
+    title,
+    description,
+    amount,
+    paymentMethod,
+    currency,
+    date,
+  } = itemObject;
+  const dateFormatted = new Date(date);
 
   const minimizeText = (text) => {
     if (text.length > 100) {
@@ -24,7 +32,10 @@ export default function OverviewList_ExpenseItem(props) {
         iconColor={colorDefinitions.light.white}
       />
       <View style={styles.containerText}>
-        <Text style={styles.textTitle}>{title}</Text>
+        <View style={styles.containerTitleRow}>
+          <Text style={styles.textTitle}>{title}</Text>
+          <Text style={styles.textDate}>{dateFormatted.toDateString()}</Text>
+        </View>
         <Text style={styles.textDescr}>{minimizeText(description)}</Text>
       </View>
       <PaymentAmountText value={amount} currency={currency} fontSize={20} />
@@ -48,6 +59,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingHorizontal: 10,
   },
+  containerTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   textTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -55,6 +71,11 @@ const styles = StyleSheet.create({
   },
   textDescr: {
     fontSize: 16,
+    fontWeight: "normal",
+    color: colorDefinitions.light.white,
+  },
+  textDate: {
+    fontSize: 12,
     fontWeight: "normal",
     color: colorDefinitions.light.white,
   },
