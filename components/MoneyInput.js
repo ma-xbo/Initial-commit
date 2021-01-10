@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, StyleSheet, Text, View } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
-export default function NumberInput(props) {
+export default function MoneyInput(props) {
   const {
     placeholderText,
     isNegativ = true,
@@ -13,8 +12,7 @@ export default function NumberInput(props) {
     onChangeValue,
     containerStyle,
   } = props;
-  const numbers = [0, 1, 2, 3, 4, 5, 6];
-  const [valueInput, setValueInput] = useState(0.0);
+  const [valueInput, setValueInput] = useState("0.00");
 
   useEffect(() => {
     setValueInput(parseFloat(valueInput).toFixed(2));
@@ -27,7 +25,8 @@ export default function NumberInput(props) {
   }, [isNegativ]);
 
   useEffect(() => {
-    setValueInput(parseFloat(Math.abs(value)).toFixed(2));
+    const valAsFloat = Math.abs(parseFloat(value)).toFixed(2);
+    setValueInput(valAsFloat);
   }, [value]);
 
   const onChanged = (text) => {
@@ -77,21 +76,6 @@ export default function NumberInput(props) {
           {unit && <Text style={styles.textStyle}>{unit}</Text>}
         </View>
       )}
-
-      {/*       {false && (
-        <Picker
-          style={{ height: 50, width: 200, marginBottom: 150 }}
-          selectedValue={selectedNumber}
-          onValueChange={(itemValue, itemIndex) => {
-            setSelectedNumber(itemValue);
-            setInputIsFocused(true);
-          }}
-        >
-          {numbers.map((val, index) => (
-            <Picker.Item key={index} label={val.toString()} value={val} />
-          ))}
-        </Picker>
-      )} */}
     </View>
   );
 }
