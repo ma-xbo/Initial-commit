@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { TextInput, StyleSheet, Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { useEffect } from "react/cjs/react.development";
 
 export default function NumberInput(props) {
   const {
     placeholderText,
     isNegativ = true,
+    value = 0,
     unit = "€",
     delimiter = ".",
     separator = ",",
@@ -13,9 +15,22 @@ export default function NumberInput(props) {
     containerStyle,
   } = props;
   const numbers = [0, 1, 2, 3, 4, 5, 6];
-  const [valueInput, setValueInput] = useState("0.00");
+  const [valueInput, setValueInput] = useState(0);
+
   const [inputIsFocused, setInputIsFocused] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState(numbers[0]);
+
+  console.log(value);
+
+  useEffect(() => {
+    setValueInput(parseFloat(valueInput).toFixed(2));
+
+    if (isNegativ) {
+      onChangeValue(parseFloat(valueInput * -1).toFixed(2));
+    } else {
+      onChangeValue(parseFloat(valueInput).toFixed(2));
+    }
+  }, [isNegativ]);
 
   const onChanged = (text) => {
     let amount = text.replace(/[^0-9]/g, "");
