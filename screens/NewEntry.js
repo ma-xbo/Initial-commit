@@ -104,14 +104,10 @@ export default function NewEntry() {
                 }}
               >
                 <NumberInput
+                  containerStyle={{ width: "50%" }}
                   placeholderText="Betrag"
                   isNegativ={isExpense}
                   onChangeValue={(val) => setAmount(val)}
-                />
-                <CurrencyDropdown
-                  defaultValue={currency}
-                  disabled={true}
-                  onChangeValue={(val) => setCurrency(val)}
                 />
               </View>
             </View>
