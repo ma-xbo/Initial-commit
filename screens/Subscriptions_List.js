@@ -30,27 +30,26 @@ export default function Subscriptions_List(props) {
     });
 
     setData(subData);
-    console.log(data)
   }, []);
 
   return (
     <AppSafeAreaView title="Abonnements">
-      <Text>Test</Text>
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <SubscriptionItem
-            itemObject={item}
-            onPress={
-              () => alert("navigate")
-              /*                 navigation.navigate("Details", {
+      <View style={{ width: "100%" }}>
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <SubscriptionItem
+              itemObject={item}
+              onPress={() =>
+                navigation.navigate("Details", {
                   itemObject: JSON.stringify(item),
-                }) */
-            }
-          />
-        )}
-      />
+                })
+              }
+            />
+          )}
+        />
+      </View>
     </AppSafeAreaView>
   );
 }

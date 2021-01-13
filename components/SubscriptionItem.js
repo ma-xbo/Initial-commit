@@ -29,7 +29,7 @@ export default function SubscriptionItem(props) {
     <Pressable style={styles.container} onPress={onPress}>
       <PaymentMethodIcon
         paymentMethod={paymentMethod}
-        iconColor={colorDefinitions.light.white}
+        iconColor={colorDefinitions.light.black}
       />
       <View style={styles.containerText}>
         <View style={styles.containerTitleRow}>
@@ -48,9 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: colorDefinitions.light.black,
-    marginVertical: 2.5,
-    marginHorizontal: 5,
+    backgroundColor: colorDefinitions.light.gray6,
     padding: 10,
     borderRadius: 5,
   },
@@ -67,16 +65,16 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colorDefinitions.light.white,
+    color: colorDefinitions.light.black,
   },
   textDescr: {
     fontSize: 16,
     fontWeight: "normal",
-    color: colorDefinitions.light.white,
+    color: colorDefinitions.light.black,
   },
   textDate: {
     fontSize: 12,
     fontWeight: "normal",
-    color: colorDefinitions.light.white,
+    color: colorDefinitions.light.black,
   },
 });
