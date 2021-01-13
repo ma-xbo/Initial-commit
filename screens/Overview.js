@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Overview_List from "../components/Overview_List";
-import Overview_Details from "../components/Overview_Details";
+import Overview_List from "./Overview_List";
+import Overview_Details from "./Overview_Details";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function OverviewList() {

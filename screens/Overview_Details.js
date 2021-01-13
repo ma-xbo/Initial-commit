@@ -7,10 +7,10 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import PaymentMethodIcon from "./PaymentMethodIcon";
-import PaymentAmountText from "./PaymentAmountText";
-import { OverflowMenuContainer, OverflowMenuItem } from "./OverflowMenu";
-import Hr from "./HorizontalRule";
+import PaymentMethodIcon from "../components/PaymentMethodIcon";
+import PaymentAmountText from "../components/PaymentAmountText";
+import { OverflowMenuContainer, OverflowMenuItem } from "../components/OverflowMenu";
+import Hr from "../components/HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function Overview_Details(props) {
