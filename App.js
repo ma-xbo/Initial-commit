@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import OverviewList from "./screens/Overview";
+import Subscriptions from "./screens/Subscriptions";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
 import Optimization from "./screens/Optimization";
@@ -25,7 +26,7 @@ export default function App() {
                 iconName = focused ? "ios-list" : "ios-list-outline";
                 size = 25;
                 break;
-              case "Kategorien" || "Optimization":
+              case "Abos" || "Subscriptions":
                 iconName = focused ? "ios-pie-chart" : "ios-pie-chart-outline";
                 size = 25;
                 break;
@@ -58,7 +59,7 @@ export default function App() {
         }}
       >
         <Tab.Screen name="Übersicht" component={OverviewList} />
-        <Tab.Screen name="Kategorien" component={Optimization} />
+        <Tab.Screen name="Abos" component={Subscriptions} />
         <Tab.Screen name="Hinzufügen" component={NewEntry} />
         <Tab.Screen name="Analyse" component={FinanceAnalysis} />
         <Tab.Screen name="Einstellungen" component={Settings} />
