@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import OverviewList from "./screens/Overview";
-import Subscriptions from "./screens/Subscriptions/Subscriptions";
+import Subscriptions from "./screens/Subscriptions";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
 import Optimization from "./screens/Optimization";

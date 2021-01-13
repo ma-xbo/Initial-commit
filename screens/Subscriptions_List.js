@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import AppSafeAreaView from "../../components/AppSafeAreaView";
-import SubscriptionItem from "../../components/SubscriptionItem";
-const dummyData = require("../../assets/dummyData.json");
+import React, { useState, useEffect } from "react";
+import { View, FlatList, StyleSheet, Text } from "react-native";
+import AppSafeAreaView from "../components/AppSafeAreaView";
+import SubscriptionItem from "../components/SubscriptionItem";
+const dummyData = require("../assets/dummyData.json");
 
-export default function Settings() {
+export default function Subscriptions_List(props) {
   const navigation = props.navigation;
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
 
   useEffect(() => {
     const subData = [];
@@ -30,6 +30,7 @@ export default function Settings() {
     });
 
     setData(subData);
+    console.log(data)
   }, []);
 
   return (

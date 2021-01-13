@@ -1,9 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Subscriptions_List from "./Subscriptions_List";
-const colorDefinitions = require("../../assets/colorDefinition.json");
+const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function OverviewList() {
+export default function Subscriptions() {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator
