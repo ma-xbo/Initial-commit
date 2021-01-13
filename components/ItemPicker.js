@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Text, Modal, StyleSheet, View, Pressable } from "react-native";
 import { BlurView } from "expo-blur";
 import { Picker } from "@react-native-picker/picker";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function ItemPicker(props) {
-  const ref = useRef();
   const { title, selectableItems, onValueChange } = props;
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -50,7 +49,7 @@ export default function ItemPicker(props) {
             },
           ]}
         >
-          <Pressable style={{}} onPress={() => setShowCategoryPicker(false)}>
+          <Pressable onPress={() => setShowCategoryPicker(false)}>
             <View style={styles.centeredView}>
               <Pressable>
                 <View style={styles.modalView}>
