@@ -13,26 +13,30 @@ export default function Login(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const tes = () => {
+  const navMainView = () => {
     navigation.navigate("MainNav", {});
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Hello from Login</Text>
+      <Text>Willkommen</Text>
+      <Text>Bitte loggen Sie sich ein</Text>
       <View>
         <TextInput
-          placeholder="Username"
+          placeholder="Benutzername"
+          style={styles.inputStyle}
           value={username}
           onChangeText={setUsername}
         />
         <TextInput
-          placeholder="Password"
+          placeholder="Passwort"
+          style={styles.inputStyle}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Button title="Sign in" onPress={tes} />
+        <Button title="Sign in" onPress={navMainView} />
+        <Button title="Registrieren" onPress={navMainView} />
       </View>
     </SafeAreaView>
   );
@@ -43,6 +47,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "orange",
+  },
+  inputStyle: {
+    alignSelf: "center",
+    width: 200,
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+    borderWidth: 0.2,
+    borderColor: "black",
   },
 });
