@@ -1,21 +1,56 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import OverviewList from "./screens/Overview";
 import Subscriptions from "./screens/Subscriptions";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
-import Optimization from "./screens/Optimization";
+import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
 import FinanceAnalysis from "./screens/Analysis";
 
 const colorDefinitions = require("./assets/colorDefinition.json");
 
 export default function App() {
-  const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: colorDefinitions.light.black },
+          headerTintColor: colorDefinitions.light.white,
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MainNav"
+          options={{ headerShown: false }}
+          component={MainNav}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function MainNav() {
+  const Tab = createBottomTabNavigator();
+
+  return (
       <Tab.Navigator
         //Vorbereitung für die verwendung von Icons --> Library muss noch ausgesucht und installiert werden
         screenOptions={({ route }) => ({
@@ -64,6 +99,5 @@ export default function App() {
         <Tab.Screen name="Analyse" component={FinanceAnalysis} />
         <Tab.Screen name="Einstellungen" component={Settings} />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }
