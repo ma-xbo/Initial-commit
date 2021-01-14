@@ -1,9 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet } from "react-native";
+import {
+  Button,
+  View,
+  Text,
+  TextInput,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
 
-export default function Login() {
+export default function Login(props) {
+  const navigation = props.navigation;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const tes = () => {
+    navigation.navigate("MainNav", {});
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,10 +32,7 @@ export default function Login() {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Button
-          title="Sign in"
-          onPress={() => signIn({ username, password })}
-        />
+        <Button title="Sign in" onPress={tes} />
       </View>
     </SafeAreaView>
   );
@@ -31,8 +40,9 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "blue",
+    backgroundColor: "orange",
   },
 });
