@@ -17,6 +17,10 @@ export default function Login(props) {
     navigation.navigate("MainNav", {});
   };
 
+  const navSignUp = () => {
+    navigation.navigate("SignUp", {});
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <Text>Willkommen</Text>
@@ -36,7 +40,7 @@ export default function Login(props) {
           secureTextEntry
         />
         <Button title="Sign in" onPress={navMainView} />
-        <Button title="Registrieren" onPress={navMainView} />
+        <Button title="Registrieren" onPress={navSignUp} />
       </View>
     </SafeAreaView>
   );
