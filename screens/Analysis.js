@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dimensions, View, ScrollView, StyleSheet, Text } from "react-native";
 import {
   LineChart,
@@ -15,14 +15,54 @@ const dummyData = require("../assets/dummyData.json");
 /* https://github.com/indiespirit/react-native-chart-kit */
 
 export default function Analysis(props) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const dataArray = dummyData.map((item) => {
+      let rObj = { ...item };
+      rObj["date"] = new Date(item.date);
+      rObj["createdAt"] = new Date(item.createdAt);
+      rObj["modifiedAt"] = new Date(item.modifiedAt);
+      return rObj;
+    });
+
+    dataArray.sort(function (a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
+
+    setData(dataArray);
+  }, []);
+
   const chartWidth = Dimensions.get("window").width * 0.95;
   const chartHeight = 250;
+
   const dataStartDate = new Date(
     Math.max(...dummyData.map((e) => new Date(e.date)))
   );
   const dataEndDate = new Date(
     Math.min(...dummyData.map((e) => new Date(e.date)))
   );
+  const msOneDay = 24 * 60 * 60 * 1000;
+  const diffDays =
+    Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1;
+
+  /* Temp */
+
+  const dataArray = [];
+  data.forEach((element) => {
+    let value = 0;
+    for (let index = 0; index < data.length; index++) {
+      if (data[index].date.toDateString() === element.date.toDateString()) {
+        console.log("same date detected");
+        console.log(data[index].date.toDateString());
+        value = value + data[index].amount;
+      }
+    }
+
+    dataArray.push({ date: element.date.toDateString(), value: value });
+  });
+
+  /* Temp End */
 
   const commitsData = [
     { date: "2017-01-02", count: 1 },
@@ -38,7 +78,7 @@ export default function Analysis(props) {
     { date: "2017-02-30", count: 4 },
   ];
 
-  const data = [
+  const chartData = [
     {
       name: "Seoul",
       population: 21500000,
@@ -142,7 +182,7 @@ export default function Analysis(props) {
           Übersicht der Kategorien (TODO)
         </Text>
         <PieChart
-          data={data}
+          data={chartData}
           width={chartWidth}
           height={chartHeight}
           chartConfig={chartConfig2}
