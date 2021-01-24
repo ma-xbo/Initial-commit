@@ -51,48 +51,12 @@ export default function Analysis(props) {
 
   /* Ausgaben pro Monat */
   const chartMonthArray = createMonthArray(dataStartDate, dataEndDate, data);
+  console.log("chartMonthArray");
+  console.log(chartMonthArray);
   /* Ausgaben pro Monat Ende */
 
   /* Ausgaben pro Kategorie */
   const chartCategoryArray = createCategoryArray(data);
-
-  const chartData = [
-    {
-      name: "Seoul",
-      population: 21500000,
-      color: "rgba(131, 167, 234, 1)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Toronto",
-      population: 2800000,
-      color: "#F00",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Beijing",
-      population: 527612,
-      color: "red",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "New York",
-      population: 8538000,
-      color: "#ffffff",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Moscow",
-      population: 11920000,
-      color: "rgb(0, 0, 255)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-  ];
   /* Ausgaben pro Kategorie Ende */
 
   const chartWidth = Dimensions.get("window").width * 0.95;
@@ -131,7 +95,7 @@ export default function Analysis(props) {
         <Hr />
 
         <Text style={styles.chartDescription}>Übersicht der Ausgaben</Text>
-        {/*         <LineChart
+        <LineChart
           data={{
             labels: chartMonthArray.labels,
             datasets: [{ data: chartMonthArray.values }],
@@ -140,16 +104,16 @@ export default function Analysis(props) {
           height={chartHeight}
           yAxisLabel=""
           yAxisSuffix="€"
-          yAxisInterval={10} // optional, defaults to 1
+          yAxisInterval={10}
           chartConfig={chartConfig2}
           style={styles.chartSelf}
           bezier
-        /> */}
+        />
 
         <Hr />
 
         <Text style={styles.chartDescription}>
-          Übersicht der Kategorien (TODO)
+          Übersicht der Kategorien
         </Text>
         <PieChart
           data={chartCategoryArray}
@@ -185,18 +149,18 @@ function createDateArray(startDate, days) {
 function createMonthArray(startDate, endDate, data) {
   const months = monthDiff(startDate, endDate);
   const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
     "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   const array = [];
   const returnArray = { labels: [], values: [] };
@@ -216,7 +180,8 @@ function createMonthArray(startDate, endDate, data) {
         data[index].date.getUTCMonth() === date.getUTCMonth() &&
         data[index].date.getUTCFullYear() === date.getUTCFullYear()
       ) {
-        value = value + data[index].amount;
+        const elVal = parseFloat(data[index].amount);
+        value += elVal * -1;
       }
     }
 
