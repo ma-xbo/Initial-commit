@@ -6,8 +6,6 @@ import AppSafeAreaView from "../components/AppSafeAreaView";
 const colorDefinitions = require("../assets/colorDefinition.json");
 const dummyData = require("../assets/dummyData.json");
 
-/* https://github.com/indiespirit/react-native-chart-kit */
-
 export default function Analysis(props) {
   const [data, setData] = useState([]);
 
@@ -154,9 +152,7 @@ export default function Analysis(props) {
           Übersicht der Kategorien (TODO)
         </Text>
         <PieChart
-          //data={chartData}
           data={chartCategoryArray}
-          //accessor={"population"}
           accessor={"value"}
           width={chartWidth}
           height={chartHeight}
@@ -257,21 +253,24 @@ function createCategoryArray(data) {
         val += elVal;
       }
     }
-    returnArray.push({
-      name: element.category,
-      value: val,
-      color: "red",
-      legendFontColor: "red",
-      legendFontSize: 15,
-    });
+
+    if (!returnArray.some((e) => e.name === element.category)) {
+      returnArray.push({
+        name: element.category,
+        value: val,
+        color: "#fff",
+        legendFontColor: colorDefinitions.light.black,
+        legendFontSize: 15,
+      });
+    }
   });
 
-  /* Add Color */
   const colorArray = generateColor(
     colorDefinitions.light.pink,
     colorDefinitions.light.blue,
     returnArray.length
   );
+
   for (let index = 0; index < returnArray.length; index++) {
     returnArray[index].color = "#" + colorArray[index];
     if (returnArray[index].value < 0) {
@@ -281,7 +280,6 @@ function createCategoryArray(data) {
     }
   }
 
-  console.log(returnArray);
   return returnArray;
 
   function hex(c) {
