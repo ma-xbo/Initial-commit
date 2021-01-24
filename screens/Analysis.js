@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, View, ScrollView, StyleSheet, Text } from "react-native";
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+import { LineChart, PieChart, ContributionGraph } from "react-native-chart-kit";
 import Hr from "../components/HorizontalRule";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+const colorDefinitions = require("../assets/colorDefinition.json");
 const dummyData = require("../assets/dummyData.json");
 
 /* https://github.com/indiespirit/react-native-chart-kit */
@@ -62,6 +56,8 @@ export default function Analysis(props) {
   /* Ausgaben pro Monat Ende */
 
   /* Ausgaben pro Kategorie */
+  const chartCategoryArray = createCategoryArray(data);
+
   const chartData = [
     {
       name: "Seoul",
@@ -137,7 +133,7 @@ export default function Analysis(props) {
         <Hr />
 
         <Text style={styles.chartDescription}>Übersicht der Ausgaben</Text>
-        <LineChart
+        {/*         <LineChart
           data={{
             labels: chartMonthArray.labels,
             datasets: [{ data: chartMonthArray.values }],
@@ -150,7 +146,7 @@ export default function Analysis(props) {
           chartConfig={chartConfig2}
           style={styles.chartSelf}
           bezier
-        />
+        /> */}
 
         <Hr />
 
@@ -158,11 +154,13 @@ export default function Analysis(props) {
           Übersicht der Kategorien (TODO)
         </Text>
         <PieChart
-          data={chartData}
+          //data={chartData}
+          data={chartCategoryArray}
+          //accessor={"population"}
+          accessor={"value"}
           width={chartWidth}
           height={chartHeight}
           chartConfig={chartConfig2}
-          accessor={"population"}
         />
         <Text>Ausgaben pro Geschäft</Text>
         <Text>Komponente kommt hier</Text>
@@ -245,6 +243,101 @@ function createMonthArray(startDate, endDate, data) {
     months -= d1.getMonth();
     months += d2.getMonth();
     return months <= 0 ? 0 : months + 1;
+  }
+}
+
+function createCategoryArray(data) {
+  const returnArray = [];
+
+  data.forEach((element) => {
+    let val = 0;
+    for (let index = 0; index < data.length; index++) {
+      if (data[index].category === element.category) {
+        const elVal = parseFloat(data[index].amount);
+        val += elVal;
+      }
+    }
+    returnArray.push({
+      name: element.category,
+      value: val,
+      color: "red",
+      legendFontColor: "red",
+      legendFontSize: 15,
+    });
+  });
+
+  /* Add Color */
+  const colorArray = generateColor(
+    colorDefinitions.light.pink,
+    colorDefinitions.light.blue,
+    returnArray.length
+  );
+  for (let index = 0; index < returnArray.length; index++) {
+    returnArray[index].color = "#" + colorArray[index];
+    if (returnArray[index].value < 0) {
+      returnArray[index].value = returnArray[index].value * -1;
+    } else {
+      returnArray.splice(index, 1);
+    }
+  }
+
+  console.log(returnArray);
+  return returnArray;
+
+  function hex(c) {
+    let s = "0123456789abcdef";
+    let i = parseInt(c);
+    if (i == 0 || isNaN(c)) return "00";
+    i = Math.round(Math.min(Math.max(0, i), 255));
+    return s.charAt((i - (i % 16)) / 16) + s.charAt(i % 16);
+  }
+
+  /* Convert an RGB triplet to a hex string */
+  function convertToHex(rgb) {
+    return hex(rgb[0]) + hex(rgb[1]) + hex(rgb[2]);
+  }
+
+  /* Remove '#' in color hex string */
+  function trim(s) {
+    return s.charAt(0) == "#" ? s.substring(1, 7) : s;
+  }
+
+  /* Convert a hex string to an RGB triplet */
+  function convertToRGB(hex) {
+    let color = [];
+    color[0] = parseInt(trim(hex).substring(0, 2), 16);
+    color[1] = parseInt(trim(hex).substring(2, 4), 16);
+    color[2] = parseInt(trim(hex).substring(4, 6), 16);
+    return color;
+  }
+
+  function generateColor(colorStart, colorEnd, colorCount) {
+    // The beginning of your gradient
+    let start = convertToRGB(colorStart);
+
+    // The end of your gradient
+    let end = convertToRGB(colorEnd);
+
+    // The number of colors to compute
+    let len = colorCount;
+
+    //Alpha blending amount
+    let alpha = 0.0;
+
+    let saida = [];
+
+    for (let i = 0; i < len; i++) {
+      let c = [];
+      alpha += 1.0 / len;
+
+      c[0] = start[0] * alpha + (1 - alpha) * end[0];
+      c[1] = start[1] * alpha + (1 - alpha) * end[1];
+      c[2] = start[2] * alpha + (1 - alpha) * end[2];
+
+      saida.push(convertToHex(c));
+    }
+
+    return saida;
   }
 }
 
