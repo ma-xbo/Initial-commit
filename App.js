@@ -6,7 +6,7 @@ import OverviewList from "./screens/Overview";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
 import Optimization from "./screens/Optimization";
-import FinanceAnalysis from "./screens/Analysis";
+import Analysis from "./screens/Analysis";
 
 const colorDefinitions = require("./assets/colorDefinition.json");
 
@@ -60,7 +60,7 @@ export default function App() {
         <Tab.Screen name="Übersicht" component={OverviewList} />
         <Tab.Screen name="Kategorien" component={Optimization} />
         <Tab.Screen name="Hinzufügen" component={NewEntry} />
-        <Tab.Screen name="Analyse" component={FinanceAnalysis} />
+        <Tab.Screen name="Analyse" component={Analysis} />
         <Tab.Screen name="Einstellungen" component={Settings} />
       </Tab.Navigator>
     </NavigationContainer>
