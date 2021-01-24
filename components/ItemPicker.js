@@ -39,36 +39,45 @@ export default function ItemPicker(props) {
       >
         <BlurView
           intensity={100}
+          tint="dark"
           style={[
             StyleSheet.absoluteFill,
             {
               alignItems: "center",
               justifyContent: "center",
+              opacity: 1,
             },
           ]}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>{title}</Text>
-              <Picker
-                selectedValue={selectedCategory}
-                style={{ height: 50, width: 200, marginBottom: 150 }}
-                onValueChange={(itemValue, itemIndex) => {
-                  setSelectedCategory(itemValue);
-                  setSelectedIndex(itemIndex);
-                }}
-              >
-                {selectableItems.map((cat, index) => (
-                  <Picker.Item
-                    key={index}
-                    label={cat.label}
-                    value={cat.value}
+          <Pressable onPress={() => setShowCategoryPicker(false)}>
+            <View style={styles.centeredView}>
+              <Pressable>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>{title}</Text>
+                  <Picker
+                    selectedValue={selectedCategory}
+                    style={{ height: 50, width: 200, marginBottom: 150 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setSelectedCategory(itemValue);
+                      setSelectedIndex(itemIndex);
+                    }}
+                  >
+                    {selectableItems.map((cat, index) => (
+                      <Picker.Item
+                        key={index}
+                        label={cat.label}
+                        value={cat.value}
+                      />
+                    ))}
+                  </Picker>
+                  <Button
+                    title="Auswahl bestätigen"
+                    onPress={() => closeModal()}
                   />
-                ))}
-              </Picker>
-              <Button title="Auswahl bestätigen" onPress={() => closeModal()} />
+                </View>
+              </Pressable>
             </View>
-          </View>
+          </Pressable>
         </BlurView>
       </Modal>
     </View>

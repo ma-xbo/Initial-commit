@@ -1,11 +1,10 @@
 import React from "react";
-import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Overview_List from "./Overview_List";
-import Overview_Details from "./Overview_Details";
+import Subscriptions_List from "./Subscriptions_List";
+import Subscriptions_Details from "./Subscriptions_Details";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function OverviewList() {
+export default function Subscriptions() {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator
@@ -18,15 +17,15 @@ export default function OverviewList() {
       }}
     >
       <Stack.Screen
-        name="Übersicht"
-        component={Overview_List}
+        name="Abos"
+        component={Subscriptions_List}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Details" component={Overview_Details} />
+      <Stack.Screen
+        name="Details"
+        component={Subscriptions_Details}
+        options={{ headerShown: true }}
+      />
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  dummy: {},
-});

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import SegmentedControl from "@react-native-community/segmented-control";
-import AppSafeAreaView from "./AppSafeAreaView";
-import SwipeableActionItem from "./SwipeableActionItem";
-import OverviewList_ExpenseItem from "./OverviewList_ExpenseItem";
+import AppSafeAreaView from "../components/AppSafeAreaView";
+import SwipeableActionItem from "../components/SwipeableActionItem";
+import OverviewList_ExpenseItem from "../components/OverviewExpenseItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
 const dummyData = require("../assets/dummyData.json");
 

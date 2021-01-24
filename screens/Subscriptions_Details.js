@@ -1,26 +1,25 @@
 import React, { useState, useLayoutEffect } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import PaymentMethodIcon from "./PaymentMethodIcon";
-import PaymentAmountText from "./PaymentAmountText";
-import { OverflowMenuContainer, OverflowMenuItem } from "./OverflowMenu";
-import Hr from "./HorizontalRule";
+import PaymentMethodIcon from "../components/PaymentMethodIcon";
+import PaymentAmountText from "../components/PaymentAmountText";
+import {
+  OverflowMenuContainer,
+  OverflowMenuItem,
+} from "../components/OverflowMenu";
+import Hr from "../components/HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function Overview_Details(props) {
+export default function Subscriptions_Details(props) {
   const route = props.route;
   const navigation = props.navigation;
   const item = JSON.parse(route.params.itemObject);
+
   const [displayHeaderMenu, setDisplayHeaderMenu] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      title: "Abo Details",
       headerRight: () => (
         <Pressable
           onPress={() => setDisplayHeaderMenu(!displayHeaderMenu)}
@@ -62,35 +61,9 @@ export default function Overview_Details(props) {
             <CardItem title="Titel" text={item.title} />
             <Hr />
             <CardItem title="Beschreibung" text={item.description} />
-            <View
-              style={{
-                marginVertical: 30,
-                borderRadius: 10,
-              }}
-            >
-              <View
-                style={{
-                  alignSelf: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 250,
-                  width: 250,
-                  marginHorizontal: 4,
-                  padding: 20,
-                  borderRadius: 200,
-                  backgroundColor: amountBackColor,
-                  shadowColor: colorDefinitions.light.gray,
-                  shadowOpacity: 0.5,
-                  shadowRadius: 20,
-                  opacity: 0.9,
-                }}
-              >
-                <Text style={{ fontSize: 30, color: "white" }}>
-                  {item.amount}
-                  {item.currency}
-                </Text>
-              </View>
-            </View>
+            <Hr />
+            <CardItem title="Datum" text={item.amount + " " + item.currency} />
+            <Hr />
             <CardItem title="Bezahlmethode">
               <View style={{ flexDirection: "row" }}>
                 <PaymentMethodIcon paymentMethod={item.paymentMethod} />
@@ -101,42 +74,14 @@ export default function Overview_Details(props) {
             <CardItem title="Datum" text={dateText} />
           </View>
         </Pressable>
-
-        <View style={styles.bottomContainer}>
-          <View style={styles.buttonContainer}>
-            <Pressable
-              style={[
-                styles.controlButton,
-                { backgroundColor: colorDefinitions.light.blue },
-              ]}
-              onPress={onPressEdit}
-            >
-              <Ionicons
-                name="construct"
-                size={22}
-                color={colorDefinitions.light.white}
-              />
-              <Text style={styles.controlButtonText}>Edit</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.controlButton,
-                { backgroundColor: colorDefinitions.light.red },
-              ]}
-              onPress={onPressDelete}
-            >
-              <Ionicons
-                name="trash"
-                size={22}
-                color={colorDefinitions.light.white}
-              />
-              <Text style={styles.controlButtonText}>Delete</Text>
-            </Pressable>
-          </View>
-        </View>
       </ScrollView>
+
       {displayHeaderMenu && (
-        <OverflowMenuContainer menuType="topRight" closeAction={() => setDisplayHeaderMenu(false)} bottom>
+        <OverflowMenuContainer
+          menuType="topRight"
+          closeAction={() => setDisplayHeaderMenu(false)}
+          bottom
+        >
           <OverflowMenuItem text="Edit" action={onPressEdit} />
           <Hr />
           <OverflowMenuItem text="Delete" action={onPressDelete} />

@@ -12,21 +12,21 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import AppSafeAreaView from "../components/AppSafeAreaView";
-import NumberInput from "../components/NumberInput";
+import MoneyInput from "../components/MoneyInput";
 import ItemPicker from "../components/ItemPicker";
 import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function NewEntry() {
-  const [displayOptional, setDisplayOptional] = useState(true); //isExpense
+  const [displayOptional, setDisplayOptional] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [store, setStore] = useState(""); //Geschäft
   const [isSubscription, setIsSubscription] = useState(false); //subscription
   const [subscriptionType, setSubscriptionType] = useState(""); //subscriptionType
   const [isExpense, setIsExpense] = useState(true); //isExpense
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(0.0);
   const [date, setDate] = useState(new Date());
   const [currency, setCurrency] = useState("euro");
   const [paymentMethod, setPaymentMethod] = useState(
@@ -46,7 +46,7 @@ export default function NewEntry() {
     //reset inputs
     setTitle("");
     setDescription("");
-    setAmount(0);
+    setAmount(0.0);
     setDate(new Date());
     setCategory(selectableCategories[0].value);
   };
@@ -103,15 +103,12 @@ export default function NewEntry() {
                   width: "100%",
                 }}
               >
-                <NumberInput
+                <MoneyInput
+                  containerStyle={{ width: "50%" }}
                   placeholderText="Betrag"
                   isNegativ={isExpense}
+                  value={amount}
                   onChangeValue={(val) => setAmount(val)}
-                />
-                <CurrencyDropdown
-                  defaultValue={currency}
-                  disabled={true}
-                  onChangeValue={(val) => setCurrency(val)}
                 />
               </View>
             </View>
