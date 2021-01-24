@@ -7,9 +7,9 @@ import OverviewList from "./screens/Overview";
 import Subscriptions from "./screens/Subscriptions";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
-import Login from "./screens/Login";
-import SignUp from "./screens/SignUp";
-import FinanceAnalysis from "./screens/Analysis";
+import Optimization from "./screens/Optimization";
+import Analysis from "./screens/Analysis";
+
 
 const colorDefinitions = require("./assets/colorDefinition.json");
 
@@ -96,7 +96,7 @@ function MainNav() {
         <Tab.Screen name="Übersicht" component={OverviewList} />
         <Tab.Screen name="Abos" component={Subscriptions} />
         <Tab.Screen name="Hinzufügen" component={NewEntry} />
-        <Tab.Screen name="Analyse" component={FinanceAnalysis} />
+        <Tab.Screen name="Analyse" component={Analysis} />
         <Tab.Screen name="Einstellungen" component={Settings} />
       </Tab.Navigator>
   );
