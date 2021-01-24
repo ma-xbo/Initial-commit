@@ -36,23 +36,11 @@ export default function Analysis(props) {
     Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1;
 
   /* Ausgaben pro Tag */
-  const valueDateArray = createDateArray(dataStartDate, diffDays);
-
-  valueDateArray.forEach((element) => {
-    let value = element.value;
-    for (let index = 0; index < data.length; index++) {
-      if (data[index].date.toDateString() === element.date.toDateString()) {
-        value = value + data[index].amount;
-      }
-    }
-    element.count = value;
-  });
+  const valueDateArray = createDateArray(data);
   /* Ausgaben pro Tag Ende */
 
   /* Ausgaben pro Monat */
-  const chartMonthArray = createMonthArray(dataStartDate, dataEndDate, data);
-  console.log("chartMonthArray");
-  console.log(chartMonthArray);
+  const chartMonthArray = createMonthArray(data);
   /* Ausgaben pro Monat Ende */
 
   /* Ausgaben pro Kategorie */
@@ -112,15 +100,14 @@ export default function Analysis(props) {
 
         <Hr />
 
-        <Text style={styles.chartDescription}>
-          Übersicht der Kategorien
-        </Text>
+        <Text style={styles.chartDescription}>Übersicht der Kategorien</Text>
         <PieChart
           data={chartCategoryArray}
           accessor={"value"}
           width={chartWidth}
           height={chartHeight}
           chartConfig={chartConfig2}
+          style={styles.chartSelf}
         />
         <Text>Ausgaben pro Geschäft</Text>
         <Text>Komponente kommt hier</Text>
@@ -129,7 +116,12 @@ export default function Analysis(props) {
   );
 }
 
-function createDateArray(startDate, days) {
+function createDateArray(data) {
+  const startDate = new Date(Math.min(...data.map((el) => el.date)));
+  const endDate = new Date(Math.max(...data.map((el) => el.date)));
+  const days =
+    Math.round(Math.abs((endDate - startDate) / (24 * 60 * 60 * 1000))) + 1;
+
   const array = [];
   for (let index = 0; index < days; index++) {
     array.push({
@@ -137,6 +129,17 @@ function createDateArray(startDate, days) {
       value: 0,
     });
   }
+
+  array.forEach((element) => {
+    let value = element.value;
+    for (let index = 0; index < data.length; index++) {
+      if (data[index].date.toDateString() === element.date.toDateString()) {
+        value = value + data[index].amount;
+      }
+    }
+    element.count = value;
+  });
+
   return array;
 
   function addDays(date, days) {
@@ -146,7 +149,9 @@ function createDateArray(startDate, days) {
   }
 }
 
-function createMonthArray(startDate, endDate, data) {
+function createMonthArray(data) {
+  const startDate = new Date(Math.min(...data.map((el) => el.date)));
+  const endDate = new Date(Math.max(...data.map((el) => el.date)));
   const months = monthDiff(startDate, endDate);
   const monthNames = [
     "Jan",
