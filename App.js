@@ -7,8 +7,9 @@ import OverviewList from "./screens/Overview";
 import Subscriptions from "./screens/Subscriptions";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
-import Optimization from "./screens/Optimization";
 import Analysis from "./screens/Analysis";
+import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
 
 
 const colorDefinitions = require("./assets/colorDefinition.json");
@@ -52,7 +53,6 @@ function MainNav() {
 
   return (
       <Tab.Navigator
-        //Vorbereitung für die verwendung von Icons --> Library muss noch ausgesucht und installiert werden
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -83,7 +83,6 @@ function MainNav() {
                 break;
             }
 
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
