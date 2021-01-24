@@ -37,46 +37,28 @@ export default function Analysis(props) {
   const chartHeight = 250;
 
   const dataStartDate = new Date(
-    Math.max(...dummyData.map((e) => new Date(e.date)))
+    Math.min(...dummyData.map((e) => new Date(e.date)))
   );
   const dataEndDate = new Date(
-    Math.min(...dummyData.map((e) => new Date(e.date)))
+    Math.max(...dummyData.map((e) => new Date(e.date)))
   );
   const msOneDay = 24 * 60 * 60 * 1000;
   const diffDays =
     Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1;
 
   /* Temp */
+  const valueDateArray = createDateArray(dataStartDate, diffDays);
 
-  const dataArray = [];
-  data.forEach((element) => {
-    let value = 0;
+  valueDateArray.forEach((element) => {
+    let value = element.value;
     for (let index = 0; index < data.length; index++) {
       if (data[index].date.toDateString() === element.date.toDateString()) {
-        console.log("same date detected");
-        console.log(data[index].date.toDateString());
         value = value + data[index].amount;
       }
     }
-
-    dataArray.push({ date: element.date.toDateString(), value: value });
+    element.count = value;
   });
-
   /* Temp End */
-
-  const commitsData = [
-    { date: "2017-01-02", count: 1 },
-    { date: "2017-01-03", count: 2 },
-    { date: "2017-01-04", count: 3 },
-    { date: "2017-01-05", count: 4 },
-    { date: "2017-01-06", count: 5 },
-    { date: "2017-01-30", count: 2 },
-    { date: "2017-01-31", count: 3 },
-    { date: "2017-03-01", count: 2 },
-    { date: "2017-04-02", count: 4 },
-    { date: "2017-03-05", count: 2 },
-    { date: "2017-02-30", count: 4 },
-  ];
 
   const chartData = [
     {
@@ -133,13 +115,11 @@ export default function Analysis(props) {
   return (
     <AppSafeAreaView title="Analyse">
       <ScrollView style={styles.container}>
-        <Text style={styles.chartDescription}>
-          Übersicht der Ausgaben (TODO)
-        </Text>
+        <Text style={styles.chartDescription}>Übersicht der Ausgaben pro Tag</Text>
         <ContributionGraph
-          values={commitsData}
-          endDate={new Date("2017-04-01")}
-          numDays={105}
+          values={valueDateArray}
+          endDate={dataEndDate}
+          numDays={diffDays}
           width={chartWidth}
           height={chartHeight}
           chartConfig={chartConfig2}
@@ -194,6 +174,23 @@ export default function Analysis(props) {
       </ScrollView>
     </AppSafeAreaView>
   );
+}
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function createDateArray(startDate, days) {
+  const array = [];
+  for (let index = 0; index < days; index++) {
+    array.push({
+      date: addDays(startDate, index),
+      value: 0,
+    });
+  }
+  return array;
 }
 
 const styles = StyleSheet.create({
