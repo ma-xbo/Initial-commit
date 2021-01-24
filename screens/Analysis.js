@@ -16,20 +16,7 @@ const dummyData = require("../assets/dummyData.json");
 
 export default function Analysis(props) {
   const [data, setData] = useState([]);
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+
   useEffect(() => {
     const dataArray = dummyData.map((item) => {
       let rObj = { ...item };
@@ -71,36 +58,7 @@ export default function Analysis(props) {
   /* Ausgaben pro Tag Ende */
 
   /* Ausgaben pro Monat */
-  const valueMonthArray = createMonthArray(dataStartDate, dataEndDate);
-
-  valueMonthArray.forEach((element) => {
-    element.date = new Date(element.date);
-    let value = element.value;
-    for (let index = 0; index < data.length; index++) {
-      if (
-        data[index].date.getUTCMonth() === element.date.getUTCMonth() &&
-        data[index].date.getUTCFullYear() === element.date.getUTCFullYear()
-      ) {
-        value = value + data[index].amount;
-      }
-    }
-    element.count = value;
-    element.label =
-      monthNames[element.date.getUTCMonth()] +
-      " " +
-      element.date.getUTCFullYear().toString();
-  });
-
-  // umwandlung in extra object mit folgendem Format
-/* 
-
-chartData:{
-  labels:[]
-  values:[]
-}
-*/
-  console.log(valueMonthArray);
-
+  const chartMonthArray = createMonthArray(dataStartDate, dataEndDate, data);
   /* Ausgaben pro Monat Ende */
 
   /* Ausgaben pro Kategorie */
@@ -178,36 +136,24 @@ chartData:{
 
         <Hr />
 
-        <Text style={styles.chartDescription}>
-          Übersicht der Ausgaben (TODO)
-        </Text>
+        <Text style={styles.chartDescription}>Übersicht der Ausgaben</Text>
         <LineChart
           data={{
-            labels: ["January", "February", "March", "April", "May", "June"],
-            datasets: [
-              {
-                data: [
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                ],
-              },
-            ],
+            labels: chartMonthArray.labels,
+            datasets: [{ data: chartMonthArray.values }],
           }}
           width={chartWidth} // from react-native
           height={chartHeight}
-          yAxisLabel="$"
-          yAxisSuffix="k"
-          yAxisInterval={1} // optional, defaults to 1
+          yAxisLabel=""
+          yAxisSuffix="€"
+          yAxisInterval={10} // optional, defaults to 1
           chartConfig={chartConfig2}
           style={styles.chartSelf}
           bezier
         />
 
         <Hr />
+
         <Text style={styles.chartDescription}>
           Übersicht der Kategorien (TODO)
         </Text>
@@ -242,16 +188,51 @@ function createDateArray(startDate, days) {
   }
 }
 
-function createMonthArray(startDate, endDate) {
+function createMonthArray(startDate, endDate, data) {
   const months = monthDiff(startDate, endDate);
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const array = [];
+  const returnArray = { labels: [], values: [] };
+
   for (let index = 0; index < months; index++) {
     array.push({
       date: addMonths(startDate, index),
       value: 0,
     });
   }
-  return array;
+
+  array.forEach((element) => {
+    const date = new Date(element.date);
+    let value = 0;
+    for (let index = 0; index < data.length; index++) {
+      if (
+        data[index].date.getUTCMonth() === date.getUTCMonth() &&
+        data[index].date.getUTCFullYear() === date.getUTCFullYear()
+      ) {
+        value = value + data[index].amount;
+      }
+    }
+
+    returnArray.labels.push(
+      monthNames[date.getUTCMonth()] + " " + date.getUTCFullYear().toString()
+    );
+    returnArray.values.push(value);
+  });
+
+  return returnArray;
 
   function addMonths(date, months) {
     let result = new Date(date);
