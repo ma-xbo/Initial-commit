@@ -16,7 +16,20 @@ const dummyData = require("../assets/dummyData.json");
 
 export default function Analysis(props) {
   const [data, setData] = useState([]);
-
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   useEffect(() => {
     const dataArray = dummyData.map((item) => {
       let rObj = { ...item };
@@ -33,9 +46,6 @@ export default function Analysis(props) {
     setData(dataArray);
   }, []);
 
-  const chartWidth = Dimensions.get("window").width * 0.95;
-  const chartHeight = 250;
-
   const dataStartDate = new Date(
     Math.min(...dummyData.map((e) => new Date(e.date)))
   );
@@ -46,7 +56,7 @@ export default function Analysis(props) {
   const diffDays =
     Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1;
 
-  /* Temp */
+  /* Ausgaben pro Tag */
   const valueDateArray = createDateArray(dataStartDate, diffDays);
 
   valueDateArray.forEach((element) => {
@@ -58,8 +68,42 @@ export default function Analysis(props) {
     }
     element.count = value;
   });
-  /* Temp End */
+  /* Ausgaben pro Tag Ende */
 
+  /* Ausgaben pro Monat */
+  const valueMonthArray = createMonthArray(dataStartDate, dataEndDate);
+
+  valueMonthArray.forEach((element) => {
+    element.date = new Date(element.date);
+    let value = element.value;
+    for (let index = 0; index < data.length; index++) {
+      if (
+        data[index].date.getUTCMonth() === element.date.getUTCMonth() &&
+        data[index].date.getUTCFullYear() === element.date.getUTCFullYear()
+      ) {
+        value = value + data[index].amount;
+      }
+    }
+    element.count = value;
+    element.label =
+      monthNames[element.date.getUTCMonth()] +
+      " " +
+      element.date.getUTCFullYear().toString();
+  });
+
+  // umwandlung in extra object mit folgendem Format
+/* 
+
+chartData:{
+  labels:[]
+  values:[]
+}
+*/
+  console.log(valueMonthArray);
+
+  /* Ausgaben pro Monat Ende */
+
+  /* Ausgaben pro Kategorie */
   const chartData = [
     {
       name: "Seoul",
@@ -97,6 +141,10 @@ export default function Analysis(props) {
       legendFontSize: 15,
     },
   ];
+  /* Ausgaben pro Kategorie Ende */
+
+  const chartWidth = Dimensions.get("window").width * 0.95;
+  const chartHeight = 250;
 
   const chartConfig2 = {
     backgroundColor: "#e26a00",
@@ -115,7 +163,9 @@ export default function Analysis(props) {
   return (
     <AppSafeAreaView title="Analyse">
       <ScrollView style={styles.container}>
-        <Text style={styles.chartDescription}>Übersicht der Ausgaben pro Tag</Text>
+        <Text style={styles.chartDescription}>
+          Übersicht der Ausgaben pro Tag
+        </Text>
         <ContributionGraph
           values={valueDateArray}
           endDate={dataEndDate}
@@ -168,18 +218,11 @@ export default function Analysis(props) {
           chartConfig={chartConfig2}
           accessor={"population"}
         />
-        <Text>Komponente kommt hier</Text>
         <Text>Ausgaben pro Geschäft</Text>
         <Text>Komponente kommt hier</Text>
       </ScrollView>
     </AppSafeAreaView>
   );
-}
-
-function addDays(date, days) {
-  var result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
 }
 
 function createDateArray(startDate, days) {
@@ -191,6 +234,37 @@ function createDateArray(startDate, days) {
     });
   }
   return array;
+
+  function addDays(date, days) {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+}
+
+function createMonthArray(startDate, endDate) {
+  const months = monthDiff(startDate, endDate);
+  const array = [];
+  for (let index = 0; index < months; index++) {
+    array.push({
+      date: addMonths(startDate, index),
+      value: 0,
+    });
+  }
+  return array;
+
+  function addMonths(date, months) {
+    let result = new Date(date);
+    result.setMonth(result.getMonth() + months);
+    return result;
+  }
+
+  function monthDiff(d1, d2) {
+    let months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months + 1;
+  }
 }
 
 const styles = StyleSheet.create({
