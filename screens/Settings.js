@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, FlatList, Text, StyleSheet, Pressable } from "react-native";
+import {
+  Button,
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -13,7 +20,6 @@ export default function Settings(props) {
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
-        <Text>Definition der Kategorien</Text>
         <Pressable
           onPress={() => setDisplayOptional(!displayOptional)}
           style={[
@@ -26,10 +32,16 @@ export default function Settings(props) {
               marginHorizontal: 5,
               borderTopEndRadius: 10,
               borderTopStartRadius: 10,
+              shadowColor: "#000",
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
             },
             !displayOptional && {
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
+              shadowColor: "#000",
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
             },
           ]}
         >
@@ -59,7 +71,7 @@ export default function Settings(props) {
         {displayOptional && (
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: "column",
               justifyContent: "space-between",
               backgroundColor: colorDefinitions.light.gray3,
               padding: 10,
@@ -68,6 +80,7 @@ export default function Settings(props) {
               borderBottomRightRadius: 10,
             }}
           >
+            <Button title="Kategorie hinzufügen" />
             <FlatList
               data={categoriesArray}
               keyExtractor={(item) => item.id}
@@ -93,12 +106,21 @@ function CategoryListItem(props) {
   return (
     <View
       style={{
-        padding: 5,
-        borderBottomWidth: 0.2,
-        borderTopWidth: 0.2,
+        backgroundColor: colorDefinitions.light.gray4,
+        borderRadius: 4,
+        paddingHorizontal: 5,
+        paddingVertical: 8,
+        margin: 1,
       }}
     >
-      <Text>{name}</Text>
+      <Text
+        style={{
+          fontSize: 16,
+          color: colorDefinitions.light.black,
+        }}
+      >
+        {name}
+      </Text>
     </View>
   );
 }
@@ -111,24 +133,19 @@ const styles = StyleSheet.create({
   logoutButton: {
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
+    alignSelf: "center",
+    width: "90%",
+    borderRadius: 10,
+    backgroundColor: colorDefinitions.light.red,
+    opacity: 0.85,
     padding: 10,
     marginVertical: 10,
-    backgroundColor: colorDefinitions.light.gray6,
-    borderTopColor: colorDefinitions.light.black,
-    borderBottomColor: colorDefinitions.light.black,
-    borderTopWidth: 0.2,
-    borderBottomWidth: 0.2,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
   },
   logoutText: {
     fontSize: 18,
-    color: colorDefinitions.light.red,
+    color: colorDefinitions.light.white,
   },
 });
