@@ -8,8 +8,10 @@ import {
   Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import CategoryListItem from "../components/CategoryListItem";
+import SwipeableActionItem from "../components/SwipeableActionItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
 const dummyProfile = require("../assets/dummyProfile.json");
 
@@ -17,6 +19,25 @@ export default function Settings(props) {
   const navigation = props.navigation;
   const [displayOptional, setDisplayOptional] = useState(true);
   const categoriesArray = dummyProfile.categories;
+
+  const renderRightActions = (progress, itemId) => (
+    <View
+      style={{
+        flexDirection: "row",
+        width: 64,
+      }}
+    >
+      <SwipeableActionItem
+        text="Delete"
+        color={colorDefinitions.light.red}
+        x={64}
+        progress={progress}
+        onPress={() => {
+          alert("text");
+        }}
+      />
+    </View>
+  );
 
   return (
     <AppSafeAreaView title="Einstellungen">
@@ -85,7 +106,11 @@ export default function Settings(props) {
             <FlatList
               data={categoriesArray}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <CategoryListItem name={item} />}
+              renderItem={({ item }) => (
+                <Swipeable renderRightActions={renderRightActions}>
+                  <CategoryListItem name={item} />
+                </Swipeable>
+              )}
             />
           </View>
         )}
