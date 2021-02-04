@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+import CategoryListItem from "../components/CategoryListItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
 const dummyProfile = require("../assets/dummyProfile.json");
 
@@ -97,31 +98,6 @@ export default function Settings(props) {
         </Pressable>
       </View>
     </AppSafeAreaView>
-  );
-}
-
-function CategoryListItem(props) {
-  const { name } = props;
-
-  return (
-    <View
-      style={{
-        backgroundColor: colorDefinitions.light.gray4,
-        borderRadius: 4,
-        paddingHorizontal: 5,
-        paddingVertical: 8,
-        margin: 1,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 16,
-          color: colorDefinitions.light.black,
-        }}
-      >
-        {name}
-      </Text>
-    </View>
   );
 }
 
