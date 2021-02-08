@@ -20,6 +20,10 @@ export default function Settings(props) {
   const [displayOptional, setDisplayOptional] = useState(true);
   const categoriesArray = dummyProfile.categories;
 
+  const addCategory = () => {
+    alert("Add category");
+  };
+
   const renderRightActions = (progress, itemId) => (
     <View
       style={{
@@ -102,15 +106,20 @@ export default function Settings(props) {
               borderBottomRightRadius: 10,
             }}
           >
-            <Button title="Kategorie hinzufügen" />
             <FlatList
               data={categoriesArray}
+              style={{ height: 200 }}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <Swipeable renderRightActions={renderRightActions}>
                   <CategoryListItem name={item} />
                 </Swipeable>
               )}
+            />
+            <Button
+              title="Kategorie hinzufügen"
+              onPress={addCategory}
+              style={styles.addCategoryButton}
             />
           </View>
         )}
@@ -130,6 +139,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+  },
+  addCategoryButton: {
+    marginTop: 5,
   },
   logoutButton: {
     justifyContent: "center",
