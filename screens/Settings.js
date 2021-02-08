@@ -1,15 +1,129 @@
-import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useState } from "react";
+import {
+  Button,
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  Pressable,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+import CategoryListItem from "../components/CategoryListItem";
+import SwipeableActionItem from "../components/SwipeableActionItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
+const dummyProfile = require("../assets/dummyProfile.json");
 
 export default function Settings(props) {
   const navigation = props.navigation;
+  const [displayOptional, setDisplayOptional] = useState(true);
+  const categoriesArray = dummyProfile.categories;
+
+  const addCategory = () => {
+    alert("Add category");
+  };
+
+  const renderRightActions = (progress, itemId) => (
+    <View
+      style={{
+        flexDirection: "row",
+        width: 64,
+      }}
+    >
+      <SwipeableActionItem
+        text="Delete"
+        color={colorDefinitions.light.red}
+        x={64}
+        progress={progress}
+        onPress={() => {
+          alert("text");
+        }}
+      />
+    </View>
+  );
 
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
-        <Text>Hello from Settings</Text>
+        <Pressable
+          onPress={() => setDisplayOptional(!displayOptional)}
+          style={[
+            {
+              flexDirection: "row",
+              justifyContent: "space-between",
+              backgroundColor: colorDefinitions.light.gray2,
+              padding: 10,
+              marginTop: 20,
+              marginHorizontal: 5,
+              borderTopEndRadius: 10,
+              borderTopStartRadius: 10,
+              shadowColor: "#000",
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+            },
+            !displayOptional && {
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+              shadowColor: "#000",
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+            },
+          ]}
+        >
+          <Text
+            style={{
+              color: colorDefinitions.light.white,
+              fontSize: 20,
+            }}
+          >
+            Kategorien
+          </Text>
+          {!displayOptional && (
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={colorDefinitions.light.white}
+            />
+          )}
+          {displayOptional && (
+            <Ionicons
+              name="arrow-down"
+              size={24}
+              color={colorDefinitions.light.white}
+            />
+          )}
+        </Pressable>
+        {displayOptional && (
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-between",
+              backgroundColor: colorDefinitions.light.gray3,
+              padding: 10,
+              marginHorizontal: 5,
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+            }}
+          >
+            <FlatList
+              data={categoriesArray}
+              style={{ height: 200 }}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <Swipeable renderRightActions={renderRightActions}>
+                  <CategoryListItem name={item} />
+                </Swipeable>
+              )}
+            />
+            <Button
+              title="Kategorie hinzufügen"
+              onPress={addCategory}
+              style={styles.addCategoryButton}
+            />
+          </View>
+        )}
+
         <Pressable
           style={styles.logoutButton}
           onPress={() => navigation.navigate("Login")}
@@ -26,27 +140,25 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
+  addCategoryButton: {
+    marginTop: 5,
+  },
   logoutButton: {
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
+    alignSelf: "center",
+    width: "90%",
+    borderRadius: 10,
+    backgroundColor: colorDefinitions.light.red,
+    opacity: 0.85,
     padding: 10,
     marginVertical: 10,
-    backgroundColor: colorDefinitions.light.gray6,
-    borderTopColor: colorDefinitions.light.black,
-    borderBottomColor: colorDefinitions.light.black,
-    borderTopWidth: 0.2,
-    borderBottomWidth: 0.2,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
   },
   logoutText: {
     fontSize: 18,
-    color: colorDefinitions.light.red,
+    color: colorDefinitions.light.white,
   },
 });

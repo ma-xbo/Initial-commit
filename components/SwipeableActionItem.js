@@ -1,6 +1,7 @@
 import React from "react";
 import { Animated, StyleSheet, Text } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
+const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function SwipeableActionItem(props) {
   const { text, color, x, progress, onPress } = props;
@@ -34,5 +35,6 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     alignSelf: "center",
+    color: colorDefinitions.light.white,
   },
 });
