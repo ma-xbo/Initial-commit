@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   View,
@@ -7,20 +7,52 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
+import firebase from "../Firebase";
+import "firebase/auth";
 
 export default function Login(props) {
   const navigation = props.navigation;
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navMainView = () => {
-    navigation.navigate("MainNav", {});
+  const _signIn = async () => {
+    try {
+      let response = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+      if (response && response.user) {
+        alert("Login erfolgreich", "Willkommen zurück");
+        console.log(response.user.uid);
+        navigation.navigate("MainNav", {});
+      }
+    } catch (e) {
+      switch (e) {
+        case "Error: The password is invalid or the user does not have a password.":
+          alert(
+            "Fehler",
+            "Die eingegebene Kombination aus E-Mail und Passwort ist falsch. Bitte versuchen Sie er erneut."
+          );
+          break;
+        case "[Error: The email address is badly formatted.]":
+          alert(
+            "Fehler",
+            "Die eingegebene Kombination aus E-Mail und Passwort ist falsch. Bitte versuchen Sie er erneut."
+          );
+
+          break;
+
+        default:
+          break;
+      }
+      setEmail("");
+      setPassword("");
+    }
   };
 
-  const navSignUp = () => {
+  const _navSignUp = () => {
     navigation.navigate("SignUp", {});
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <Text>Willkommen</Text>
@@ -29,8 +61,8 @@ export default function Login(props) {
         <TextInput
           placeholder="Benutzername"
           style={styles.inputStyle}
-          value={username}
-          onChangeText={setUsername}
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           placeholder="Passwort"
@@ -39,8 +71,8 @@ export default function Login(props) {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Button title="Sign in" onPress={navMainView} />
-        <Button title="Registrieren" onPress={navSignUp} />
+        <Button title="Sign in" onPress={_signIn} />
+        <Button title="Registrieren" onPress={_navSignUp} />
       </View>
     </SafeAreaView>
   );

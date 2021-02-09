@@ -7,25 +7,55 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
+import firebase from "../Firebase";
+import "firebase/auth";
 
 export default function SignUp(props) {
   const navigation = props.navigation;
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVeri, setPasswordVeri] = useState("");
+  const [error, setError] = useState();
 
-  const navLogin = () => {
+  const _signUp = () => {
+    if (!email) {
+      setError("Bitte geben Sie eine E-Mail Adresse ein");
+      return;
+    } else if (!password && password.trim() && password.length > 6) {
+      setError("Weak password, minimum 5 chars");
+      return;
+    } else if (password !== passwordVeri) {
+      setError(
+        "Die eingegebenen Passwörter stimmen nicht miteinander überein!"
+      );
+      return;
+    }
+
+    _createUser(email, password);
     navigation.navigate("Login", {});
+  };
+
+  const _createUser = async (email, password) => {
+    try {
+      let response = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
+      if (response && response.user) {
+        Alert.alert("Success ✅", "Account created successfully");
+      }
+    } catch (e) {
+      console.error(e.message);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>Bitte füllen Sie die nachfolgenden Felder aus</Text>
       <TextInput
-        placeholder="Benutzername"
+        placeholder="E-Mail Adresse"
         style={styles.inputStyle}
-        value={username}
-        onChangeText={setUsername}
+        value={email}
+        onChangeText={setEmail}
       />
       <TextInput
         placeholder="Passwort"
@@ -41,7 +71,8 @@ export default function SignUp(props) {
         onChangeText={setPasswordVeri}
         secureTextEntry
       />
-      <Button title="Account erstellen" onPress={navLogin} />
+      <Text style={styles.errorText}>{error}</Text>
+      <Button title="Account erstellen" onPress={_signUp} />
     </SafeAreaView>
   );
 }
@@ -60,5 +91,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 0.2,
     borderColor: "black",
+  },
+  errorText: {
+    color: "red",
   },
 });
