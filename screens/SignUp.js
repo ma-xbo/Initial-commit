@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   View,
@@ -8,8 +8,6 @@ import {
   StyleSheet,
 } from "react-native";
 import firebase from "../js/Firebase";
-import "firebase/auth";
-import "firebase/firestore";
 
 export default function SignUp(props) {
   const navigation = props.navigation;
@@ -17,6 +15,8 @@ export default function SignUp(props) {
   const [password, setPassword] = useState("");
   const [passwordVeri, setPasswordVeri] = useState("");
   const [error, setError] = useState();
+
+  firebase.init();
 
   const _signUp = async () => {
     if (!email) {
@@ -37,12 +37,12 @@ export default function SignUp(props) {
 
   const _createUser = async (email, password) => {
     try {
-      let response = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
+      let response = await firebase.auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
       if (response && response.user) {
-        firebase
-          .firestore()
+        firebase.db
           .collection("userProfiles")
           .add({
             userId: response.user.uid,

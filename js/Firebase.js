@@ -1,4 +1,6 @@
 import firebase from "firebase";
+import "firebase/auth";
+import "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDzY77UPCkh9LYcNJNw3HFYnv5roYpKP8A",
@@ -9,4 +11,15 @@ const firebaseConfig = {
   appId: "1:624102838911:web:bcec26cc1636cde066a54a",
 };
 
-export default !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+export default class Finance_Firebase {
+  static db;
+  static auth;
+
+  static init() {
+    if (firebase.apps.length === 0) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    Finance_Firebase.db = firebase.firestore();
+    Finance_Firebase.auth = firebase.auth();
+  }
+}
