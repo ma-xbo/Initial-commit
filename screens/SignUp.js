@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-import firebase from "../Firebase";
+import firebase from "../js/Firebase";
 import "firebase/auth";
 import "firebase/firestore";
 
