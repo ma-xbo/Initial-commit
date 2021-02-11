@@ -8,7 +8,6 @@ import {
   StyleSheet,
 } from "react-native";
 import firebase from "../js/Firebase";
-import "firebase/auth";
 
 export default function Login(props) {
   const navigation = props.navigation;
@@ -17,13 +16,18 @@ export default function Login(props) {
 
   const _signIn = async () => {
     try {
-      let response = await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password);
+      let response = await firebase.auth.signInWithEmailAndPassword(
+        email,
+        password
+      );
       if (response && response.user) {
         alert("Login erfolgreich", "Willkommen zurück");
         console.log(response.user.uid);
         navigation.navigate("MainNav", {});
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "MainNav" }],
+        });
       }
     } catch (e) {
       switch (e) {
@@ -42,6 +46,7 @@ export default function Login(props) {
           break;
 
         default:
+          console.log(e);
           break;
       }
       setEmail("");

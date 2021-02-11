@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   View,
@@ -15,8 +15,6 @@ export default function SignUp(props) {
   const [password, setPassword] = useState("");
   const [passwordVeri, setPasswordVeri] = useState("");
   const [error, setError] = useState();
-
-  firebase.init();
 
   const _signUp = async () => {
     if (!email) {
