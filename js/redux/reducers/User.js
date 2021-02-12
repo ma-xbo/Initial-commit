@@ -2,24 +2,17 @@ import { LOAD_USER } from "../actionTypes.js";
 
 const currentUser = (state = initialUserInfo, action) => {
   switch (action.type) {
-    //TODO
-    //Api call to update the database
-
-    // return value --> it is NOT allowed to return "state". Therefore you have to create a new Array
-    // https://daveceddia.com/react-redux-immutability-guide/
-
     case LOAD_USER: {
-      // get the payload
       const userId = action.payload;
 
+      console.log("Inside User reducer");
       //get Account Info from Firestore
-      const user = {};
+      //TODO -> Api call to update the database
 
-      /*       if (newTask) {
-        newTask.name = task.name;
-        newTask.description = task.description;
-        newTask.priority = task.priority;
-      } */
+      const user = {
+        userId: userId,
+        name: "test",
+      };
 
       return user;
     }
@@ -31,6 +24,6 @@ const currentUser = (state = initialUserInfo, action) => {
 export default currentUser;
 
 const initialUserInfo = {
-  userId: "test",
-  name: "test",
+  userId: "",
+  name: "",
 };

@@ -3,6 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import rootReducer from "./js/redux/reducers/index";
+
 import OverviewList from "./screens/Overview";
 import Subscriptions from "./screens/Subscriptions";
 import Settings from "./screens/Settings";
@@ -21,34 +25,38 @@ export default function App() {
     firebase.init();
   }, []);
 
+  const store = createStore(rootReducer);
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: colorDefinitions.light.black },
-          headerTintColor: colorDefinitions.light.white,
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name="MainNav"
-          options={{ headerShown: false }}
-          component={MainNav}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: colorDefinitions.light.black },
+            headerTintColor: colorDefinitions.light.white,
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        >
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="MainNav"
+            options={{ headerShown: false }}
+            component={MainNav}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

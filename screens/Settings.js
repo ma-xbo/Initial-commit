@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
+import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import AppSafeAreaView from "../components/AppSafeAreaView";
@@ -15,7 +16,7 @@ import SwipeableActionItem from "../components/SwipeableActionItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
 const dummyProfile = require("../assets/dummyProfile.json");
 
-export default function Settings(props) {
+function Settings(props) {
   const navigation = props.navigation;
   const [displayOptional, setDisplayOptional] = useState(true);
   const categoriesArray = dummyProfile.categories;
@@ -46,6 +47,8 @@ export default function Settings(props) {
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
+        <Text>Name: {props.currentUser.name}</Text>
+        <Text>ID: {props.currentUser.userId}</Text>
         <Pressable
           onPress={() => setDisplayOptional(!displayOptional)}
           style={[
@@ -162,3 +165,9 @@ const styles = StyleSheet.create({
     color: colorDefinitions.light.white,
   },
 });
+
+const mapStateToProps = (state) => {
+  return { currentUser: state.user };
+};
+
+export default connect(mapStateToProps)(Settings);

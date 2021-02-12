@@ -7,9 +7,12 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import firebase from "../js/Firebase";
+import { loadUser } from "../js/redux/actions/User";
 
-export default function Login(props) {
+function Login(props) {
   const navigation = props.navigation;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +26,7 @@ export default function Login(props) {
       if (response && response.user) {
         alert("Login erfolgreich", "Willkommen zurück");
         console.log(response.user.uid);
+        props.loadUser(response.user.uid);
         navigation.navigate("MainNav", {});
         navigation.reset({
           index: 0,
@@ -99,3 +103,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
 });
+
+const mapStateToProps = (state) => {
+  return { userProfile: state.currentUser };
+};
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ loadUser }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
