@@ -42,13 +42,31 @@ export default function SignUp(props) {
       if (response && response.user) {
         firebase.db
           .collection("userProfiles")
-          .add({
+          .doc(response.user.uid)
+          .set({
             userId: response.user.uid,
             name: "Max Mustermann",
             email: email,
             config: {
-              categories: [],
-              stores: [],
+              categories: [
+                "Gehalt",
+                "Versicherung",
+                "Auto",
+                "Miete",
+                "Haushalt",
+                "Lebensmittel",
+                "Hobbys & Freizeit",
+                "Technik"
+              ],
+              stores: [
+                "Rewe",
+                "Penny Markt",
+                "Edeka",
+                "Amazon",
+                "Netflix",
+                "Vodafone",
+                "Telekom",
+              ],
             },
           })
           .then((docRef) => {

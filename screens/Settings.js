@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   View,
@@ -13,13 +13,26 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import CategoryListItem from "../components/CategoryListItem";
 import SwipeableActionItem from "../components/SwipeableActionItem";
+
 const colorDefinitions = require("../assets/colorDefinition.json");
-const dummyProfile = require("../assets/dummyProfile.json");
 
 function Settings(props) {
   const navigation = props.navigation;
-  const [displayOptional, setDisplayOptional] = useState(true);
-  const categoriesArray = dummyProfile.categories;
+  const [displayOptional, setDisplayOptional] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    userId: "",
+    name: "",
+    email: "",
+    config: {
+      categories: [],
+      stores: [],
+    },
+  });
+
+  useEffect(() => {
+    setUserInfo(props.currentUser)
+  }, []);
+  
 
   const addCategory = () => {
     alert("Add category");
@@ -47,8 +60,8 @@ function Settings(props) {
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
-        <Text>Name: {props.currentUser.name}</Text>
-        <Text>ID: {props.currentUser.userId}</Text>
+        <Text>Name: {userInfo.name}</Text>
+        <Text>ID: {userInfo.userId}</Text>
         <Pressable
           onPress={() => setDisplayOptional(!displayOptional)}
           style={[
@@ -110,9 +123,9 @@ function Settings(props) {
             }}
           >
             <FlatList
-              data={categoriesArray}
+              data={userInfo.config.categories}
               style={{ height: 200 }}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item}
               renderItem={({ item }) => (
                 <Swipeable renderRightActions={renderRightActions}>
                   <CategoryListItem name={item} />

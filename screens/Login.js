@@ -24,18 +24,21 @@ function Login(props) {
         password
       );
       if (response && response.user) {
+        //Message
         alert("Login erfolgreich", "Willkommen zurück");
-        console.log(response.user.uid);
-        props.loadUser(response.user.uid);
-        navigation.navigate("MainNav", {});
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "MainNav" }],
-        });
+
+        // Get User Data from Firebase
+        _getUserProfile(response.user.uid);
+
+        //TODO Get Financial Data from Firebase
+        //_getFinanceData();
+
+        //Navigate
+        _navMain();
       }
     } catch (e) {
       switch (e) {
-        case "Error: The password is invalid or the user does not have a password.":
+        case "[Error: The password is invalid or the user does not have a password.]":
           alert(
             "Fehler",
             "Die eingegebene Kombination aus E-Mail und Passwort ist falsch. Bitte versuchen Sie er erneut."
@@ -56,6 +59,43 @@ function Login(props) {
       setEmail("");
       setPassword("");
     }
+  };
+
+  const _getUserProfile = async (userId) => {
+    const docUser = await firebase.db
+      .collection("userProfiles")
+      .doc(userId)
+      .get();
+
+    if (!docUser.exists) {
+      console.log("Userinformationen konnten nicht gefunden werden");
+      return;
+    }
+
+    const userData = await docUser.data();
+    props.loadUser(userData);
+  };
+
+  const _getFinanceData = async () => {
+    const snapshot = await firebase.db
+      .collection("userProfiles")
+      .where("capital", "==", true)
+      .get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+    snapshot.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+    });
+  };
+
+  const _navMain = () => {
+    navigation.navigate("MainNav", {});
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "MainNav" }],
+    });
   };
 
   const _navSignUp = () => {
