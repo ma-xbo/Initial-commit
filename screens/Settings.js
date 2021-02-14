@@ -8,9 +8,9 @@ import {
   Pressable,
 } from "react-native";
 import { connect } from "react-redux";
-import { Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import AppSafeAreaView from "../components/AppSafeAreaView";
+import FoldableSection from "../components/FoldableSection";
 import CategoryListItem from "../components/CategoryListItem";
 import SwipeableActionItem from "../components/SwipeableActionItem";
 
@@ -18,7 +18,6 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 
 function Settings(props) {
   const navigation = props.navigation;
-  const [displayOptional, setDisplayOptional] = useState(false);
   const [userInfo, setUserInfo] = useState({
     userId: "",
     name: "",
@@ -28,11 +27,11 @@ function Settings(props) {
       stores: [],
     },
   });
+  const [isEdited, setIsEdited] = useState(false);
 
   useEffect(() => {
-    setUserInfo(props.currentUser)
+    setUserInfo(props.currentUser);
   }, []);
-  
 
   const addCategory = () => {
     alert("Add category");
@@ -62,82 +61,50 @@ function Settings(props) {
       <View style={styles.container}>
         <Text>Name: {userInfo.name}</Text>
         <Text>ID: {userInfo.userId}</Text>
-        <Pressable
-          onPress={() => setDisplayOptional(!displayOptional)}
-          style={[
-            {
-              flexDirection: "row",
-              justifyContent: "space-between",
-              backgroundColor: colorDefinitions.light.gray2,
-              padding: 10,
-              marginTop: 20,
-              marginHorizontal: 5,
-              borderTopEndRadius: 10,
-              borderTopStartRadius: 10,
-              shadowColor: "#000",
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-            },
-            !displayOptional && {
-              borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
-              shadowColor: "#000",
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-            },
-          ]}
-        >
-          <Text
-            style={{
-              color: colorDefinitions.light.white,
-              fontSize: 20,
-            }}
+
+        <FoldableSection cardTitle="Kategorien">
+          <FlatList
+            data={userInfo.config.categories}
+            style={{ height: 200 }}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <Swipeable renderRightActions={renderRightActions}>
+                <CategoryListItem name={item} />
+              </Swipeable>
+            )}
+          />
+          <Button
+            title="Kategorie hinzufügen"
+            onPress={addCategory}
+            style={styles.addCategoryButton}
+          />
+        </FoldableSection>
+
+        <FoldableSection cardTitle="Geschäfte">
+          <FlatList
+            data={userInfo.config.stores}
+            style={{ height: 200 }}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <Swipeable renderRightActions={renderRightActions}>
+                <CategoryListItem name={item} />
+              </Swipeable>
+            )}
+          />
+          <Button
+            title="Geschäft hinzufügen"
+            onPress={addCategory}
+            style={styles.addCategoryButton}
+          />
+        </FoldableSection>
+
+        {isEdited && (
+          <Pressable
+            style={styles.saveEditButton}
+            onPress={() => navigation.navigate("Login")}
           >
-            Kategorien
-          </Text>
-          {!displayOptional && (
-            <Ionicons
-              name="arrow-back"
-              size={24}
-              color={colorDefinitions.light.white}
-            />
-          )}
-          {displayOptional && (
-            <Ionicons
-              name="arrow-down"
-              size={24}
-              color={colorDefinitions.light.white}
-            />
-          )}
-        </Pressable>
-        {displayOptional && (
-          <View
-            style={{
-              flexDirection: "column",
-              justifyContent: "space-between",
-              backgroundColor: colorDefinitions.light.gray3,
-              padding: 10,
-              marginHorizontal: 5,
-              borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
-            }}
-          >
-            <FlatList
-              data={userInfo.config.categories}
-              style={{ height: 200 }}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <Swipeable renderRightActions={renderRightActions}>
-                  <CategoryListItem name={item} />
-                </Swipeable>
-              )}
-            />
-            <Button
-              title="Kategorie hinzufügen"
-              onPress={addCategory}
-              style={styles.addCategoryButton}
-            />
-          </View>
+            <Text style={styles.saveEditText}>Save</Text>
+          </Pressable>
         )}
 
         <Pressable
@@ -151,6 +118,8 @@ function Settings(props) {
   );
 }
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -158,6 +127,24 @@ const styles = StyleSheet.create({
   },
   addCategoryButton: {
     marginTop: 5,
+  },
+  saveEditButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    width: "90%",
+    borderRadius: 10,
+    backgroundColor: colorDefinitions.light.blue,
+    opacity: 0.85,
+    padding: 10,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+  },
+  saveEditText: {
+    fontSize: 18,
+    color: colorDefinitions.light.white,
   },
   logoutButton: {
     justifyContent: "center",
