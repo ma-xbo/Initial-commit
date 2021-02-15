@@ -37,6 +37,7 @@ export default function Subscriptions_List(props) {
       <View style={{ width: "100%" }}>
         <FlatList
           data={data}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <SubscriptionItem
@@ -57,5 +58,9 @@ export default function Subscriptions_List(props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "blue",
+  },
+  separator: {
+    backgroundColor: "rgb(200, 199, 204)",
+    height: StyleSheet.hairlineWidth,
   },
 });
