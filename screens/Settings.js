@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
+  Animated,
   Button,
   View,
   FlatList,
   Text,
   StyleSheet,
   Pressable,
-  Modal,
 } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { RectButton } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import FoldableSection from "../components/FoldableSection";
 import CategoryListItem from "../components/CategoryListItem";
-import SwipeableActionItem from "../components/SwipeableActionItem";
 import CustomModal from "../components/CustomModal";
 import {
   addCategory,
@@ -33,51 +33,15 @@ function Settings(props) {
   const [newCategory, setNewCategory] = useState("");
   const [newStore, setNewStore] = useState("");
 
-  const addStore = () => {
-    props.addStore(newStore);
+  const deleteCategory = (itemName) => {
+    props.deleteCategory(itemName);
+    //TODO Firebase
   };
 
-  const deleteCategory = () => {
-    alert("Delete category");
+  const deleteStore = (itemName) => {
+    props.deleteStore(itemName);
+    //TODO Firebase
   };
-
-  const deleteStore = () => {
-    alert("Delete category");
-  };
-
-  const swipDeleteCategory = (progress, itemId) => (
-    <View
-      style={{
-        flexDirection: "row",
-        width: 64,
-      }}
-    >
-      <SwipeableActionItem
-        text="Delete"
-        color={colorDefinitions.light.red}
-        x={64}
-        progress={progress}
-        onPress={deleteCategory}
-      />
-    </View>
-  );
-
-  const swipDeleteStore = (progress, itemId) => (
-    <View
-      style={{
-        flexDirection: "row",
-        width: 64,
-      }}
-    >
-      <SwipeableActionItem
-        text="Delete"
-        color={colorDefinitions.light.red}
-        x={64}
-        progress={progress}
-        onPress={deleteStore}
-      />
-    </View>
-  );
 
   return (
     <AppSafeAreaView title="Einstellungen">
@@ -91,7 +55,33 @@ function Settings(props) {
             style={{ height: 200 }}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={swipDeleteCategory}>
+              <Swipeable
+                renderRightActions={(progress) => {
+                  const trans = progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [64, 0],
+                  });
+                  return (
+                    <View sty={{ width: 64 }}>
+                      <Animated.View
+                        style={{ flex: 1, transform: [{ translateX: 0 }] }}
+                      >
+                        <RectButton
+                          style={[
+                            styles.swipeButton,
+                            { flex: 1, backgroundColor: "red" },
+                          ]}
+                          onPress={() => {
+                            deleteCategory(item);
+                          }}
+                        >
+                          <Text style={styles.textStyle}>Löschen</Text>
+                        </RectButton>
+                      </Animated.View>
+                    </View>
+                  );
+                }}
+              >
                 <CategoryListItem name={item} />
               </Swipeable>
             )}
@@ -109,7 +99,33 @@ function Settings(props) {
             style={{ height: 200 }}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={swipDeleteStore}>
+              <Swipeable
+                renderRightActions={(progress) => {
+                  const trans = progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [64, 0],
+                  });
+                  return (
+                    <View sty={{ width: 64 }}>
+                      <Animated.View
+                        style={{ flex: 1, transform: [{ translateX: 0 }] }}
+                      >
+                        <RectButton
+                          style={[
+                            styles.swipeButton,
+                            { flex: 1, backgroundColor: "red" },
+                          ]}
+                          onPress={() => {
+                            deleteStore(item);
+                          }}
+                        >
+                          <Text style={styles.textStyle}>Löschen</Text>
+                        </RectButton>
+                      </Animated.View>
+                    </View>
+                  );
+                }}
+              >
                 <CategoryListItem name={item} />
               </Swipeable>
             )}
@@ -130,15 +146,7 @@ function Settings(props) {
       </View>
 
       <CustomModal isVisible={isCatModalVisible}>
-        <Text
-          style={{
-            fontSize: 20,
-            textAlign: "center",
-            marginBottom: 10,
-          }}
-        >
-          Neue Kategorie:
-        </Text>
+        <Text style={styles.modalTitle}>Neue Kategorie:</Text>
         <TextInput
           placeholder="Kategorie"
           style={styles.basicTextInput}
@@ -157,10 +165,48 @@ function Settings(props) {
           </Pressable>
           <Pressable
             onPress={() => {
-              if (newCategory !== "") {
+              if (
+                newCategory !== "" &&
+                !props.currentUser.config.categories.includes(newCategory)
+              ) {
                 props.addCategory(newCategory);
                 setNewCategory("");
                 setIsCatModalVisible(false);
+              }
+            }}
+            style={styles.saveEditButton}
+          >
+            <Text>Speichern</Text>
+          </Pressable>
+        </View>
+      </CustomModal>
+      <CustomModal isVisible={isStoModalVisible}>
+        <Text style={styles.modalTitle}>Neues Geschäft:</Text>
+        <TextInput
+          placeholder="Geschäft"
+          style={styles.basicTextInput}
+          value={newStore}
+          onChangeText={(val) => setNewStore(val)}
+        />
+        <View style={{ flexDirection: "row" }}>
+          <Pressable
+            onPress={() => setIsStoModalVisible(false)}
+            style={[
+              styles.saveEditButton,
+              { backgroundColor: colorDefinitions.light.gray },
+            ]}
+          >
+            <Text>Abbrechen</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              if (
+                newStore !== "" &&
+                !props.currentUser.config.stores.includes(newStore)
+              ) {
+                props.addStore(newStore);
+                setNewStore("");
+                setIsStoModalVisible(false);
               }
             }}
             style={styles.saveEditButton}
@@ -199,6 +245,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colorDefinitions.light.white,
   },
+  swipeButton: {
+    flexDirection: "column",
+    justifyContent: "center",
+    borderRadius: 10,
+    padding: 5,
+    marginRight: 3,
+    marginVertical: 3,
+  },
   logoutButton: {
     justifyContent: "center",
     alignItems: "center",
@@ -222,6 +276,11 @@ const styles = StyleSheet.create({
     backgroundColor: colorDefinitions.light.gray6,
     padding: 10,
     borderRadius: 15,
+  },
+  modalTitle: {
+    fontSize: 20,
+    textAlign: "center",
+    marginBottom: 10,
   },
 });
 

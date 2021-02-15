@@ -24,6 +24,19 @@ const currentUser = (state = initialUserInfo, action) => {
       };
     }
 
+    case DELETE_CATEGORY: {
+      const categoryName = action.payload;
+      return {
+        ...state,
+        config: {
+          categories: state.config.categories.filter(
+            (item) => item != categoryName
+          ),
+          stores: [...state.config.stores],
+        },
+      };
+    }
+
     case ADD_STORE: {
       const storeName = action.payload;
       return {
@@ -31,6 +44,19 @@ const currentUser = (state = initialUserInfo, action) => {
         config: {
           categories: [...state.config.categories],
           stores: [...state.config.stores, storeName],
+        },
+      };
+    }
+
+    case DELETE_STORE: {
+      const storeName = action.payload;
+      return {
+        ...state,
+        config: {
+          categories: [...state.config.categories],
+          stores: state.config.stores.filter(
+            (item) => item != storeName
+          ),
         },
       };
     }
