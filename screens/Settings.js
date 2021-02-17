@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Animated,
   Button,
   View,
   FlatList,
   Text,
+  TextInput,
   StyleSheet,
   Pressable,
 } from "react-native";
@@ -22,7 +24,7 @@ import {
   deleteCategory,
   deleteStore,
 } from "../js/redux/actions/User";
-import { TextInput } from "react-native-gesture-handler";
+import fb from "../js/Firebase";
 
 const colorDefinitions = require("../assets/colorDefinition.json");
 
@@ -33,14 +35,50 @@ function Settings(props) {
   const [newCategory, setNewCategory] = useState("");
   const [newStore, setNewStore] = useState("");
 
+  const userProfilesRef = fb.db
+    .collection("userProfiles")
+    .doc(props.currentUser.userId);
+
   const deleteCategory = (itemName) => {
     props.deleteCategory(itemName);
-    //TODO Firebase
+
+    userProfilesRef
+    .update({
+      "config.categories": fb.fieldVal.arrayRemove(itemName),
+    })
+    .then(() => {
+      Alert.alert(
+        "Löschen erfolgreich 🗑️",
+        "Die Kategorie " + itemName + " wurde gelöscht"
+      );
+    })
+    .catch((error) => {
+      Alert.alert(
+        "Fehler",
+        "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+      );
+    });
   };
 
   const deleteStore = (itemName) => {
     props.deleteStore(itemName);
-    //TODO Firebase
+
+    userProfilesRef
+      .update({
+        "config.stores": fb.fieldVal.arrayRemove(itemName),
+      })
+      .then(() => {
+        Alert.alert(
+          "Löschen erfolgreich 🗑️",
+          "Das Geschäft " + itemName + " wurde gelöscht"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+        );
+      });
   };
 
   return (

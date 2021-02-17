@@ -14,6 +14,7 @@ const firebaseConfig = {
 export default class Finance_Firebase {
   static db;
   static auth;
+  static fieldVal;
 
   static init() {
     if (firebase.apps.length === 0) {
@@ -21,5 +22,6 @@ export default class Finance_Firebase {
     }
     Finance_Firebase.db = firebase.firestore();
     Finance_Firebase.auth = firebase.auth();
+    Finance_Firebase.fieldVal = firebase.firestore.FieldValue;
   }
 }
