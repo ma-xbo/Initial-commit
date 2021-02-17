@@ -9,8 +9,12 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
+import { addFinanceItem } from "../js/redux/actions/Finance";
+import firebase from "../js/Firebase";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import MoneyInput from "../components/MoneyInput";
 import ItemPicker from "../components/ItemPicker";
@@ -18,37 +22,61 @@ import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function NewEntry() {
+/*
+TODO:
+-Finish reducer
+-fix ItemPicker (label, value)
+-add item to redux
+-add item to firebase
+*/
+
+function NewEntry(props) {
   const [displayOptional, setDisplayOptional] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [store, setStore] = useState(""); //Geschäft
+  const [date, setDate] = useState(new Date());
+  const [store, setStore] = useState(props.currentUser.config.stores[0]); //Händler
+  const [category, setCategory] = useState(
+    props.currentUser.config.categories[0]
+  );
   const [isSubscription, setIsSubscription] = useState(false); //subscription
   const [subscriptionType, setSubscriptionType] = useState(""); //subscriptionType
   const [isExpense, setIsExpense] = useState(true); //isExpense
   const [amount, setAmount] = useState(0.0);
-  const [date, setDate] = useState(new Date());
-  const [currency, setCurrency] = useState("euro");
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
   );
-  const [category, setCategory] = useState(selectableCategories[0].value);
 
   const submitForm = () => {
     alert("Clicked");
-    console.log("Log submitted data");
-    console.log("Titel:" + title);
-    console.log("Beschreibung:" + description);
-    console.log("Betrag:" + amount);
-    console.log("Datum:" + date);
-    console.log("Kategorie:" + category);
+
+    const data = {
+      title: title,
+      description: description,
+      date: date,
+      store: store,
+      category: category,
+      amount: 0,
+      currency: "€",
+      paymentMethod: paymentMethod,
+      isSubscription: isSubscription,
+      subscriptionType: "weekly",
+      subscriptionStartDate: "",
+      subscriptionEndDate: "",
+      createdBy: props.currentUser.userId,
+      createdAt: new Date(),
+      modifiedBy: props.currentUser.userId,
+      modifiedAt: new Date(),
+    };
+
+    console.log(data);
 
     //reset inputs
     setTitle("");
     setDescription("");
     setAmount(0.0);
     setDate(new Date());
-    setCategory(selectableCategories[0].value);
+    setCategory(props.currentUser.config.categories[0].value);
   };
 
   return (
@@ -176,7 +204,7 @@ export default function NewEntry() {
                   <Text style={styles.inputView_text}>Kategorie</Text>
                   <ItemPicker
                     title="Wählen Sie eine Kategorie aus:"
-                    selectableItems={selectableCategories}
+                    selectableItems={props.currentUser.config.categories}
                     onValueChange={(cat) => setCategory(cat)}
                   />
                 </View>
@@ -223,14 +251,6 @@ export default function NewEntry() {
   );
 }
 
-const selectableCategories = [
-  { label: "Test 1", value: "test1" },
-  { label: "Test 2", value: "test2" },
-  { label: "Test 3", value: "test3" },
-  { label: "Test 4", value: "test4" },
-  { label: "Test 5", value: "test5" },
-];
-
 const selectablePaymentMethods = [
   { label: "Barzahlung", value: "cash" },
   { label: "EC-Karte", value: "debit-card" },
@@ -275,3 +295,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 });
+
+const mapStateToProps = (state) => {
+  return { currentUser: state.user };
+};
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ addFinanceItem }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewEntry);

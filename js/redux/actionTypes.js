@@ -3,3 +3,7 @@ export const ADD_CATEGORY = "ADD_CATEGORY";
 export const DELETE_CATEGORY = "DELETE_CATEGORY";
 export const ADD_STORE = "ADD_STORE";
 export const DELETE_STORE = "DELETE_STORE";
+
+export const LOAD_FINANCEDATA = "LOAD_FINANCEDATA";
+export const ADD_FINANCEDP = "ADD_FINANCEDP";
+
