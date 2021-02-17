@@ -3,12 +3,12 @@ import {
   Alert,
   Animated,
   Button,
-  View,
   FlatList,
+  Pressable,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
-  Pressable,
+  View,
 } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -39,25 +39,83 @@ function Settings(props) {
     .collection("userProfiles")
     .doc(props.currentUser.userId);
 
+  const addCategory = () => {
+    if (
+      newCategory !== "" &&
+      !props.currentUser.config.categories.includes(newCategory)
+    ) {
+      props.addCategory(newCategory);
+
+      userProfilesRef
+        .update({
+          "config.categories": fb.fieldVal.arrayUnion(newCategory),
+        })
+        .then(() => {
+          Alert.alert(
+            "Hinzufügen erfolgreich ➕",
+            "Die Kategorie " + itemName + " wurde hinzugefügt"
+          );
+        })
+        .catch((error) => {
+          Alert.alert(
+            "Fehler",
+            "Beim Hinzufügen ist ein Fehler aufgetreten: " + error.message
+          );
+        });
+
+      setNewCategory("");
+      setIsCatModalVisible(false);
+    }
+  };
+
   const deleteCategory = (itemName) => {
     props.deleteCategory(itemName);
 
     userProfilesRef
-    .update({
-      "config.categories": fb.fieldVal.arrayRemove(itemName),
-    })
-    .then(() => {
-      Alert.alert(
-        "Löschen erfolgreich 🗑️",
-        "Die Kategorie " + itemName + " wurde gelöscht"
-      );
-    })
-    .catch((error) => {
-      Alert.alert(
-        "Fehler",
-        "Beim Löschen ist ein Fehler aufgetreten: " + error.message
-      );
-    });
+      .update({
+        "config.categories": fb.fieldVal.arrayRemove(itemName),
+      })
+      .then(() => {
+        Alert.alert(
+          "Löschen erfolgreich 🗑️",
+          "Die Kategorie " + itemName + " wurde gelöscht"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+        );
+      });
+  };
+
+  const addStore = () => {
+    if (
+      newStore !== "" &&
+      !props.currentUser.config.stores.includes(newStore)
+    ) {
+      props.addStore(newStore);
+
+      userProfilesRef
+        .update({
+          "config.stores": fb.fieldVal.arrayUnion(newStore),
+        })
+        .then(() => {
+          Alert.alert(
+            "Hinzufügen erfolgreich ➕",
+            "Das Geschäft " + itemName + " wurde hinzugefügt"
+          );
+        })
+        .catch((error) => {
+          Alert.alert(
+            "Fehler",
+            "Beim Hinzufügen ist ein Fehler aufgetreten: " + error.message
+          );
+        });
+
+      setNewStore("");
+      setIsStoModalVisible(false);
+    }
   };
 
   const deleteStore = (itemName) => {
@@ -201,19 +259,7 @@ function Settings(props) {
           >
             <Text>Abbrechen</Text>
           </Pressable>
-          <Pressable
-            onPress={() => {
-              if (
-                newCategory !== "" &&
-                !props.currentUser.config.categories.includes(newCategory)
-              ) {
-                props.addCategory(newCategory);
-                setNewCategory("");
-                setIsCatModalVisible(false);
-              }
-            }}
-            style={styles.saveEditButton}
-          >
+          <Pressable onPress={addCategory} style={styles.saveEditButton}>
             <Text>Speichern</Text>
           </Pressable>
         </View>
@@ -236,19 +282,7 @@ function Settings(props) {
           >
             <Text>Abbrechen</Text>
           </Pressable>
-          <Pressable
-            onPress={() => {
-              if (
-                newStore !== "" &&
-                !props.currentUser.config.stores.includes(newStore)
-              ) {
-                props.addStore(newStore);
-                setNewStore("");
-                setIsStoModalVisible(false);
-              }
-            }}
-            style={styles.saveEditButton}
-          >
+          <Pressable onPress={addStore} style={styles.saveEditButton}>
             <Text>Speichern</Text>
           </Pressable>
         </View>
