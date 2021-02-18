@@ -4,7 +4,7 @@ import { BlurView } from "expo-blur";
 import { Picker } from "@react-native-picker/picker";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function ItemPicker(props) {
+export function ObjectItemPicker(props) {
   const { title, selectableItems, onValueChange } = props;
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -67,6 +67,84 @@ export default function ItemPicker(props) {
                         key={index}
                         label={cat.label}
                         value={cat.value}
+                      />
+                    ))}
+                  </Picker>
+                  <Button
+                    title="Auswahl bestätigen"
+                    onPress={() => closeModal()}
+                  />
+                </View>
+              </Pressable>
+            </View>
+          </Pressable>
+        </BlurView>
+      </Modal>
+    </View>
+  );
+}
+
+export function StringItemPicker(props) {
+  const { title, selectableItems, onValueChange } = props;
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(selectableItems[0]);
+
+  const closeModal = () => {
+    setShowCategoryPicker(!showCategoryPicker);
+    onValueChange(selectedCategory);
+  };
+
+  return (
+    <View>
+      <Pressable
+        style={{
+          backgroundColor: colorDefinitions.light.gray5,
+          padding: 10,
+          borderRadius: 5,
+        }}
+        onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+      >
+        <Text style={{ color: colorDefinitions.light.blue, fontSize: 18 }}>
+          {selectableItems[selectedIndex]}
+        </Text>
+      </Pressable>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showCategoryPicker}
+      >
+        <BlurView
+          intensity={100}
+          tint="dark"
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: 1,
+            },
+          ]}
+        >
+          <Pressable onPress={() => setShowCategoryPicker(false)}>
+            <View style={styles.centeredView}>
+              <Pressable>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>{title}</Text>
+                  <Picker
+                    selectedValue={selectedCategory}
+                    style={{ height: 50, width: 200, marginBottom: 150 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setSelectedCategory(itemValue);
+                      setSelectedIndex(itemIndex);
+                    }}
+                  >
+                    {selectableItems.map((cat, index) => (
+                      <Picker.Item
+                        key={index}
+                        label={cat}
+                        value={cat}
                       />
                     ))}
                   </Picker>

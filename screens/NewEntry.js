@@ -17,7 +17,7 @@ import { addFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import MoneyInput from "../components/MoneyInput";
-import ItemPicker from "../components/ItemPicker";
+import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -25,7 +25,6 @@ const colorDefinitions = require("../assets/colorDefinition.json");
 /*
 TODO:
 -Finish reducer
--fix ItemPicker (label, value)
 -add item to redux
 -add item to firebase
 */
@@ -193,7 +192,7 @@ function NewEntry(props) {
               <View>
                 <View style={styles.inputView}>
                   <Text style={styles.inputView_text}>Bezahlmethode</Text>
-                  <ItemPicker
+                  <ObjectItemPicker
                     title="Wählen Sie eine Bezahlmethode aus:"
                     selectableItems={selectablePaymentMethods}
                     onValueChange={(val) => setPaymentMethod(val)}
@@ -202,7 +201,7 @@ function NewEntry(props) {
 
                 <View style={styles.inputView}>
                   <Text style={styles.inputView_text}>Kategorie</Text>
-                  <ItemPicker
+                  <StringItemPicker
                     title="Wählen Sie eine Kategorie aus:"
                     selectableItems={props.currentUser.config.categories}
                     onValueChange={(cat) => setCategory(cat)}
