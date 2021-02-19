@@ -4,6 +4,8 @@ import {
   DELETE_CATEGORY,
   DELETE_STORE,
   LOAD_USER,
+  ADD_TEMPLATE,
+  DELETE_TEMPLATE,
 } from "../actionTypes.js";
 
 export function loadUser(userData) {
@@ -38,5 +40,19 @@ export function deleteStore(storeName) {
   return {
     type: DELETE_STORE,
     payload: storeName,
+  };
+}
+
+export function addTemplate(templateData) {
+  return {
+    type: ADD_TEMPLATE,
+    payload: templateData,
+  };
+}
+
+export function deleteTemplate(templateData) {
+  return {
+    type: DELETE_TEMPLATE,
+    payload: templateData,
   };
 }
