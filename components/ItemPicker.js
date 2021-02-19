@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Text, Modal, StyleSheet, View, Pressable } from "react-native";
 import { BlurView } from "expo-blur";
 import { Picker } from "@react-native-picker/picker";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export function ObjectItemPicker(props) {
-  const { title, selectableItems, onValueChange } = props;
+  const { selectableItems, onValueChange, title, value } = props;
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState(
-    selectableItems[0].value
-  );
+  const [selectedValue, setSelectedValue] = useState(selectableItems[0].value);
+
+  useEffect(() => {
+    setSelectedValue(value);
+    setSelectedIndex(selectableItems.findIndex((x) => x.value === value));
+  }, [value]);
 
   const closeModal = () => {
     setShowCategoryPicker(!showCategoryPicker);
-    onValueChange(selectedCategory);
+    onValueChange(selectedValue);
   };
 
   return (
@@ -55,10 +58,10 @@ export function ObjectItemPicker(props) {
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>{title}</Text>
                   <Picker
-                    selectedValue={selectedCategory}
+                    selectedValue={selectedValue}
                     style={{ height: 50, width: 200, marginBottom: 150 }}
                     onValueChange={(itemValue, itemIndex) => {
-                      setSelectedCategory(itemValue);
+                      setSelectedValue(itemValue);
                       setSelectedIndex(itemIndex);
                     }}
                   >
@@ -85,14 +88,17 @@ export function ObjectItemPicker(props) {
 }
 
 export function StringItemPicker(props) {
-  const { title, selectableItems, onValueChange } = props;
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState(selectableItems[0]);
+  const { title, selectableItems, onValueChange, value } = props;
+  const [showPicker, setShowPicker] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(selectableItems[0]);
+
+  useEffect(() => {
+    setSelectedItem(value);
+  }, [value]);
 
   const closeModal = () => {
-    setShowCategoryPicker(!showCategoryPicker);
-    onValueChange(selectedCategory);
+    setShowPicker(!showPicker);
+    onValueChange(selectedItem);
   };
 
   return (
@@ -103,18 +109,14 @@ export function StringItemPicker(props) {
           padding: 10,
           borderRadius: 5,
         }}
-        onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+        onPress={() => setShowPicker(!showPicker)}
       >
         <Text style={{ color: colorDefinitions.light.blue, fontSize: 18 }}>
-          {selectableItems[selectedIndex]}
+          {value}
         </Text>
       </Pressable>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showCategoryPicker}
-      >
+      <Modal animationType="fade" transparent={true} visible={showPicker}>
         <BlurView
           intensity={100}
           tint="dark"
@@ -127,25 +129,20 @@ export function StringItemPicker(props) {
             },
           ]}
         >
-          <Pressable onPress={() => setShowCategoryPicker(false)}>
+          <Pressable onPress={() => setShowPicker(false)}>
             <View style={styles.centeredView}>
               <Pressable>
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>{title}</Text>
                   <Picker
-                    selectedValue={selectedCategory}
+                    selectedValue={selectedItem}
                     style={{ height: 50, width: 200, marginBottom: 150 }}
-                    onValueChange={(itemValue, itemIndex) => {
-                      setSelectedCategory(itemValue);
-                      setSelectedIndex(itemIndex);
+                    onValueChange={(itemValue) => {
+                      setSelectedItem(itemValue);
                     }}
                   >
                     {selectableItems.map((cat, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={cat}
-                        value={cat}
-                      />
+                      <Picker.Item key={index} label={cat} value={cat} />
                     ))}
                   </Picker>
                   <Button

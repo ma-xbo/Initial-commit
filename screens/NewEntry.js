@@ -53,15 +53,15 @@ function NewEntry(props) {
       title: title,
       description: description,
       date: date,
-      store: store,
+      store: store, //TODO -> add field
       category: category,
-      amount: 0,
+      amount: amount,
       currency: "€",
       paymentMethod: paymentMethod,
       isSubscription: isSubscription,
-      subscriptionType: "weekly",
-      subscriptionStartDate: "",
-      subscriptionEndDate: "",
+      subscriptionType: "weekly", //TODO -> add field
+      subscriptionStartDate: "", //TODO -> add field
+      subscriptionEndDate: "", //TODO -> add field
       createdBy: props.currentUser.userId,
       createdAt: new Date(),
       modifiedBy: props.currentUser.userId,
@@ -73,9 +73,11 @@ function NewEntry(props) {
     //reset inputs
     setTitle("");
     setDescription("");
-    setAmount(0.0);
     setDate(new Date());
-    setCategory(props.currentUser.config.categories[0].value);
+    setAmount(0.0);
+    setStore(props.currentUser.config.stores[0]);
+    setPaymentMethod(selectablePaymentMethods[0].value);
+    setCategory(props.currentUser.config.categories[0]);
   };
 
   return (
@@ -111,6 +113,7 @@ function NewEntry(props) {
                 placeholder="Titel"
                 style={styles.inputView_textInput}
                 onChangeText={(val) => setTitle(val)}
+                value={title}
               />
             </View>
 
@@ -145,10 +148,10 @@ function NewEntry(props) {
               {/* https://github.com/react-native-datetimepicker/datetimepicker */}
               <DateTimePicker
                 testID="dateTimePicker"
-                value={date}
                 is24Hour={true}
                 display="default"
                 onChange={(event, date) => setDate(date)}
+                value={date}
               />
             </View>
 
@@ -196,6 +199,7 @@ function NewEntry(props) {
                     title="Wählen Sie eine Bezahlmethode aus:"
                     selectableItems={selectablePaymentMethods}
                     onValueChange={(val) => setPaymentMethod(val)}
+                    value={paymentMethod}
                   />
                 </View>
 
@@ -205,6 +209,7 @@ function NewEntry(props) {
                     title="Wählen Sie eine Kategorie aus:"
                     selectableItems={props.currentUser.config.categories}
                     onValueChange={(cat) => setCategory(cat)}
+                    value={category}
                   />
                 </View>
 
@@ -223,6 +228,7 @@ function NewEntry(props) {
                     placeholder="Empfänger"
                     style={styles.inputView_textInput}
                     onChangeText={(val) => setDescription(val)}
+                    value={description}
                   />
                 </View>
 
