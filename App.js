@@ -9,6 +9,7 @@ import rootReducer from "./js/redux/reducers/index";
 
 import OverviewList from "./screens/Overview";
 import Subscriptions from "./screens/Subscriptions";
+import Templates from "./screens/Templates";
 import Settings from "./screens/Settings";
 import NewEntry from "./screens/NewEntry";
 import Analysis from "./screens/Analysis";
@@ -73,16 +74,16 @@ function MainNav() {
               iconName = focused ? "ios-list" : "ios-list-outline";
               size = 25;
               break;
-            case "Abos" || "Subscriptions":
-              iconName = focused ? "ios-pie-chart" : "ios-pie-chart-outline";
+            case "Analyse" || "Analysis":
+              iconName = focused ? "ios-analytics" : "ios-analytics-outline";
               size = 25;
               break;
             case "Hinzufügen" || "NewEntry":
               iconName = focused ? "ios-add-circle" : "ios-add-circle-outline";
               size = 32;
               break;
-            case "Analyse" || "Analysis":
-              iconName = focused ? "ios-analytics" : "ios-analytics-outline";
+            case "Vorlagen" || "Templates":
+              iconName = focused ? "ios-layers" : "ios-layers-outline";
               size = 25;
               break;
             case "Einstellungen" || "Settings":
@@ -97,15 +98,15 @@ function MainNav() {
         },
       })}
       tabBarOptions={{
-        activeTintColor: colorDefinitions.light.teal,
+        activeTintColor: colorDefinitions.light.blue,
         inactiveTintColor: colorDefinitions.light.gray,
         style: { backgroundColor: colorDefinitions.light.gray6 },
       }}
     >
       <Tab.Screen name="Übersicht" component={OverviewList} />
-      <Tab.Screen name="Abos" component={Subscriptions} />
-      <Tab.Screen name="Hinzufügen" component={NewEntry} />
       <Tab.Screen name="Analyse" component={Analysis} />
+      <Tab.Screen name="Hinzufügen" component={NewEntry} />
+      <Tab.Screen name="Vorlagen" component={Templates} />
       <Tab.Screen name="Einstellungen" component={Settings} />
     </Tab.Navigator>
   );
