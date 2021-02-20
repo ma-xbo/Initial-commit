@@ -50,7 +50,7 @@ function NewEntry(props) {
   };
 
   const submitForm = () => {
-    const data = {
+    let data = {
       title: title,
       description: description,
       date: date,
@@ -65,8 +65,6 @@ function NewEntry(props) {
       modifiedAt: new Date(),
     };
 
-    props.addFinanceItem(data);
-
     firebase.db
       .collection("financialData")
       .add(data)
@@ -75,6 +73,12 @@ function NewEntry(props) {
           "Hinzufügen erfolgreich ➕",
           "Die Daten wurden erfolgreich in der Cloud gespeichert"
         );
+
+        data["docId"] = docRef.id;
+
+        props.addFinanceItem(data);
+
+        resetForm();
       })
       .catch((error) => {
         Alert.alert(
@@ -83,8 +87,6 @@ function NewEntry(props) {
             error.message
         );
       });
-
-    resetForm();
   };
 
   const saveAsTemplate = () => {

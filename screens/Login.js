@@ -94,6 +94,7 @@ function Login(props) {
       docData.date = docData.date.toDate();
       docData.createdAt = docData.createdAt.toDate();
       docData.modifiedAt = docData.modifiedAt.toDate();
+      docData.docId = doc.id;
       dataArray.push(docData);
     });
 

@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
+import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import { connect } from "react-redux";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import SubscriptionItem from "../components/SubscriptionItem";
-const dummyData = require("../assets/dummyData.json");
+//const dummyData = require("../assets/dummyData.json");
 
-export default function Subscriptions_List(props) {
+function Subscriptions_List(props) {
   const navigation = props.navigation;
   const [data, setData] = useState();
 
+  //console.log(props.financeData);
+
   useEffect(() => {
     const subData = [];
-
-    const dataArray = dummyData.map((item) => {
+    const dataArray = props.financeData;
+    /*     const dataArray = props.financeData.map((item) => {
+      console.log("inside useEffect")
       let rObj = { ...item };
       rObj["date"] = new Date(item.date);
       rObj["createdAt"] = new Date(item.createdAt);
       rObj["modifiedAt"] = new Date(item.modifiedAt);
       return rObj;
-    });
+    }); */
 
     for (let index = 0; index < dataArray.length; index++) {
       const element = dataArray[index];
@@ -38,7 +42,7 @@ export default function Subscriptions_List(props) {
         <FlatList
           data={data}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.title}
           renderItem={({ item }) => (
             <SubscriptionItem
               itemObject={item}
@@ -64,3 +68,9 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
   },
 });
+
+const mapStateToProps = (state) => {
+  return { financeData: state.finance };
+};
+
+export default connect(mapStateToProps)(Subscriptions_List);
