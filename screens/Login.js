@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
-  View,
-  Text,
-  TextInput,
   SafeAreaView,
   StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import firebase from "../js/Firebase";
 import { loadUser } from "../js/redux/actions/User";
+import { loadFinanceData } from "../js/redux/actions/Finance";
 
 function Login(props) {
   const navigation = props.navigation;
@@ -30,8 +31,8 @@ function Login(props) {
         // Get User Data from Firebase
         _getUserProfile(response.user.uid);
 
-        //TODO Get Financial Data from Firebase
-        //_getFinanceData();
+        // Get Financial Data from Firebase
+        _getFinanceData(response.user.uid);
 
         //Navigate
         _navMain();
@@ -76,18 +77,27 @@ function Login(props) {
     props.loadUser(userData);
   };
 
-  const _getFinanceData = async () => {
+  const _getFinanceData = async (userId) => {
+    const dataArray = [];
     const snapshot = await firebase.db
-      .collection("userProfiles")
-      .where("capital", "==", true)
+      .collection("financialData")
+      .where("userId", "==", userId)
       .get();
+
     if (snapshot.empty) {
       console.log("No matching documents.");
       return;
     }
-    snapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
+
+    snapshot.forEach(async (doc) => {
+      const docData = await doc.data();
+      docData.date = docData.date.toDate();
+      docData.createdAt = docData.createdAt.toDate();
+      docData.modifiedAt = docData.modifiedAt.toDate();
+      dataArray.push(docData);
     });
+
+    props.loadFinanceData(dataArray);
   };
 
   const _navMain = () => {
@@ -149,6 +159,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ loadUser }, dispatch);
+  bindActionCreators({ loadUser, loadFinanceData }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
