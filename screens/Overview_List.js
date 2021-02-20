@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
+import { connect } from "react-redux";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import SegmentedControl from "@react-native-community/segmented-control";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import SwipeableActionItem from "../components/SwipeableActionItem";
 import OverviewList_ExpenseItem from "../components/OverviewExpenseItem";
 const colorDefinitions = require("../assets/colorDefinition.json");
-const dummyData = require("../assets/dummyData.json");
 
-export default function Overview_List(props) {
+function Overview_List(props) {
   const navigation = props.navigation;
   const [activeSegment, setActiveSegment] = useState(0);
-  const [weekData, setWeekData] = useState([]);
-  const [monthData, setMonthData] = useState([]);
-  const [allData, setAllData] = useState([]);
+  const [weekData, setWeekData] = useState();
+  const [monthData, setMonthData] = useState();
+  const [allData, setAllData] = useState();
   const selectableSegements = ["This week", "This Month", "All time"];
 
   useEffect(() => {
@@ -22,13 +22,7 @@ export default function Overview_List(props) {
     const monthData = [];
     const allData = [];
 
-    const dataArray = dummyData.map((item) => {
-      let rObj = { ...item };
-      rObj["date"] = new Date(item.date);
-      rObj["createdAt"] = new Date(item.createdAt);
-      rObj["modifiedAt"] = new Date(item.modifiedAt);
-      return rObj;
-    });
+    const dataArray = props.financeData;
 
     for (let index = 0; index < dataArray.length; index++) {
       const element = dataArray[index];
@@ -56,7 +50,7 @@ export default function Overview_List(props) {
     setWeekData(weekData);
     setMonthData(monthData);
     setAllData(allData);
-  }, []);
+  }, [props.financeData]);
 
   const renderRightActions = (progress, itemId) => (
     <View
@@ -88,12 +82,7 @@ export default function Overview_List(props) {
 
   return (
     <AppSafeAreaView title="Übersicht">
-      <View
-        style={{
-          width: "100%",
-          backgroundColor: colorDefinitions.light.gray6,
-        }}
-      >
+      <View style={{ width: "100%" }}>
         <SegmentedControl
           values={selectableSegements}
           selectedIndex={activeSegment}
@@ -105,7 +94,7 @@ export default function Overview_List(props) {
         {activeSegment === 0 && (
           <FlatList
             data={weekData}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
               <Swipeable renderRightActions={renderRightActions}>
                 <OverviewList_ExpenseItem
@@ -123,7 +112,7 @@ export default function Overview_List(props) {
         {activeSegment === 1 && (
           <FlatList
             data={monthData}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
               <Swipeable renderRightActions={renderRightActions}>
                 <OverviewList_ExpenseItem
@@ -141,7 +130,7 @@ export default function Overview_List(props) {
         {activeSegment === 2 && (
           <FlatList
             data={allData}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
               <Swipeable renderRightActions={renderRightActions}>
                 <OverviewList_ExpenseItem
@@ -164,6 +153,12 @@ export default function Overview_List(props) {
 const styles = StyleSheet.create({
   dummy: {},
 });
+
+const mapStateToProps = (state) => {
+  return { financeData: state.finance };
+};
+
+export default connect(mapStateToProps)(Overview_List);
 
 /* copied from https://www.w3resource.com/javascript-exercises/javascript-date-exercise-24.php */
 function getWeekNumber(dt) {

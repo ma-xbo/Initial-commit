@@ -7,25 +7,92 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
+import firebase from "../js/Firebase";
 
 export default function SignUp(props) {
   const navigation = props.navigation;
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVeri, setPasswordVeri] = useState("");
+  const [error, setError] = useState();
 
-  const navLogin = () => {
-    navigation.navigate("Login", {});
+  const _signUp = async () => {
+    if (!email) {
+      setError("Bitte geben Sie eine E-Mail Adresse ein");
+      return;
+    } else if (!password && password.trim() && password.length > 6) {
+      setError("Weak password, minimum 5 chars");
+      return;
+    } else if (password !== passwordVeri) {
+      setError(
+        "Die eingegebenen Passwörter stimmen nicht miteinander überein!"
+      );
+      return;
+    }
+
+    await _createUser(email, password);
+  };
+
+  const _createUser = async (email, password) => {
+    try {
+      let response = await firebase.auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      if (response && response.user) {
+        firebase.db
+          .collection("userProfiles")
+          .doc(response.user.uid)
+          .set({
+            userId: response.user.uid,
+            name: "Max Mustermann",
+            email: email,
+            config: {
+              categories: [
+                "Gehalt",
+                "Versicherung",
+                "Auto",
+                "Miete",
+                "Haushalt",
+                "Lebensmittel",
+                "Hobbys & Freizeit",
+                "Technik"
+              ],
+              stores: [
+                "Rewe",
+                "Penny Markt",
+                "Edeka",
+                "Amazon",
+                "Netflix",
+                "Vodafone",
+                "Telekom",
+              ],
+            },
+          })
+          .then((docRef) => {
+            alert(
+              "Account erstellt",
+              "Dein Account wurde erfolgreich angelegt"
+            );
+            navigation.navigate("Login", {});
+          })
+          .catch((error) => {
+            setError("Es ist ein Fehler aufgetreten: ", error.message);
+          });
+      }
+    } catch (e) {
+      setError(e.message);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>Bitte füllen Sie die nachfolgenden Felder aus</Text>
       <TextInput
-        placeholder="Benutzername"
+        placeholder="E-Mail Adresse"
         style={styles.inputStyle}
-        value={username}
-        onChangeText={setUsername}
+        value={email}
+        onChangeText={setEmail}
       />
       <TextInput
         placeholder="Passwort"
@@ -41,7 +108,8 @@ export default function SignUp(props) {
         onChangeText={setPasswordVeri}
         secureTextEntry
       />
-      <Button title="Account erstellen" onPress={navLogin} />
+      <Text style={styles.errorText}>{error}</Text>
+      <Button title="Account erstellen" onPress={_signUp} />
     </SafeAreaView>
   );
 }
@@ -60,5 +128,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 0.2,
     borderColor: "black",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
 });

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -9,46 +10,122 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
+import { addFinanceItem } from "../js/redux/actions/Finance";
+import firebase from "../js/Firebase";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import MoneyInput from "../components/MoneyInput";
-import ItemPicker from "../components/ItemPicker";
+import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function NewEntry() {
+function NewEntry(props) {
   const [displayOptional, setDisplayOptional] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [store, setStore] = useState(""); //Geschäft
-  const [isSubscription, setIsSubscription] = useState(false); //subscription
-  const [subscriptionType, setSubscriptionType] = useState(""); //subscriptionType
-  const [isExpense, setIsExpense] = useState(true); //isExpense
-  const [amount, setAmount] = useState(0.0);
   const [date, setDate] = useState(new Date());
-  const [currency, setCurrency] = useState("euro");
+  const [store, setStore] = useState(props.currentUser.config.stores[0]); //Händler
+  const [category, setCategory] = useState(
+    props.currentUser.config.categories[0]
+  );
+  const [isExpense, setIsExpense] = useState(true);
+  const [isSubscription, setIsSubscription] = useState(false);
+  const [amount, setAmount] = useState(0.0);
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
   );
-  const [category, setCategory] = useState(selectableCategories[0].value);
 
-  const submitForm = () => {
-    alert("Clicked");
-    console.log("Log submitted data");
-    console.log("Titel:" + title);
-    console.log("Beschreibung:" + description);
-    console.log("Betrag:" + amount);
-    console.log("Datum:" + date);
-    console.log("Kategorie:" + category);
-
-    //reset inputs
+  const resetForm = () => {
     setTitle("");
     setDescription("");
-    setAmount(0.0);
     setDate(new Date());
-    setCategory(selectableCategories[0].value);
+    setStore(props.currentUser.config.stores[0]);
+    setCategory(props.currentUser.config.categories[0]);
+    setAmount(0.0);
+    setPaymentMethod(selectablePaymentMethods[0].value);
+    setIsSubscription(false);
+  };
+
+  const submitForm = () => {
+    let data = {
+      title: title,
+      description: description,
+      date: date,
+      store: store,
+      category: category,
+      amount: amount,
+      currency: "€",
+      paymentMethod: paymentMethod,
+      isSubscription: isSubscription,
+      userId: props.currentUser.userId,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+    };
+
+    firebase.db
+      .collection("financialData")
+      .add(data)
+      .then((docRef) => {
+        Alert.alert(
+          "Hinzufügen erfolgreich ➕",
+          "Die Daten wurden erfolgreich in der Cloud gespeichert"
+        );
+
+        data["docId"] = docRef.id;
+
+        props.addFinanceItem(data);
+
+        resetForm();
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Speichern in der Cloud ist ein Fehler aufgetreten: " +
+            error.message
+        );
+      });
+  };
+
+  const saveAsTemplate = () => {
+    const data = {
+      title: title,
+      description: description,
+      date: date,
+      store: store,
+      category: category,
+      amount: amount,
+      currency: "€",
+      paymentMethod: paymentMethod,
+      isSubscription: isSubscription,
+      userId: props.currentUser.userId,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+    };
+
+    //props.addTemplate(data);
+
+    firebase.db
+      .collection("userProfiles")
+      .doc(props.currentUser.userId)
+      .update({
+        "config.templates": firebase.fieldVal.arrayUnion(data),
+      })
+      .then((docRef) => {
+        Alert.alert(
+          "Hinzufügen erfolgreich ➕",
+          "Die Daten wurden erfolgreich in der Cloud gespeichert"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Speichern in der Cloud ist ein Fehler aufgetreten: " +
+            error.message
+        );
+      });
   };
 
   return (
@@ -84,6 +161,19 @@ export default function NewEntry() {
                 placeholder="Titel"
                 style={styles.inputView_textInput}
                 onChangeText={(val) => setTitle(val)}
+                value={title}
+              />
+            </View>
+
+            <View style={styles.inputView}>
+              <Text style={styles.inputView_text}>Datum</Text>
+              {/* https://github.com/react-native-datetimepicker/datetimepicker */}
+              <DateTimePicker
+                testID="dateTimePicker"
+                is24Hour={true}
+                display="default"
+                onChange={(event, date) => setDate(date)}
+                value={date}
               />
             </View>
 
@@ -113,108 +203,68 @@ export default function NewEntry() {
               </View>
             </View>
 
-            <View style={styles.inputView}>
-              <Text style={styles.inputView_text}>Datum</Text>
-              {/* https://github.com/react-native-datetimepicker/datetimepicker */}
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                is24Hour={true}
-                display="default"
-                onChange={(event, date) => setDate(date)}
-              />
-            </View>
-
-            <Pressable
-              onPress={() => setDisplayOptional(!displayOptional)}
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: colorDefinitions.light.gray2,
-                padding: 10,
-                margin: 5,
-                marginVertical: 20,
-                borderRadius: 10,
-              }}
-            >
-              <Text
-                style={{
-                  color: colorDefinitions.light.white,
-                  fontSize: 20,
-                }}
-              >
-                Optionale Felder
-              </Text>
-              {!displayOptional && (
-                <Ionicons
-                  name="arrow-back"
-                  size={24}
-                  color={colorDefinitions.light.white}
+            <View>
+              <View style={styles.inputView}>
+                <Text style={styles.inputView_text}>Bezahlmethode</Text>
+                <ObjectItemPicker
+                  title="Wählen Sie eine Bezahlmethode aus:"
+                  selectableItems={selectablePaymentMethods}
+                  onValueChange={(val) => setPaymentMethod(val)}
+                  value={paymentMethod}
                 />
-              )}
-              {displayOptional && (
-                <Ionicons
-                  name="arrow-down"
-                  size={24}
-                  color={colorDefinitions.light.white}
-                />
-              )}
-            </Pressable>
-
-            {displayOptional && (
-              <View>
-                <View style={styles.inputView}>
-                  <Text style={styles.inputView_text}>Bezahlmethode</Text>
-                  <ItemPicker
-                    title="Wählen Sie eine Bezahlmethode aus:"
-                    selectableItems={selectablePaymentMethods}
-                    onValueChange={(val) => setPaymentMethod(val)}
-                  />
-                </View>
-
-                <View style={styles.inputView}>
-                  <Text style={styles.inputView_text}>Kategorie</Text>
-                  <ItemPicker
-                    title="Wählen Sie eine Kategorie aus:"
-                    selectableItems={selectableCategories}
-                    onValueChange={(cat) => setCategory(cat)}
-                  />
-                </View>
-
-                <View style={styles.inputView}>
-                  <Text style={styles.inputView_text}>Beschreibung</Text>
-                  <TextInput
-                    placeholder="Beschreibung"
-                    style={styles.inputView_textInput}
-                    onChangeText={(val) => setDescription(val)}
-                  />
-                </View>
-
-                <View style={styles.inputView}>
-                  <Text style={styles.inputView_text}>Empfänger</Text>
-                  <TextInput
-                    placeholder="Empfänger"
-                    style={styles.inputView_textInput}
-                    onChangeText={(val) => setDescription(val)}
-                  />
-                </View>
-
-                <View style={styles.inputView}>
-                  <Text style={styles.inputView_text}>Abonnement</Text>
-                  <Switch
-                    onValueChange={() =>
-                      setIsSubscription((prevVal) => !prevVal)
-                    }
-                    value={isSubscription}
-                  />
-                </View>
               </View>
-            )}
+
+              <View style={styles.inputView}>
+                <Text style={styles.inputView_text}>Kategorie</Text>
+                <StringItemPicker
+                  title="Wählen Sie eine Kategorie aus:"
+                  selectableItems={props.currentUser.config.categories}
+                  onValueChange={(cat) => setCategory(cat)}
+                  value={category}
+                />
+              </View>
+
+              <View style={styles.inputView}>
+                <Text style={styles.inputView_text}>Geschäft</Text>
+                <StringItemPicker
+                  title="Wählen Sie ein Geschäft aus:"
+                  selectableItems={props.currentUser.config.stores}
+                  onValueChange={(cat) => setStore(cat)}
+                  value={store}
+                />
+              </View>
+
+              <View style={styles.inputView}>
+                <Text style={styles.inputView_text}>Beschreibung</Text>
+                <TextInput
+                  placeholder="Beschreibung"
+                  style={styles.inputView_textInput}
+                  onChangeText={(val) => setDescription(val)}
+                  value={description}
+                />
+              </View>
+
+              <View style={styles.inputView}>
+                <Text style={styles.inputView_text}>Abonnement</Text>
+                <Switch
+                  onValueChange={() => setIsSubscription((prevVal) => !prevVal)}
+                  value={isSubscription}
+                />
+              </View>
+            </View>
           </View>
 
           <View style={styles.submitButtonView}>
             <Pressable onPress={submitForm} style={styles.submitButton}>
-              <Text style={styles.submitButtonText}>Anlegen</Text>
+              <Text style={styles.submitButtonText}>Eintrag speichern</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.submitButtonView}>
+            <Pressable onPress={saveAsTemplate} style={styles.submitButton}>
+              <Text style={styles.submitButtonText}>
+                Als Template speichern
+              </Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -222,14 +272,6 @@ export default function NewEntry() {
     </AppSafeAreaView>
   );
 }
-
-const selectableCategories = [
-  { label: "Test 1", value: "test1" },
-  { label: "Test 2", value: "test2" },
-  { label: "Test 3", value: "test3" },
-  { label: "Test 4", value: "test4" },
-  { label: "Test 5", value: "test5" },
-];
 
 const selectablePaymentMethods = [
   { label: "Barzahlung", value: "cash" },
@@ -275,3 +317,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 });
+
+const mapStateToProps = (state) => {
+  return { currentUser: state.user };
+};
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ addFinanceItem }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewEntry);
