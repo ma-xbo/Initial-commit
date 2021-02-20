@@ -50,9 +50,9 @@ export function addTemplate(templateData) {
   };
 }
 
-export function deleteTemplate(templateData) {
+export function deleteTemplate(templateId) {
   return {
     type: DELETE_TEMPLATE,
-    payload: templateData,
+    payload: templateId,
   };
 }
