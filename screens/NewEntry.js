@@ -21,9 +21,11 @@ import AppSafeAreaView from "../components/AppSafeAreaView";
 import MoneyInput from "../components/MoneyInput";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 import NewEntry_Template from "../components/NewEntry_Template";
+import NewEntry_Camera from "../components/NewEntry_Camera";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 function NewEntry(props) {
+  const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
@@ -270,6 +272,15 @@ function NewEntry(props) {
             </View>
           </View>
 
+          <Pressable
+            onPress={() => {
+              setIsCameraVisible(true);
+            }}
+            style={styles.submitButton}
+          >
+            <Text style={styles.submitButtonText}>Bild aufnehmen</Text>
+          </Pressable>
+
           <View style={styles.submitButtonView}>
             <Pressable onPress={submitForm} style={styles.submitButton}>
               <Text style={styles.submitButtonText}>Eintrag speichern</Text>
@@ -285,6 +296,19 @@ function NewEntry(props) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {isCameraVisible && (
+        <View style={StyleSheet.absoluteFill}>
+          <NewEntry_Camera
+            onCancel={() => {
+              setIsCameraVisible(false);
+            }}
+            onSavePicture={(pic) => {
+              console.log(pic);
+            }}
+          />
+        </View>
+      )}
     </AppSafeAreaView>
   );
 }
