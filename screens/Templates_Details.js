@@ -1,8 +1,8 @@
 import React, { useState, useLayoutEffect } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Ionicons } from "@expo/vector-icons";
 import { deleteTemplate } from "../js/redux/actions/User";
 import PaymentMethodIcon from "../components/PaymentMethodIcon";
 import PaymentAmountText from "../components/PaymentAmountText";
@@ -23,8 +23,6 @@ function Templates_Details(props) {
   item.createdAt = new Date(item.createdAt);
   item.modifiedAt = new Date(item.modifiedAt);
 
-  console.log(item);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Details zu Vorlage",
@@ -41,17 +39,19 @@ function Templates_Details(props) {
 
   const onPressEdit = () => {
     alert("Edit item: " + item.templateId);
+    console.log(props.currentUser);
     //TODO Add Edit Screen
     //Navigate to Edit Screen
   };
 
   const onPressDelete = () => {
-    alert("Delete item: " + item.templateId);
+    console.log("Delete item: " + item.templateId);
 
-    //TODO Redux
-    //deleteTemplate(item.templateId)
+    props.deleteTemplate(item.templateId);
 
     //TODO Firebase
+
+    navigation.navigate("Vorlagen");
   };
 
   return (
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  return { userProfile: state.currentUser };
+  return { currentUser: state.user };
 };
 
 const mapDispatchToProps = (dispatch) =>

@@ -59,9 +59,7 @@ const currentUser = (state = initialUserInfo, action) => {
         ...state,
         config: {
           categories: [...state.config.categories],
-          stores: state.config.stores.filter(
-            (item) => item != storeName
-          ),
+          stores: state.config.stores.filter((item) => item != storeName),
           templates: [...state.config.templates],
         },
       };
@@ -87,7 +85,7 @@ const currentUser = (state = initialUserInfo, action) => {
           categories: [...state.config.categories],
           stores: [...state.config.stores],
           templates: state.config.templates.filter(
-            (item) => item.templateId != templateId
+            (item) => item.templateId !== templateId
           ),
         },
       };
