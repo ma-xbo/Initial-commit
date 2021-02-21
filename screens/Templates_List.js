@@ -2,25 +2,25 @@ import React, { useState, useEffect } from "react";
 import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import AppSafeAreaView from "../components/AppSafeAreaView";
-import SubscriptionItem from "../components/SubscriptionItem";
+import TemplateListItem from "../components/TemplateListItem";
 
 function Templates_List(props) {
   const navigation = props.navigation;
 
   return (
     <AppSafeAreaView title="Vorlagen">
-      <View style={{ width: "100%" }}>
+      <View style={styles.container}>
         {props.currentUser.config.templates.length > 0 && (
           <FlatList
             data={props.currentUser.config.templates}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             keyExtractor={(item) => item.templateId}
             renderItem={({ item }) => (
-              <SubscriptionItem
+              <TemplateListItem
                 itemObject={item}
                 onPress={() =>
                   navigation.navigate("Details", {
-                    itemObject: item,
+                    itemObject: JSON.stringify(item),
                   })
                 }
               />
@@ -38,7 +38,7 @@ function Templates_List(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: { flex: 1, width: "100%" },
   separator: {
     backgroundColor: "rgb(200, 199, 204)",
     height: StyleSheet.hairlineWidth,

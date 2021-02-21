@@ -17,7 +17,7 @@ export default function Subscriptions() {
       }}
     >
       <Stack.Screen
-        name="Abos"
+        name="Vorlagen"
         component={Templates_List}
         options={{ headerShown: false }}
       />

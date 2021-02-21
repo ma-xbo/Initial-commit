@@ -18,7 +18,11 @@ function Templates_Details(props) {
   const navigation = props.navigation;
   const [displayHeaderMenu, setDisplayHeaderMenu] = useState(false);
 
-  const item = route.params.itemObject;
+  const item = JSON.parse(route.params.itemObject);
+  item.date = new Date(item.date);
+  item.createdAt = new Date(item.createdAt);
+  item.modifiedAt = new Date(item.modifiedAt);
+
   console.log(item);
 
   useLayoutEffect(() => {
@@ -36,11 +40,13 @@ function Templates_Details(props) {
   }, [navigation, displayHeaderMenu]);
 
   const onPressEdit = () => {
-    alert("Edit item: ", item.templateId);
+    alert("Edit item: " + item.templateId);
+    //TODO Add Edit Screen
+    //Navigate to Edit Screen
   };
 
   const onPressDelete = () => {
-    alert("Delete item: ", item.templateId);
+    alert("Delete item: " + item.templateId);
 
     //TODO Redux
     //deleteTemplate(item.templateId)
@@ -63,7 +69,13 @@ function Templates_Details(props) {
               padding: 5,
             }}
           >
-            <Text>Test</Text>
+            <CardItem title="Titel" text={item.title} />
+            <CardItem title="Betrag" text={item.amount + item.currency} />
+            <CardItem title="Geschäft" text={item.store} />
+            <CardItem title="Kategorie" text={item.category} />
+            {item.description !== "" && (
+              <CardItem title="Beschreibung" text={item.description} />
+            )}
           </View>
         </Pressable>
       </ScrollView>
@@ -83,6 +95,42 @@ function Templates_Details(props) {
   );
 }
 
+function CardItem(props) {
+  const { title, text, children } = props;
+
+  return (
+    <View
+      style={{
+        backgroundColor: colorDefinitions.light.gray5,
+        padding: 10,
+        marginVertical: 5,
+        marginHorizontal: 2,
+        borderRadius: 10,
+      }}
+    >
+      <Text
+        style={{
+          color: colorDefinitions.light.black,
+          fontSize: 20,
+          fontWeight: "bold",
+          marginBottom: 4,
+        }}
+      >
+        {title}
+      </Text>
+      <Text
+        style={{
+          color: colorDefinitions.light.black,
+          fontSize: 18,
+        }}
+      >
+        {text}
+      </Text>
+      {children}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -98,20 +146,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginVertical: 10,
-  },
-  controlButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignContent: "center",
-    width: 150,
-    padding: 6,
-    marginVertical: 1,
-    borderRadius: 5,
-  },
-  controlButtonText: {
-    fontSize: 22,
-    marginHorizontal: 6,
-    color: colorDefinitions.light.white,
   },
 });
 
