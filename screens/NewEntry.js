@@ -135,12 +135,9 @@ function NewEntry(props) {
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS == "ios" ? 120 : 20}
-        style={{ flex: 1 }}
+        style={styles.container}
       >
-        <ScrollView
-          style={styles.container}
-          keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView keyboardShouldPersistTaps="handled">
           {/* Templates */}
           <FlatList
             horizontal
