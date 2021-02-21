@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import {
   Alert,
-  KeyboardAvoidingView,
   FlatList,
+  Image,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Ionicons } from "@expo/vector-icons";
 import { addTemplate } from "../js/redux/actions/User";
 import { addFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
@@ -39,6 +41,11 @@ function NewEntry(props) {
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
   );
+  const [picture, setPicture] = useState();
+
+  //TODO
+  // add picture to redux --> save pictureObject in the entry?
+  // add picture to cloud --> picture to blob?
 
   const resetForm = () => {
     setTitle("");
@@ -269,17 +276,38 @@ function NewEntry(props) {
                   value={isSubscription}
                 />
               </View>
+
+              {picture && (
+                <View style={[styles.inputView,{height:150}]}>
+                  <Image
+                    style={{flex:1, height: null, width: null}}
+                    resizeMode="contain"
+                    source={picture}
+                  />
+                </View>
+              )}
+
+              <View style={styles.inputView}>
+                <Pressable
+                  onPress={() => {
+                    setIsCameraVisible(true);
+                  }}
+                  style={[
+                    styles.submitButton,
+                    { backgroundColor: colorDefinitions.light.gray },
+                  ]}
+                >
+                  <Ionicons
+                    name="ios-camera-sharp"
+                    size={20}
+                    color="white"
+                    style={{ marginRight: 5 }}
+                  />
+                  <Text style={styles.submitButtonText}>Bild aufnehmen</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
-
-          <Pressable
-            onPress={() => {
-              setIsCameraVisible(true);
-            }}
-            style={styles.submitButton}
-          >
-            <Text style={styles.submitButtonText}>Bild aufnehmen</Text>
-          </Pressable>
 
           <View style={styles.submitButtonView}>
             <Pressable onPress={submitForm} style={styles.submitButton}>
@@ -304,7 +332,8 @@ function NewEntry(props) {
               setIsCameraVisible(false);
             }}
             onSavePicture={(pic) => {
-              console.log(pic);
+              setPicture(pic);
+              setIsCameraVisible(false);
             }}
           />
         </View>
@@ -347,9 +376,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   submitButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colorDefinitions.light.blue,
     borderRadius: 5,
-    width: "50%",
     marginVertical: 5,
     marginBottom: 10,
     padding: 5,
