@@ -1,9 +1,17 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { deleteTemplate } from "../js/redux/actions/User";
+import firebase from "../js/Firebase";
 import PaymentMethodIcon from "../components/PaymentMethodIcon";
 import PaymentAmountText from "../components/PaymentAmountText";
 import {
@@ -49,7 +57,26 @@ function Templates_Details(props) {
 
     props.deleteTemplate(item.templateId);
 
-    //TODO Firebase
+    firebase.db
+      .collection("userProfiles")
+      .doc(props.currentUser.userId)
+      .update({
+        "config.templates": props.currentUser.config.templates.filter(
+          (element) => element.templateId !== item.templateId
+        ),
+      })
+      .then(() => {
+        Alert.alert(
+          "Löschen erfolgreich 🗑️",
+          "Das Template " + item.title + " wurde gelöscht"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+        );
+      });
 
     navigation.navigate("Vorlagen");
   };
