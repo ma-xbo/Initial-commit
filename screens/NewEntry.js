@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
+  FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,21 +14,20 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { addTemplate } from "../js/redux/actions/User";
 import { addFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import MoneyInput from "../components/MoneyInput";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
-import CurrencyDropdown from "../components/CurrencyDropdown";
 import NewEntry_Template from "../components/NewEntry_Template";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 function NewEntry(props) {
-  const [displayOptional, setDisplayOptional] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
-  const [store, setStore] = useState(props.currentUser.config.stores[0]); //Händler
+  const [store, setStore] = useState(props.currentUser.config.stores[0]);
   const [category, setCategory] = useState(
     props.currentUser.config.categories[0]
   );
@@ -103,9 +103,11 @@ function NewEntry(props) {
       userId: props.currentUser.userId,
       createdAt: new Date(),
       modifiedAt: new Date(),
+      templateColor: colorDefinitions.light.blue,
+      templateId: generateUUID(),
     };
 
-    //props.addTemplate(data);
+    props.addTemplate(data);
 
     firebase.db
       .collection("userProfiles")
@@ -113,9 +115,9 @@ function NewEntry(props) {
       .update({
         "config.templates": firebase.fieldVal.arrayUnion(data),
       })
-      .then((docRef) => {
+      .then(() => {
         Alert.alert(
-          "Hinzufügen erfolgreich ➕",
+          "Erfolgreich aktualisiert",
           "Die Daten wurden erfolgreich in der Cloud gespeichert"
         );
       })
@@ -133,25 +135,39 @@ function NewEntry(props) {
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS == "ios" ? 120 : 20}
-        style={{ flex: 1 }}
+        style={styles.container}
       >
-        <ScrollView
-          style={{
-            flex: 1,
-            width: "100%",
-          }}
-          keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView keyboardShouldPersistTaps="handled">
           {/* Templates */}
-          <ScrollView
+          <FlatList
             horizontal
             style={{ paddingVertical: 10 }}
             contentContainerStyle={{ paddingHorizontal: 10 }}
-          >
-            <NewEntry_Template text="Template 1" />
-            <NewEntry_Template text="Template 2" />
-            <NewEntry_Template text="Template 3" />
-          </ScrollView>
+            data={props.currentUser.config.templates}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            keyExtractor={(item) => item.templateId}
+            renderItem={({ item }) => (
+              <NewEntry_Template
+                text={item.title}
+                onPress={() => {
+                  setTitle(item.title);
+                  setDescription(item.description);
+                  setDate(item.date);
+                  if (item.amount < 0) {
+                    setAmount(Math.abs(item.amount));
+                    setIsExpense(true);
+                  } else {
+                    setAmount(item.amount);
+                    setIsExpense(false);
+                  }
+                  setPaymentMethod(item.paymentMethod);
+                  setCategory(item.category);
+                  setStore(item.store);
+                  setIsSubscription(item.isSubscription);
+                }}
+              />
+            )}
+          />
 
           {/* Form */}
           <View>
@@ -281,6 +297,10 @@ const selectablePaymentMethods = [
 ];
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+  },
   inputView_text: {
     fontSize: 22,
     fontWeight: "bold",
@@ -323,6 +343,26 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ addFinanceItem }, dispatch);
+  bindActionCreators({ addFinanceItem, addTemplate }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewEntry);
+
+/* https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid */
+function generateUUID() {
+  // Public Domain/MIT
+  var d = new Date().getTime(); //Timestamp
+  var d2 = (performance && performance.now && performance.now() * 1000) || 0; //Time in microseconds since page-load or 0 if unsupported
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16; //random number between 0 and 16
+    if (d > 0) {
+      //Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {
+      //Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
