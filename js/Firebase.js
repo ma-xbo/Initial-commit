@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDzY77UPCkh9LYcNJNw3HFYnv5roYpKP8A",
@@ -16,6 +17,7 @@ export default class Finance_Firebase {
   static auth;
   static fieldVal;
   static firestore;
+  static storage;
 
   static init() {
     if (firebase.apps.length === 0) {
@@ -25,5 +27,6 @@ export default class Finance_Firebase {
     Finance_Firebase.auth = firebase.auth();
     Finance_Firebase.fieldVal = firebase.firestore.FieldValue;
     Finance_Firebase.firestore = firebase.firestore;
+    Finance_Firebase.storage = firebase.storage();
   }
 }

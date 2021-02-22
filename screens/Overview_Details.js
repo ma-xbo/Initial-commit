@@ -1,5 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
 import {
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,7 +10,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import PaymentMethodIcon from "../components/PaymentMethodIcon";
 import PaymentAmountText from "../components/PaymentAmountText";
-import { OverflowMenuContainer, OverflowMenuItem } from "../components/OverflowMenu";
+import {
+  OverflowMenuContainer,
+  OverflowMenuItem,
+} from "../components/OverflowMenu";
 import Hr from "../components/HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
@@ -99,6 +103,16 @@ export default function Overview_Details(props) {
             </CardItem>
             <Hr />
             <CardItem title="Datum" text={dateText} />
+
+            <CardItem title="Angehängtes Bild">
+              <View style={{ height: 300 }}>
+                <Image
+                  style={{ flex: 1, height: null, width: null }}
+                  resizeMode="contain"
+                  source={{ uri: item.imageUrl }}
+                />
+              </View>
+            </CardItem>
           </View>
         </Pressable>
 
@@ -136,7 +150,11 @@ export default function Overview_Details(props) {
         </View>
       </ScrollView>
       {displayHeaderMenu && (
-        <OverflowMenuContainer menuType="topRight" closeAction={() => setDisplayHeaderMenu(false)} bottom>
+        <OverflowMenuContainer
+          menuType="topRight"
+          closeAction={() => setDisplayHeaderMenu(false)}
+          bottom
+        >
           <OverflowMenuItem text="Edit" action={onPressEdit} />
           <Hr />
           <OverflowMenuItem text="Delete" action={onPressDelete} />

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import {
   Alert,
-  KeyboardAvoidingView,
   FlatList,
+  Image,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Ionicons } from "@expo/vector-icons";
 import { addTemplate } from "../js/redux/actions/User";
 import { addFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
@@ -21,9 +23,11 @@ import AppSafeAreaView from "../components/AppSafeAreaView";
 import MoneyInput from "../components/MoneyInput";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 import NewEntry_Template from "../components/NewEntry_Template";
+import NewEntry_Camera from "../components/NewEntry_Camera";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 function NewEntry(props) {
+  const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
@@ -37,6 +41,7 @@ function NewEntry(props) {
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
   );
+  const [picture, setPicture] = useState();
 
   const resetForm = () => {
     setTitle("");
@@ -47,9 +52,12 @@ function NewEntry(props) {
     setAmount(0.0);
     setPaymentMethod(selectablePaymentMethods[0].value);
     setIsSubscription(false);
+    setPicture(null);
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
+    const imageUrl = await uploadImage(picture.uri);
+
     let data = {
       title: title,
       description: description,
@@ -59,6 +67,7 @@ function NewEntry(props) {
       amount: amount,
       currency: "€",
       paymentMethod: paymentMethod,
+      imageUrl: imageUrl,
       isSubscription: isSubscription,
       userId: props.currentUser.userId,
       createdAt: new Date(),
@@ -75,7 +84,6 @@ function NewEntry(props) {
         );
 
         data["docId"] = docRef.id;
-
         props.addFinanceItem(data);
 
         resetForm();
@@ -267,6 +275,36 @@ function NewEntry(props) {
                   value={isSubscription}
                 />
               </View>
+
+              {picture && (
+                <View style={[styles.inputView, { height: 150 }]}>
+                  <Image
+                    style={{ flex: 1, height: null, width: null }}
+                    resizeMode="contain"
+                    source={picture}
+                  />
+                </View>
+              )}
+
+              <View style={styles.inputView}>
+                <Pressable
+                  onPress={() => {
+                    setIsCameraVisible(true);
+                  }}
+                  style={[
+                    styles.submitButton,
+                    { backgroundColor: colorDefinitions.light.gray },
+                  ]}
+                >
+                  <Ionicons
+                    name="ios-camera-sharp"
+                    size={20}
+                    color="white"
+                    style={{ marginRight: 5 }}
+                  />
+                  <Text style={styles.submitButtonText}>Bild aufnehmen</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
 
@@ -285,6 +323,20 @@ function NewEntry(props) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {isCameraVisible && (
+        <View style={StyleSheet.absoluteFill}>
+          <NewEntry_Camera
+            onCancel={() => {
+              setIsCameraVisible(false);
+            }}
+            onSavePicture={(pic) => {
+              setPicture(pic);
+              setIsCameraVisible(false);
+            }}
+          />
+        </View>
+      )}
     </AppSafeAreaView>
   );
 }
@@ -323,9 +375,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   submitButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colorDefinitions.light.blue,
     borderRadius: 5,
-    width: "50%",
     marginVertical: 5,
     marginBottom: 10,
     padding: 5,
@@ -365,4 +419,20 @@ function generateUUID() {
     }
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
+}
+
+async function uploadImage(uri) {
+  const response = await fetch(uri);
+  const imageBlob = await response.blob();
+
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const name = generateUUID() + "-media.jpg";
+  const imageRef = firebase.storage.ref().child("images/" + name);
+
+  const snapshot = await imageRef.put(imageBlob, metadata);
+  const downloadURL = await snapshot.ref.getDownloadURL();
+
+  return downloadURL;
 }
