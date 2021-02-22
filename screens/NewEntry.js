@@ -43,10 +43,6 @@ function NewEntry(props) {
   );
   const [picture, setPicture] = useState();
 
-  //TODO
-  // add picture to redux --> save pictureObject in the entry?
-  // add picture to cloud --> picture to blob?
-
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -56,9 +52,12 @@ function NewEntry(props) {
     setAmount(0.0);
     setPaymentMethod(selectablePaymentMethods[0].value);
     setIsSubscription(false);
+    setPicture(null);
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
+    const imageUrl = await uploadImage(picture.uri);
+
     let data = {
       title: title,
       description: description,
@@ -68,6 +67,7 @@ function NewEntry(props) {
       amount: amount,
       currency: "€",
       paymentMethod: paymentMethod,
+      imageUrl: imageUrl,
       isSubscription: isSubscription,
       userId: props.currentUser.userId,
       createdAt: new Date(),
@@ -84,7 +84,6 @@ function NewEntry(props) {
         );
 
         data["docId"] = docRef.id;
-
         props.addFinanceItem(data);
 
         resetForm();
@@ -278,9 +277,9 @@ function NewEntry(props) {
               </View>
 
               {picture && (
-                <View style={[styles.inputView,{height:150}]}>
+                <View style={[styles.inputView, { height: 150 }]}>
                   <Image
-                    style={{flex:1, height: null, width: null}}
+                    style={{ flex: 1, height: null, width: null }}
                     resizeMode="contain"
                     source={picture}
                   />
@@ -420,4 +419,20 @@ function generateUUID() {
     }
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
+}
+
+async function uploadImage(uri) {
+  const response = await fetch(uri);
+  const imageBlob = await response.blob();
+
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const name = generateUUID() + "-media.jpg";
+  const imageRef = firebase.storage.ref().child("images/" + name);
+
+  const snapshot = await imageRef.put(imageBlob, metadata);
+  const downloadURL = await snapshot.ref.getDownloadURL();
+
+  return downloadURL;
 }
