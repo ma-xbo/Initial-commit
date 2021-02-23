@@ -6,6 +6,7 @@ import {
   DELETE_STORE,
   ADD_TEMPLATE,
   DELETE_TEMPLATE,
+  UPDATE_TEMPLATE,
 } from "../actionTypes.js";
 
 const currentUser = (state = initialUserInfo, action) => {
@@ -87,6 +88,25 @@ const currentUser = (state = initialUserInfo, action) => {
           templates: state.config.templates.filter(
             (item) => item.templateId !== templateId
           ),
+        },
+      };
+    }
+
+    case UPDATE_TEMPLATE: {
+      const templateData = action.payload;
+
+      return {
+        ...state,
+        config: {
+          categories: [...state.config.categories],
+          stores: [...state.config.stores],
+          templates: state.config.templates.map((item, index) => {
+            console.log(item);
+            if (item.templateId === templateData.templateId) {
+              return templateData;
+            }
+            return item;
+          }),
         },
       };
     }

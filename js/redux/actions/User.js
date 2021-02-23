@@ -6,6 +6,7 @@ import {
   LOAD_USER,
   ADD_TEMPLATE,
   DELETE_TEMPLATE,
+  UPDATE_TEMPLATE,
 } from "../actionTypes.js";
 
 export function loadUser(userData) {
@@ -54,5 +55,12 @@ export function deleteTemplate(templateId) {
   return {
     type: DELETE_TEMPLATE,
     payload: templateId,
+  };
+}
+
+export function updateTemplate(templateData) {
+  return {
+    type: UPDATE_TEMPLATE,
+    payload: templateData,
   };
 }
