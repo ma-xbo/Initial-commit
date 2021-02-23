@@ -46,10 +46,9 @@ function Templates_Details(props) {
   }, [navigation, displayHeaderMenu]);
 
   const onPressEdit = () => {
-    alert("Edit item: " + item.templateId);
-    console.log(props.currentUser);
-    //TODO Add Edit Screen
-    //Navigate to Edit Screen
+    navigation.navigate("Bearbeiten", {
+      itemObject: route.params.itemObject,
+    });
   };
 
   const onPressDelete = () => {
@@ -82,7 +81,7 @@ function Templates_Details(props) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <ScrollView style={styles.container}>
         <Text>{displayHeaderMenu}</Text>
         <Pressable
