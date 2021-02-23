@@ -101,12 +101,17 @@ function Templates_Edit(props) {
     };
 
     props.updateTemplate(data);
-    /* 
+
     firebase.db
       .collection("userProfiles")
       .doc(props.currentUser.userId)
       .update({
-        "config.templates": firebase.fieldVal.arrayUnion(data),
+        "config.templates": props.currentUser.config.templates.map((item) => {
+          if (item.templateId === data.templateId) {
+            return data;
+          }
+          return item;
+        }),
       })
       .then(() => {
         Alert.alert(
@@ -121,8 +126,8 @@ function Templates_Edit(props) {
             error.message
         );
       });
-       */
 
+    resetForm();
     navigation.navigate("Vorlagen");
   };
 

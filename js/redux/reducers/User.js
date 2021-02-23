@@ -100,8 +100,7 @@ const currentUser = (state = initialUserInfo, action) => {
         config: {
           categories: [...state.config.categories],
           stores: [...state.config.stores],
-          templates: state.config.templates.map((item, index) => {
-            console.log(item);
+          templates: state.config.templates.map((item) => {
             if (item.templateId === templateData.templateId) {
               return templateData;
             }
