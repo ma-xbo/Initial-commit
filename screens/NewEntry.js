@@ -41,7 +41,7 @@ function NewEntry(props) {
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
   );
-  const [picture, setPicture] = useState();
+  const [imageUrl, setImageUrl] = useState("");
 
   const resetForm = () => {
     setTitle("");
@@ -52,11 +52,14 @@ function NewEntry(props) {
     setAmount(0.0);
     setPaymentMethod(selectablePaymentMethods[0].value);
     setIsSubscription(false);
-    setPicture(null);
+    setImageUrl("");
   };
 
   const submitForm = async () => {
-    const imageUrl = await uploadImage(picture.uri);
+    if (imageUrl !== "") {
+      const url = await uploadImage(imageUrl);
+      setImageUrl(url);
+    }
 
     let data = {
       title: title,
@@ -160,7 +163,7 @@ function NewEntry(props) {
                 onPress={() => {
                   setTitle(item.title);
                   setDescription(item.description);
-                  setDate(item.date);
+                  setDate(new Date());
                   if (item.amount < 0) {
                     setAmount(Math.abs(item.amount));
                     setIsExpense(true);
@@ -276,12 +279,12 @@ function NewEntry(props) {
                 />
               </View>
 
-              {picture && (
+              {imageUrl !== "" && (
                 <View style={[styles.inputView, { height: 150 }]}>
                   <Image
                     style={{ flex: 1, height: null, width: null }}
                     resizeMode="contain"
-                    source={picture}
+                    source={{ url: imageUrl }}
                   />
                 </View>
               )}
@@ -331,7 +334,7 @@ function NewEntry(props) {
               setIsCameraVisible(false);
             }}
             onSavePicture={(pic) => {
-              setPicture(pic);
+              setImageUrl(pic.uri);
               setIsCameraVisible(false);
             }}
           />

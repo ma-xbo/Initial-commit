@@ -1,5 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -8,6 +9,10 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { deleteFinanceItem } from "../js/redux/actions/Finance";
+import firebase from "../js/Firebase";
 import PaymentMethodIcon from "../components/PaymentMethodIcon";
 import PaymentAmountText from "../components/PaymentAmountText";
 import {
@@ -17,11 +22,15 @@ import {
 import Hr from "../components/HorizontalRule";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
-export default function Overview_Details(props) {
+function Overview_Details(props) {
   const route = props.route;
   const navigation = props.navigation;
-  const item = JSON.parse(route.params.itemObject);
+
   const [displayHeaderMenu, setDisplayHeaderMenu] = useState(false);
+  const item = JSON.parse(route.params.itemObject);
+  item.date = new Date(item.date);
+  item.createdAt = new Date(item.createdAt);
+  item.modifiedAt = new Date(item.modifiedAt);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -41,11 +50,36 @@ export default function Overview_Details(props) {
     item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
-    alert("Greetings from edit");
+    setDisplayHeaderMenu(false);
+    navigation.navigate("Bearbeiten", {
+      itemObject: route.params.itemObject,
+    });
   };
 
   const onPressDelete = () => {
-    alert("Greetings from delete");
+    console.log("delete item: " + item.docId);
+
+    props.deleteFinanceItem(item.docId);
+
+    firebase.db
+      .collection("financialData")
+      .doc(item.docId)
+      .delete()
+      .then(() => {
+        Alert.alert(
+          "Löschen erfolgreich 🗑️",
+          "Der Eintrag " + item.title + " wurde gelöscht"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+        );
+      });
+
+    setDisplayHeaderMenu(false);
+    navigation.navigate("Übersicht");
   };
 
   return (
@@ -104,15 +138,17 @@ export default function Overview_Details(props) {
             <Hr />
             <CardItem title="Datum" text={dateText} />
 
-            <CardItem title="Angehängtes Bild">
-              <View style={{ height: 300 }}>
-                <Image
-                  style={{ flex: 1, height: null, width: null }}
-                  resizeMode="contain"
-                  source={{ uri: item.imageUrl }}
-                />
-              </View>
-            </CardItem>
+            {item.imageUrl !== "" && (
+              <CardItem title="Angehängtes Bild">
+                <View style={{ height: 300 }}>
+                  <Image
+                    style={{ flex: 1, height: null, width: null }}
+                    resizeMode="contain"
+                    source={{ uri: item.imageUrl }}
+                  />
+                </View>
+              </CardItem>
+            )}
           </View>
         </Pressable>
 
@@ -231,3 +267,12 @@ const styles = StyleSheet.create({
     color: colorDefinitions.light.white,
   },
 });
+
+const mapStateToProps = (state) => {
+  return { financeData: state.finance };
+};
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ deleteFinanceItem }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Overview_Details);
