@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
-//import { updateTemplate } from "../js/redux/actions/User";
+import { updateFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
 import NewEntry_Camera from "../components/NewEntry_Camera";
 import MoneyInput from "../components/MoneyInput";
@@ -37,10 +37,11 @@ function Overview_Edit(props) {
     selectablePaymentMethods[0].value
   );
   const [isSubscription, setIsSubscription] = useState(false);
-  const [templateId, setTemplateId] = useState();
   const [createdAt, setCreatedAt] = useState();
   const [imageUrl, setImageUrl] = useState();
   const [isCameraVisible, setIsCameraVisible] = useState(false);
+  const [docId, setDocId] = useState();
+  const [isNewImage, setIsNewImage] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -49,16 +50,13 @@ function Overview_Edit(props) {
 
     const item = JSON.parse(route.params.itemObject);
     let expense = false;
-    let amount = 0.0;
 
     console.log(item);
 
-    if (item.amount < 0.0) {
+    if (parseFloat(item.amount) < 0.0) {
       expense = true;
-      amount = Math.abs(item.amount);
     } else {
       expense = false;
-      amount = Math.abs(item.amount);
     }
 
     setTitle(item.title);
@@ -66,14 +64,14 @@ function Overview_Edit(props) {
     setDate(new Date(item.date));
     setStore(item.store);
     setCategory(item.category);
-    setAmount(amount);
+    setAmount(Math.abs(item.amount));
     setIsExpense(expense);
     setPaymentMethod(item.paymentMethod);
     setIsSubscription(item.isSubscription);
     setImageUrl(item.imageUrl);
-    setTemplateId(item.templateId);
     setCreatedAt(new Date(item.createdAt));
-  }, []);
+    setDocId(item.docId);
+  }, [route.params.itemObject]);
 
   const resetForm = () => {
     setTitle("");
@@ -86,7 +84,12 @@ function Overview_Edit(props) {
     setIsSubscription(false);
   };
 
-  const test = () => {
+  const saveEntry = async () => {
+    if (isNewImage) {
+      const url = await uploadImage(imageUrl);
+      setImageUrl(url);
+    }
+
     const data = {
       title: title,
       description: description,
@@ -100,42 +103,16 @@ function Overview_Edit(props) {
       userId: props.currentUser.userId,
       createdAt: createdAt,
       modifiedAt: new Date(),
-      templateColor: colorDefinitions.light.blue,
-      templateId: templateId,
-    };
-  };
-
-  const saveEntry = () => {
-    const data = {
-      title: title,
-      description: description,
-      date: date,
-      store: store,
-      category: category,
-      amount: amount,
-      currency: "€",
-      paymentMethod: paymentMethod,
-      isSubscription: isSubscription,
-      userId: props.currentUser.userId,
-      createdAt: createdAt,
-      modifiedAt: new Date(),
-      templateColor: colorDefinitions.light.blue,
-      templateId: templateId,
+      docId: docId,
+      imageUrl: imageUrl,
     };
 
-    props.updateTemplate(data);
+    props.updateFinanceItem(data);
 
     firebase.db
-      .collection("userProfiles")
-      .doc(props.currentUser.userId)
-      .update({
-        "config.templates": props.currentUser.config.templates.map((item) => {
-          if (item.templateId === data.templateId) {
-            return data;
-          }
-          return item;
-        }),
-      })
+      .collection("financialData")
+      .doc(docId)
+      .update(data)
       .then(() => {
         Alert.alert(
           "Erfolgreich aktualisiert",
@@ -151,7 +128,7 @@ function Overview_Edit(props) {
       });
 
     resetForm();
-    navigation.navigate("Vorlagen");
+    navigation.navigate("Übersicht");
   };
 
   return (
@@ -259,7 +236,7 @@ function Overview_Edit(props) {
               />
             </View>
 
-            {imageUrl && (
+            {imageUrl !== "" && (
               <View style={[styles.inputView, { height: 150 }]}>
                 <Image
                   style={{ flex: 1, height: null, width: null }}
@@ -269,7 +246,12 @@ function Overview_Edit(props) {
               </View>
             )}
 
-            <View style={styles.inputView}>
+            <View
+              style={[
+                styles.inputView,
+                { flexDirection: "row", justifyContent: "space-evenly" },
+              ]}
+            >
               <Pressable
                 onPress={() => {
                   setIsCameraVisible(true);
@@ -287,11 +269,31 @@ function Overview_Edit(props) {
                 />
                 <Text style={styles.buttonText}>Bild aufnehmen</Text>
               </Pressable>
+
+              {imageUrl !== "" && (
+                <Pressable
+                  onPress={() => {
+                    setImageUrl("");
+                  }}
+                  style={[
+                    styles.button,
+                    { backgroundColor: colorDefinitions.light.red },
+                  ]}
+                >
+                  <Ionicons
+                    name="ios-camera-sharp"
+                    size={20}
+                    color="white"
+                    style={{ marginRight: 5 }}
+                  />
+                  <Text style={styles.buttonText}>Bild entfernen</Text>
+                </Pressable>
+              )}
             </View>
           </View>
 
           <View style={styles.buttonView}>
-            <Pressable style={styles.button} onPress={test}>
+            <Pressable style={styles.button} onPress={saveEntry}>
               <Text style={styles.buttonText}>Eintrag aktualisieren</Text>
             </Pressable>
           </View>
@@ -306,6 +308,7 @@ function Overview_Edit(props) {
             }}
             onSavePicture={(pic) => {
               setImageUrl(pic.uri);
+              setIsNewImage(true);
               setIsCameraVisible(false);
             }}
           />
@@ -366,10 +369,46 @@ const styles = StyleSheet.create({
   },
 });
 
+async function uploadImage(uri) {
+  const response = await fetch(uri);
+  const imageBlob = await response.blob();
+
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const name = generateUUID() + "-media.jpg";
+  const imageRef = firebase.storage.ref().child("images/" + name);
+
+  const snapshot = await imageRef.put(imageBlob, metadata);
+  const downloadURL = await snapshot.ref.getDownloadURL();
+
+  return downloadURL;
+}
+
+function generateUUID() {
+  // Public Domain/MIT
+  var d = new Date().getTime(); //Timestamp
+  var d2 = (performance && performance.now && performance.now() * 1000) || 0; //Time in microseconds since page-load or 0 if unsupported
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16; //random number between 0 and 16
+    if (d > 0) {
+      //Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {
+      //Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 const mapStateToProps = (state) => {
   return { currentUser: state.user };
 };
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({}, dispatch);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ updateFinanceItem }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Overview_Edit);

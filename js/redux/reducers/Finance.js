@@ -25,7 +25,7 @@ const financeData = (state = initialFinanceData, action) => {
     case UPDATE_FINANCEDP: {
       const datapoint = action.payload;
 
-      return state.config.templates.map((item) => {
+      return state.map((item) => {
         if (item.docId === datapoint.docId) {
           return datapoint;
         }
