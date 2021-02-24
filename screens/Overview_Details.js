@@ -41,7 +41,9 @@ export default function Overview_Details(props) {
     item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
-    alert("Greetings from edit");
+    navigation.navigate("Bearbeiten", {
+      itemObject: route.params.itemObject,
+    });
   };
 
   const onPressDelete = () => {

@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Overview_List from "./Overview_List";
 import Overview_Details from "./Overview_Details";
+import Overview_Edit from "./Overview_Edit";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 export default function OverviewList() {
@@ -23,6 +24,7 @@ export default function OverviewList() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Details" component={Overview_Details} />
+      <Stack.Screen name="Bearbeiten" component={Overview_Edit} />
     </Stack.Navigator>
   );
 }
