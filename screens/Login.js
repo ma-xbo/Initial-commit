@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   SafeAreaView,
@@ -17,6 +17,7 @@ function Login(props) {
   const navigation = props.navigation;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const _signIn = async () => {
     try {
@@ -37,26 +38,9 @@ function Login(props) {
         //Navigate
         _navMain();
       }
-    } catch (e) {
-      switch (e) {
-        case "[Error: The password is invalid or the user does not have a password.]":
-          alert(
-            "Fehler",
-            "Die eingegebene Kombination aus E-Mail und Passwort ist falsch. Bitte versuchen Sie er erneut."
-          );
-          break;
-        case "[Error: The email address is badly formatted.]":
-          alert(
-            "Fehler",
-            "Die eingegebene Kombination aus E-Mail und Passwort ist falsch. Bitte versuchen Sie er erneut."
-          );
-
-          break;
-
-        default:
-          console.log(e);
-          break;
-      }
+    } catch (error) {
+      const errorMessage = error.message;
+      setErrorMessage(errorMessage);
       setEmail("");
       setPassword("");
     }
@@ -122,7 +106,7 @@ function Login(props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Willkommen</Text>
+      <Text style={{ fontSize: 40, marginBottom: 20 }}>Willkommen zurück</Text>
       <Text>Bitte loggen Sie sich ein</Text>
       <View>
         <TextInput
@@ -138,8 +122,15 @@ function Login(props) {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Button title="Sign in" onPress={_signIn} />
-        <Button title="Registrieren" onPress={_navSignUp} />
+        {errorMessage !== "" && (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        )}
+        <Button title="Anmelden" style={styles.button} onPress={_signIn} />
+        <Button
+          title="Registrieren"
+          style={styles.button}
+          onPress={_navSignUp}
+        />
       </View>
     </SafeAreaView>
   );
@@ -159,6 +150,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 0.2,
     borderColor: "black",
+  },
+  button: {
+    marginVertical: 5,
+  },
+  errorText: {
+    fontSize: 15,
+    color: "red",
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
 });
 
