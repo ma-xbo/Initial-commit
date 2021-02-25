@@ -15,8 +15,8 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
 import CurrencyInput from "react-native-currency-input";
+import { Ionicons } from "@expo/vector-icons";
 import { addTemplate } from "../js/redux/actions/User";
 import { addFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
@@ -85,7 +85,7 @@ function NewEntry(props) {
       date: date,
       store: store,
       category: category,
-      amount: amount,
+      amount: amountValue,
       currency: unit,
       paymentMethod: paymentMethod,
       imageUrl: imageUrl,
@@ -125,7 +125,7 @@ function NewEntry(props) {
       date: date,
       store: store,
       category: category,
-      amount: amount,
+      amount: amountValue,
       currency: "€",
       paymentMethod: paymentMethod,
       isSubscription: isSubscription,
