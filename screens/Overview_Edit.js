@@ -54,8 +54,6 @@ function Overview_Edit(props) {
     const item = JSON.parse(route.params.itemObject);
     let expense = false;
 
-    console.log(item);
-
     if (parseFloat(item.amount) < 0.0) {
       expense = true;
     } else {
