@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Alert,
   FlatList,
@@ -24,7 +24,6 @@ import AppSafeAreaView from "../components/AppSafeAreaView";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 import NewEntry_Template from "../components/NewEntry_Template";
 import NewEntry_Camera from "../components/NewEntry_Camera";
-import { useEffect } from "react";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
 function NewEntry(props) {
@@ -61,8 +60,6 @@ function NewEntry(props) {
       }
     }
   }, [isExpense, amount]);
-
-  console.log(amountValue);
 
   const resetForm = () => {
     setTitle("");
@@ -149,8 +146,8 @@ function NewEntry(props) {
       })
       .then(() => {
         Alert.alert(
-          "Erfolgreich aktualisiert",
-          "Die Daten wurden erfolgreich in der Cloud gespeichert"
+          "Hinzufügen erfolgreich ➕",
+          "Die Vorlage wurde erfolgreich in der Cloud gespeichert"
         );
       })
       .catch((error) => {
