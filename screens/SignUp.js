@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Button,
-  View,
-  Text,
-  TextInput,
   SafeAreaView,
   StyleSheet,
+  Text,
+  TextInput,
 } from "react-native";
 import firebase from "../js/Firebase";
 
@@ -14,6 +14,7 @@ export default function SignUp(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVeri, setPasswordVeri] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState();
 
   const _signUp = async () => {
@@ -45,10 +46,11 @@ export default function SignUp(props) {
           .doc(response.user.uid)
           .set({
             userId: response.user.uid,
-            name: "Max Mustermann",
+            name: name,
             email: email,
             config: {
               categories: [
+                "keine Angabe",
                 "Gehalt",
                 "Versicherung",
                 "Auto",
@@ -56,21 +58,25 @@ export default function SignUp(props) {
                 "Haushalt",
                 "Lebensmittel",
                 "Hobbys & Freizeit",
-                "Technik"
+                "Technik",
               ],
               stores: [
+                "keine Angabe",
                 "Rewe",
                 "Penny Markt",
+                "Aldi Süd",
+                "Aldi Nord",
                 "Edeka",
                 "Amazon",
                 "Netflix",
                 "Vodafone",
                 "Telekom",
               ],
+              templates: [],
             },
           })
-          .then((docRef) => {
-            alert(
+          .then(() => {
+            Alert.alert(
               "Account erstellt",
               "Dein Account wurde erfolgreich angelegt"
             );
@@ -87,6 +93,7 @@ export default function SignUp(props) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={{ fontSize: 40, marginBottom: 20 }}>Registrierung</Text>
       <Text>Bitte füllen Sie die nachfolgenden Felder aus</Text>
       <TextInput
         placeholder="E-Mail Adresse"
@@ -108,7 +115,13 @@ export default function SignUp(props) {
         onChangeText={setPasswordVeri}
         secureTextEntry
       />
-      <Text style={styles.errorText}>{error}</Text>
+      <TextInput
+        placeholder="Name"
+        style={styles.inputStyle}
+        value={name}
+        onChangeText={setName}
+      />
+      {error !== "" && <Text style={styles.errorText}>{error}</Text>}
       <Button title="Account erstellen" onPress={_signUp} />
     </SafeAreaView>
   );
