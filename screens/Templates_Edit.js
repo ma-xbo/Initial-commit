@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Alert,
-  FlatList,
-  Image,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -15,11 +13,9 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
+import CurrencyInput from "react-native-currency-input";
 import { updateTemplate } from "../js/redux/actions/User";
 import firebase from "../js/Firebase";
-import AppSafeAreaView from "../components/AppSafeAreaView";
-import MoneyInput from "../components/MoneyInput";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 const colorDefinitions = require("../assets/colorDefinition.json");
 
@@ -33,6 +29,8 @@ function Templates_Edit(props) {
   const [store, setStore] = useState();
   const [category, setCategory] = useState();
   const [amount, setAmount] = useState(0.0);
+  const [amountValue, setAmountValue] = useState(0.0);
+  const [unit, setUnit] = useState("€");
   const [isExpense, setIsExpense] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
@@ -71,6 +69,22 @@ function Templates_Edit(props) {
     setCreatedAt(new Date(item.createdAt));
   }, []);
 
+  useEffect(() => {
+    if (isExpense) {
+      if (amount > 0) {
+        setAmountValue(amount * -1);
+      } else {
+        setAmountValue(amount);
+      }
+    } else {
+      if (amount < 0) {
+        setAmountValue(amount * -1);
+      } else {
+        setAmountValue(amount);
+      }
+    }
+  }, [isExpense, amount]);
+
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -89,8 +103,8 @@ function Templates_Edit(props) {
       date: date,
       store: store,
       category: category,
-      amount: amount,
-      currency: "€",
+      amount: amountValue,
+      currency: unit,
       paymentMethod: paymentMethod,
       isSubscription: isSubscription,
       userId: props.currentUser.userId,
@@ -171,20 +185,15 @@ function Templates_Edit(props) {
 
           <View style={styles.inputView}>
             <Text style={styles.inputView_text}>Betrag</Text>
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-              }}
-            >
-              <MoneyInput
-                containerStyle={{ width: "50%" }}
-                placeholderText="Betrag"
-                isNegativ={isExpense}
-                value={amount}
-                onChangeValue={(val) => setAmount(val)}
-              />
-            </View>
+            <CurrencyInput
+              value={amountValue}
+              onChangeValue={setAmount}
+              unit={unit}
+              delimiter=","
+              separator="."
+              precision={2}
+              style={styles.inputView_textInput}
+            />
           </View>
 
           <View>

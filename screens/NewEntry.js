@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Alert,
   FlatList,
@@ -15,12 +15,12 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CurrencyInput from "react-native-currency-input";
 import { Ionicons } from "@expo/vector-icons";
 import { addTemplate } from "../js/redux/actions/User";
 import { addFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
 import AppSafeAreaView from "../components/AppSafeAreaView";
-import MoneyInput from "../components/MoneyInput";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 import NewEntry_Template from "../components/NewEntry_Template";
 import NewEntry_Camera from "../components/NewEntry_Camera";
@@ -35,13 +35,31 @@ function NewEntry(props) {
   const [category, setCategory] = useState(
     props.currentUser.config.categories[0]
   );
-  const [isExpense, setIsExpense] = useState(true);
+  const [isExpense, setIsExpense] = useState(false);
   const [isSubscription, setIsSubscription] = useState(false);
   const [amount, setAmount] = useState(0.0);
+  const [amountValue, setAmountValue] = useState(0.0);
+  const [unit, setUnit] = useState("€");
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
   );
   const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    if (isExpense) {
+      if (amount > 0) {
+        setAmountValue(amount * -1);
+      } else {
+        setAmountValue(amount);
+      }
+    } else {
+      if (amount < 0) {
+        setAmountValue(amount * -1);
+      } else {
+        setAmountValue(amount);
+      }
+    }
+  }, [isExpense, amount]);
 
   const resetForm = () => {
     setTitle("");
@@ -67,8 +85,8 @@ function NewEntry(props) {
       date: date,
       store: store,
       category: category,
-      amount: amount,
-      currency: "€",
+      amount: amountValue,
+      currency: unit,
       paymentMethod: paymentMethod,
       imageUrl: imageUrl,
       isSubscription: isSubscription,
@@ -107,7 +125,7 @@ function NewEntry(props) {
       date: date,
       store: store,
       category: category,
-      amount: amount,
+      amount: amountValue,
       currency: "€",
       paymentMethod: paymentMethod,
       isSubscription: isSubscription,
@@ -128,8 +146,8 @@ function NewEntry(props) {
       })
       .then(() => {
         Alert.alert(
-          "Erfolgreich aktualisiert",
-          "Die Daten wurden erfolgreich in der Cloud gespeichert"
+          "Hinzufügen erfolgreich ➕",
+          "Die Vorlage wurde erfolgreich in der Cloud gespeichert"
         );
       })
       .catch((error) => {
@@ -207,27 +225,24 @@ function NewEntry(props) {
             <View style={styles.inputView}>
               <Text style={styles.inputView_text}>Ausgabe</Text>
               <Switch
-                onValueChange={() => setIsExpense((prevVal) => !prevVal)}
+                onValueChange={() => {
+                  setIsExpense((prevVal) => !prevVal);
+                }}
                 value={isExpense}
               />
             </View>
 
             <View style={styles.inputView}>
               <Text style={styles.inputView_text}>Betrag</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                }}
-              >
-                <MoneyInput
-                  containerStyle={{ width: "50%" }}
-                  placeholderText="Betrag"
-                  isNegativ={isExpense}
-                  value={amount}
-                  onChangeValue={(val) => setAmount(val)}
-                />
-              </View>
+              <CurrencyInput
+                value={amountValue}
+                onChangeValue={setAmount}
+                unit={unit}
+                delimiter=","
+                separator="."
+                precision={2}
+                style={styles.inputView_textInput}
+              />
             </View>
 
             <View>

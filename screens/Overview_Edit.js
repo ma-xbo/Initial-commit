@@ -14,6 +14,7 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CurrencyInput from "react-native-currency-input";
 import { Ionicons } from "@expo/vector-icons";
 import { updateFinanceItem } from "../js/redux/actions/Finance";
 import firebase from "../js/Firebase";
@@ -36,6 +37,8 @@ function Overview_Edit(props) {
   const [store, setStore] = useState();
   const [category, setCategory] = useState();
   const [amount, setAmount] = useState(0.0);
+  const [amountValue, setAmountValue] = useState(0.0);
+  const [unit, setUnit] = useState("€");
   const [isExpense, setIsExpense] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState(
     selectablePaymentMethods[0].value
@@ -54,8 +57,6 @@ function Overview_Edit(props) {
 
     const item = JSON.parse(route.params.itemObject);
     let expense = false;
-
-    console.log(item);
 
     if (parseFloat(item.amount) < 0.0) {
       expense = true;
@@ -76,6 +77,22 @@ function Overview_Edit(props) {
     setCreatedAt(new Date(item.createdAt));
     setDocId(item.docId);
   }, [route.params.itemObject]);
+
+  useEffect(() => {
+    if (isExpense) {
+      if (amount > 0) {
+        setAmountValue(amount * -1);
+      } else {
+        setAmountValue(amount);
+      }
+    } else {
+      if (amount < 0) {
+        setAmountValue(amount * -1);
+      } else {
+        setAmountValue(amount);
+      }
+    }
+  }, [isExpense, amount]);
 
   const resetForm = () => {
     setTitle("");
@@ -100,8 +117,8 @@ function Overview_Edit(props) {
       date: date,
       store: store,
       category: category,
-      amount: amount,
-      currency: "€",
+      amount: amountValue,
+      currency: unit,
       paymentMethod: paymentMethod,
       isSubscription: isSubscription,
       userId: props.currentUser.userId,
@@ -176,20 +193,15 @@ function Overview_Edit(props) {
 
             <View style={styles.inputView}>
               <Text style={styles.inputView_text}>Betrag</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                }}
-              >
-                <MoneyInput
-                  containerStyle={{ width: "50%" }}
-                  placeholderText="Betrag"
-                  isNegativ={isExpense}
-                  value={amount}
-                  onChangeValue={(val) => setAmount(val)}
-                />
-              </View>
+              <CurrencyInput
+                value={amountValue}
+                onChangeValue={setAmount}
+                unit={unit}
+                delimiter=","
+                separator="."
+                precision={2}
+                style={styles.inputView_textInput}
+              />
             </View>
 
             <View style={styles.inputView}>
