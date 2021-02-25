@@ -59,11 +59,13 @@ function Login(props) {
 
     const userData = await docUser.data();
 
-    userData.config.templates.forEach((element) => {
-      element.date = element.date.toDate();
-      element.createdAt = element.createdAt.toDate();
-      element.modifiedAt = element.modifiedAt.toDate();
-    });
+    if (userData.config.templates) {      
+      userData.config.templates.forEach((element) => {
+        element.date = element.date.toDate();
+        element.createdAt = element.createdAt.toDate();
+        element.modifiedAt = element.modifiedAt.toDate();
+      });
+    }
 
     props.loadUser(userData);
   };
