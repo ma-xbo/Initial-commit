@@ -16,6 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CurrencyInput from "react-native-currency-input";
 import { updateTemplate } from "../redux/actions/User";
 import firebase from "../Firebase";
+import { selectablePaymentMethods } from "../Helper";
 import { ObjectItemPicker, StringItemPicker } from "../components/ItemPicker";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
@@ -256,13 +257,6 @@ function Templates_Edit(props) {
     </KeyboardAvoidingView>
   );
 }
-
-const selectablePaymentMethods = [
-  { label: "Barzahlung", value: "cash" },
-  { label: "EC-Karte", value: "debit-card" },
-  { label: "Kreditkarte", value: "credit-card" },
-  { label: "PayPal", value: "paypal" },
-];
 
 const styles = StyleSheet.create({
   container: {
