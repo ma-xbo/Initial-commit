@@ -6,16 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "./js/redux/reducers/index";
-
-import OverviewList from "./screens/Overview";
-import Subscriptions from "./screens/Subscriptions";
-import Templates from "./screens/Templates";
-import Settings from "./screens/Settings";
-import NewEntry from "./screens/NewEntry";
-import Analysis from "./screens/Analysis";
-import Login from "./screens/Login";
-import SignUp from "./screens/SignUp";
 import firebase from "./js/Firebase";
+import OverviewList from "./js/screens/Overview";
+import Templates from "./js/screens/Templates";
+import Settings from "./js/screens/Settings";
+import NewEntry from "./js/screens/NewEntry";
+import Analysis from "./js/screens/Analysis";
+import Login from "./js/screens/Login";
+import SignUp from "./js/screens/SignUp";
 
 const colorDefinitions = require("./assets/colorDefinition.json");
 
