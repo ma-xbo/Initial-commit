@@ -139,6 +139,22 @@ function Settings(props) {
       });
   };
 
+  const _logout = () => {
+    fb.auth
+      .signOut()
+      .then(() => {
+        //TODO Redux Reset
+
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Abmelden ist ein Fehler aufgetreten: " + error.message
+        );
+      });
+  };
+
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
@@ -233,10 +249,7 @@ function Settings(props) {
           />
         </FoldableSection>
 
-        <Pressable
-          style={styles.logoutButton}
-          onPress={() => navigation.navigate("Login")}
-        >
+        <Pressable style={styles.logoutButton} onPress={_logout}>
           <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
       </View>
