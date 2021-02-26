@@ -1,5 +1,6 @@
 import React from "react";
-import { SafeAreaView, Text, StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
 export default function AppSafeAreaView(props) {
