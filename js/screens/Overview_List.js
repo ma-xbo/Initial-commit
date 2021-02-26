@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import SegmentedControl from "@react-native-community/segmented-control";
+import { getWeekNumber } from "../Helper";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import SwipeableActionItem from "../components/SwipeableActionItem";
 import OverviewList_ExpenseItem from "../components/OverviewExpenseItem";
@@ -159,16 +160,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(Overview_List);
-
-/* copied from https://www.w3resource.com/javascript-exercises/javascript-date-exercise-24.php */
-function getWeekNumber(dt) {
-  let tdt = new Date(dt.valueOf());
-  let dayn = (dt.getDay() + 6) % 7;
-  tdt.setDate(tdt.getDate() - dayn + 3);
-  let firstThursday = tdt.valueOf();
-  tdt.setMonth(0, 1);
-  if (tdt.getDay() !== 4) {
-    tdt.setMonth(0, 1 + ((4 - tdt.getDay() + 7) % 7));
-  }
-  return 1 + Math.ceil((firstThursday - tdt) / 604800000);
-}

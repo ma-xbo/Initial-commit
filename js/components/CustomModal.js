@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Modal, StyleSheet } from "react-native";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-      alignItems: "center",
+    alignItems: "center",
     margin: 20,
     padding: 35,
     borderRadius: 20,

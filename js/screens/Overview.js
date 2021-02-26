@@ -11,11 +11,9 @@ export default function OverviewList() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: colorDefinitions.light.black },
+        headerStyle: styles.header,
         headerTintColor: colorDefinitions.light.white,
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
+        headerTitleStyle: styles.headerTitle,
       }}
     >
       <Stack.Screen
@@ -30,5 +28,6 @@ export default function OverviewList() {
 }
 
 const styles = StyleSheet.create({
-  dummy: {},
+  header: { backgroundColor: colorDefinitions.light.black },
+  headerTitle: { fontWeight: "bold" },
 });

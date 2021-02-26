@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import TemplateListItem from "../components/TemplateListItem";
