@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from 'expo-status-bar';
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "./js/redux/reducers/index";
@@ -14,7 +15,6 @@ import NewEntry from "./js/screens/NewEntry";
 import Analysis from "./js/screens/Analysis";
 import Login from "./js/screens/Login";
 import SignUp from "./js/screens/SignUp";
-
 const colorDefinitions = require("./assets/colorDefinition.json");
 
 export default function App() {
@@ -55,6 +55,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      <StatusBar style="auto" />
     </Provider>
   );
 }
