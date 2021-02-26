@@ -23,7 +23,9 @@ import {
   addStore,
   deleteCategory,
   deleteStore,
+  loadUser,
 } from "../js/redux/actions/User";
+import { loadFinanceData } from "../js/redux/actions/Finance";
 import fb from "../js/Firebase";
 
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -143,7 +145,19 @@ function Settings(props) {
     fb.auth
       .signOut()
       .then(() => {
-        //TODO Redux Reset
+        const emptyUser = {
+          userId: "1",
+          email: "",
+          name: "",
+          config: {
+            categories: [],
+            stores: [],
+            templates: [],
+          },
+        };
+
+        props.loadUser(emptyUser);
+        props.loadFinanceData([]);
 
         navigation.navigate("Login");
       })
@@ -375,7 +389,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { addCategory, addStore, deleteCategory, deleteStore },
+    {
+      addCategory,
+      addStore,
+      deleteCategory,
+      deleteStore,
+      loadFinanceData,
+      loadUser,
+    },
     dispatch
   );
 
