@@ -23,7 +23,9 @@ import {
   addStore,
   deleteCategory,
   deleteStore,
+  loadUser,
 } from "../js/redux/actions/User";
+import { loadFinanceData } from "../js/redux/actions/Finance";
 import fb from "../js/Firebase";
 
 const colorDefinitions = require("../assets/colorDefinition.json");
@@ -139,6 +141,34 @@ function Settings(props) {
       });
   };
 
+  const _logout = () => {
+    fb.auth
+      .signOut()
+      .then(() => {
+        const emptyUser = {
+          userId: "1",
+          email: "",
+          name: "",
+          config: {
+            categories: [],
+            stores: [],
+            templates: [],
+          },
+        };
+
+        props.loadUser(emptyUser);
+        props.loadFinanceData([]);
+
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Abmelden ist ein Fehler aufgetreten: " + error.message
+        );
+      });
+  };
+
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
@@ -233,10 +263,7 @@ function Settings(props) {
           />
         </FoldableSection>
 
-        <Pressable
-          style={styles.logoutButton}
-          onPress={() => navigation.navigate("Login")}
-        >
+        <Pressable style={styles.logoutButton} onPress={_logout}>
           <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
       </View>
@@ -362,7 +389,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { addCategory, addStore, deleteCategory, deleteStore },
+    {
+      addCategory,
+      addStore,
+      deleteCategory,
+      deleteStore,
+      loadFinanceData,
+      loadUser,
+    },
     dispatch
   );
 
