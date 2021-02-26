@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text } from "react-native";
+import { connect } from "react-redux";
 import { LineChart, PieChart, ContributionGraph } from "react-native-chart-kit";
 import Hr from "../components/HorizontalRule";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
-export default function Analysis(props) {
+function Analysis(props) {
   const [data, setData] = useState([]);
+  const [dataStartDate, setDataStartDate] = useState();
+  const [dataEndDate, setDataEndDate] = useState();
+  const [diffDays, setDiffDays] = useState();
 
+  const msOneDay = 24 * 60 * 60 * 1000;
   useEffect(() => {
-    const dataArray = dummyData.map((item) => {
+    const dataArray = props.financeData.map((item) => {
       let rObj = { ...item };
       rObj["date"] = new Date(item.date);
       rObj["createdAt"] = new Date(item.createdAt);
@@ -22,24 +27,23 @@ export default function Analysis(props) {
     });
 
     setData(dataArray);
-  }, []);
+    setDataStartDate(
+      new Date(Math.min(...dataArray.map((e) => new Date(e.date))))
+    );
 
-  const dataStartDate = new Date(
-    Math.min(...dummyData.map((e) => new Date(e.date)))
-  );
-  const dataEndDate = new Date(
-    Math.max(...dummyData.map((e) => new Date(e.date)))
-  );
-  const msOneDay = 24 * 60 * 60 * 1000;
-  const diffDays =
-    Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1;
+    setDataEndDate(new Date(Math.max(...data.map((e) => new Date(e.date)))));
+    setDiffDays(
+      Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1
+    );
+  }, [props.financeData]);
 
   /* Ausgaben pro Tag */
   const valueDateArray = createDateArray(data);
   /* Ausgaben pro Tag Ende */
 
-  /* Ausgaben pro Monat */
+  /* TODO Ausgaben pro Monat */
   const chartMonthArray = createMonthArray(data);
+  console.log(chartMonthArray);
   /* Ausgaben pro Monat Ende */
 
   /* Ausgaben pro Kategorie */
@@ -66,6 +70,7 @@ export default function Analysis(props) {
   return (
     <AppSafeAreaView title="Analyse">
       <ScrollView style={styles.container}>
+        <Text>Es liegen Daten für den Zeitraum zwischen {dataStartDate} und {dataEndDate} vor</Text>
         <Text style={styles.chartDescription}>
           Übersicht der Ausgaben pro Tag
         </Text>
@@ -323,3 +328,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+const mapStateToProps = (state) => {
+  return { financeData: state.finance };
+};
+
+export default connect(mapStateToProps)(Analysis);
