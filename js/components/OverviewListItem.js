@@ -4,7 +4,7 @@ import PaymentAmountText from "./PaymentAmountText";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
-export default function OverviewList_ExpenseItem(props) {
+export default function OverviewListItem(props) {
   const { onPress, itemObject } = props;
   const {
     title,

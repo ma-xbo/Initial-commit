@@ -6,7 +6,7 @@ import SegmentedControl from "@react-native-community/segmented-control";
 import { getWeekNumber } from "../Helper";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import SwipeableActionItem from "../components/SwipeableActionItem";
-import OverviewList_ExpenseItem from "../components/OverviewExpenseItem";
+import OverviewListItem from "../components/OverviewListItem";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
 function Overview_List(props) {
@@ -83,7 +83,7 @@ function Overview_List(props) {
 
   return (
     <AppSafeAreaView title="Übersicht">
-      <View style={{ width: "100%" }}>
+      <View style={styles.container}>
         <SegmentedControl
           values={selectableSegements}
           selectedIndex={activeSegment}
@@ -98,7 +98,7 @@ function Overview_List(props) {
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
               <Swipeable renderRightActions={renderRightActions}>
-                <OverviewList_ExpenseItem
+                <OverviewListItem
                   itemObject={item}
                   onPress={() =>
                     navigation.navigate("Details", {
@@ -116,7 +116,7 @@ function Overview_List(props) {
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
               <Swipeable renderRightActions={renderRightActions}>
-                <OverviewList_ExpenseItem
+                <OverviewListItem
                   itemObject={item}
                   onPress={() =>
                     navigation.navigate("Details", {
@@ -134,7 +134,7 @@ function Overview_List(props) {
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
               <Swipeable renderRightActions={renderRightActions}>
-                <OverviewList_ExpenseItem
+                <OverviewListItem
                   itemObject={item}
                   onPress={() =>
                     navigation.navigate("Details", {
@@ -152,7 +152,7 @@ function Overview_List(props) {
 }
 
 const styles = StyleSheet.create({
-  dummy: {},
+  container: { flex: 1, width: "100%" },
 });
 
 const mapStateToProps = (state) => {
