@@ -13,13 +13,13 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { deleteFinanceItem } from "../redux/actions/Finance";
 import firebase from "../Firebase";
-import PaymentMethodIcon from "../components/PaymentMethodIcon";
-import PaymentAmountText from "../components/PaymentAmountText";
+import { selectablePaymentMethods } from "../Helper";
 import {
   OverflowMenuContainer,
   OverflowMenuItem,
 } from "../components/OverflowMenu";
 import Hr from "../components/HorizontalRule";
+import DetailsContainer from "../components/DetailsContainer";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
 function Overview_Details(props) {
@@ -44,10 +44,6 @@ function Overview_Details(props) {
       ),
     });
   }, [navigation, displayHeaderMenu]);
-
-  const dateText = new Date(item.date).toDateString();
-  const amountBackColor =
-    item.amount < 0 ? colorDefinitions.light.red : colorDefinitions.light.green;
 
   const onPressEdit = () => {
     setDisplayHeaderMenu(false);
@@ -90,66 +86,54 @@ function Overview_Details(props) {
           style={styles.contentContainer}
           onPress={() => setDisplayHeaderMenu(false)}
         >
-          <View
-            style={{
-              flex: 1,
-              margin: 8,
-              padding: 5,
-            }}
-          >
-            <CardItem title="Titel" text={item.title} />
-            <Hr />
-            <CardItem title="Beschreibung" text={item.description} />
-            <View
-              style={{
-                marginVertical: 30,
-                borderRadius: 10,
-              }}
-            >
-              <View
-                style={{
-                  alignSelf: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 250,
-                  width: 250,
-                  marginHorizontal: 4,
-                  padding: 20,
-                  borderRadius: 200,
-                  backgroundColor: amountBackColor,
-                  shadowColor: colorDefinitions.light.gray,
-                  shadowOpacity: 0.5,
-                  shadowRadius: 20,
-                  opacity: 0.9,
-                }}
-              >
-                <Text style={{ fontSize: 30, color: "white" }}>
-                  {item.amount}
-                  {item.currency}
-                </Text>
-              </View>
-            </View>
-            <CardItem title="Bezahlmethode">
-              <View style={{ flexDirection: "row" }}>
-                <PaymentMethodIcon paymentMethod={item.paymentMethod} />
-                <Text>{item.paymentMethod}</Text>
-              </View>
-            </CardItem>
-            <Hr />
-            <CardItem title="Datum" text={dateText} />
+          <DetailsContainer title="Titel" text={item.title} />
+          <DetailsContainer
+            title="Datum"
+            text={new Date(item.date).toDateString()}
+          />
+          <DetailsContainer
+            title="Betrag"
+            text={item.amount + item.currency}
+            containerStyle={
+              item.amount < 0
+                ? { backgroundColor: colorDefinitions.light.red }
+                : { backgroundColor: colorDefinitions.light.green }
+            }
+          />
+          <DetailsContainer
+            title="Bezahlmethode"
+            text={
+              selectablePaymentMethods.find(
+                (el) => el.value === item.paymentMethod
+              ).label
+            }
+          />
+          <DetailsContainer title="Geschäft" text={item.store} />
+          <DetailsContainer title="Kategorie" text={item.category} />
+          {item.description !== "" && (
+            <DetailsContainer title="Beschreibung" text={item.description} />
+          )}
 
-            {item.imageUrl !== "" && (
-              <CardItem title="Angehängtes Bild">
-                <View style={{ height: 300 }}>
-                  <Image
-                    style={{ flex: 1, height: null, width: null }}
-                    resizeMode="contain"
-                    source={{ uri: item.imageUrl }}
-                  />
-                </View>
-              </CardItem>
-            )}
-          </View>
+          {item.imageUrl !== "" && (
+            <DetailsContainer title="Angehängtes Bild">
+              <View style={{ height: 300 }}>
+                <Image
+                  style={{ flex: 1, height: null, width: null }}
+                  resizeMode="contain"
+                  source={{ uri: item.imageUrl }}
+                />
+              </View>
+            </DetailsContainer>
+          )}
+
+          <DetailsContainer
+            title="Erstellt am"
+            text={new Date(item.createdAt).toDateString()}
+          />
+          <DetailsContainer
+            title="Zuletzt geändert am"
+            text={new Date(item.modifiedAt).toDateString()}
+          />
         </Pressable>
 
         <View style={styles.bottomContainer}>
@@ -185,6 +169,7 @@ function Overview_Details(props) {
           </View>
         </View>
       </ScrollView>
+
       {displayHeaderMenu && (
         <OverflowMenuContainer
           menuType="topRight"
@@ -200,48 +185,13 @@ function Overview_Details(props) {
   );
 }
 
-function CardItem(props) {
-  const { title, text, children } = props;
-
-  return (
-    <View
-      style={{
-        /*  backgroundColor: colorDefinitions.light.gray5, */
-        padding: 10,
-        marginVertical: 6,
-        marginHorizontal: 4,
-        borderRadius: 10,
-      }}
-    >
-      <Text
-        style={{
-          color: colorDefinitions.light.black,
-          fontSize: 20,
-          fontWeight: "bold",
-          marginBottom: 4,
-        }}
-      >
-        {title}
-      </Text>
-      <Text
-        style={{
-          color: colorDefinitions.light.black,
-          fontSize: 18,
-        }}
-      >
-        {text}
-      </Text>
-      {children}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   contentContainer: {
     flex: 1,
+    padding: 10,
   },
   bottomContainer: {
     width: "100%",

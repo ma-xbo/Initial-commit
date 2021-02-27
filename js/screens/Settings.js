@@ -171,8 +171,12 @@ function Settings(props) {
   return (
     <AppSafeAreaView title="Einstellungen">
       <View style={styles.container}>
-        <Text>Name: {props.currentUser.name}</Text>
-        <Text>ID: {props.currentUser.userId}</Text>
+        <View style={styles.userIconView}>
+          <Text style={styles.userIconText}>
+            {props.currentUser.name.charAt(0)}
+          </Text>
+        </View>
+        <Text style={styles.userNameText}>{props.currentUser.name}</Text>
 
         <FoldableSection cardTitle="Kategorien">
           <FlatList
@@ -350,6 +354,27 @@ const styles = StyleSheet.create({
     padding: 5,
     marginRight: 3,
     marginVertical: 3,
+  },
+  userIconView: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 100,
+    width: 100,
+    marginHorizontal: 4,
+    padding: 20,
+    borderRadius: 50,
+    backgroundColor: colorDefinitions.light.gray3,
+    shadowColor: colorDefinitions.light.gray,
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    opacity: 0.9,
+  },
+  userIconText: { fontSize: 40, color: colorDefinitions.light.white },
+  userNameText: {
+    fontSize: 24,
+    color: colorDefinitions.light.black,
+    alignSelf: "center",
   },
   logoutButton: {
     justifyContent: "center",
