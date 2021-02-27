@@ -4,25 +4,16 @@ import PaymentAmountText from "./PaymentAmountText";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
-export default function OverviewList_ExpenseItem(props) {
+export default function OverviewListItem(props) {
   const { onPress, itemObject } = props;
   const {
     title,
-    description,
     amount,
     paymentMethod,
     currency,
     date,
   } = itemObject;
   const dateFormatted = new Date(date);
-
-  const minimizeText = (text) => {
-    if (text.length > 100) {
-      text = text.substring(0, 100);
-      text = text + "...";
-    }
-    return text;
-  };
 
   return (
     <Pressable style={styles.container} onPress={onPress}>
@@ -31,11 +22,8 @@ export default function OverviewList_ExpenseItem(props) {
         iconColor={colorDefinitions.light.white}
       />
       <View style={styles.containerText}>
-        <View style={styles.containerTitleRow}>
-          <Text style={styles.textTitle}>{title}</Text>
-          <Text style={styles.textDate}>{dateFormatted.toDateString()}</Text>
-        </View>
-        <Text style={styles.textDescr}>{minimizeText(description)}</Text>
+        <Text style={styles.textTitle}>{title}</Text>
+        <Text style={styles.textDescr}>{dateFormatted.toDateString()}</Text>
       </View>
       <PaymentAmountText value={amount} currency={currency} fontSize={20} />
     </Pressable>
@@ -48,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: colorDefinitions.light.black,
+    opacity: 0.6,
     marginVertical: 2.5,
     marginHorizontal: 5,
     padding: 10,
