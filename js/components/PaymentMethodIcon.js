@@ -4,15 +4,25 @@ import { Ionicons, Entypo, FontAwesome } from "@expo/vector-icons";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
 export default function PaymentMethodIcon(props) {
-  const { paymentMethod, iconColor} = props;
+  const { paymentMethod, iconColor } = props;
 
   const iconSize = 25;
 
   switch (paymentMethod) {
-    case "card":
+    case "debit-card":
       return (
-        <Ionicons
-          name={"card"}
+        <FontAwesome
+          name="bank"
+          size={iconSize}
+          color={iconColor}
+          style={styles.icon}
+        />
+      );
+
+    case "credit-card":
+      return (
+        <FontAwesome
+          name="credit-card"
           size={iconSize}
           color={iconColor}
           style={styles.icon}
@@ -41,8 +51,8 @@ export default function PaymentMethodIcon(props) {
 
     default:
       return (
-        <Ionicons
-          name={"checkmark"}
+        <FontAwesome
+          name="question-circle-o"
           size={iconSize}
           color={iconColor}
           style={styles.icon}
