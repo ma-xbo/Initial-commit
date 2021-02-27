@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text } from "react-native";
+import { connect } from "react-redux";
 import { LineChart, PieChart, ContributionGraph } from "react-native-chart-kit";
 import Hr from "../components/HorizontalRule";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
-export default function Analysis(props) {
+function Analysis(props) {
   const [data, setData] = useState([]);
+  const [dataExpenses, setDataExpenses] = useState([]);
+  const [dataEarnings, setDataEarnings] = useState([]);
+  const [dataStartDate, setDataStartDate] = useState(new Date());
+  const [dataEndDate, setDataEndDate] = useState(new Date());
+  const [chartHeight, setChartHeight] = useState(250);
+  const [sumExpenses, setSumExpenses] = useState(0);
+  const [sumEarnings, setSumEarnings] = useState(0);
+  const [expensesPerDay, setExpensesPerDay] = useState({ data: [] });
+  const [expensesPerMonth, setExpensesPerMonth] = useState({
+    labels: [],
+    values: [],
+  });
+  const [expensesPerCategory, setExpensesPerCategory] = useState([]);
 
   useEffect(() => {
-    const dataArray = dummyData.map((item) => {
+    const dataArray = props.financeData.map((item) => {
       let rObj = { ...item };
       rObj["date"] = new Date(item.date);
       rObj["createdAt"] = new Date(item.createdAt);
       rObj["modifiedAt"] = new Date(item.modifiedAt);
+
       return rObj;
     });
 
@@ -21,35 +36,45 @@ export default function Analysis(props) {
       return new Date(b.date) - new Date(a.date);
     });
 
+    const expenses = [];
+    const earnings = [];
+    let sumEarn = 0;
+    let sumEx = 0;
+    dataArray.forEach((element) => {
+      if (element.amount < 0) {
+        expenses.push(element);
+        sumEx += element.amount;
+      } else {
+        earnings.push(element);
+        sumEarn += element.amount;
+      }
+    });
+
+    setDataExpenses(expenses);
+    setDataEarnings(earnings);
+    setSumExpenses(parseFloat(sumEx).toFixed(2));
+    setSumEarnings(parseFloat(sumEarn).toFixed(2));
+
     setData(dataArray);
+    setDataStartDate(
+      new Date(Math.min(...dataArray.map((e) => new Date(e.date))))
+    );
+    setDataEndDate(new Date(Math.max(...data.map((e) => new Date(e.date)))));
+  }, [props.financeData]);
+
+  useEffect(() => {
+    setExpensesPerDay(createDateArray(dataExpenses));
+    setExpensesPerMonth(createMonthArray(dataExpenses));
+    setExpensesPerCategory(createCategoryArray(dataExpenses));
   }, []);
 
-  const dataStartDate = new Date(
-    Math.min(...dummyData.map((e) => new Date(e.date)))
-  );
-  const dataEndDate = new Date(
-    Math.max(...dummyData.map((e) => new Date(e.date)))
-  );
-  const msOneDay = 24 * 60 * 60 * 1000;
-  const diffDays =
-    Math.round(Math.abs((dataEndDate - dataStartDate) / msOneDay)) + 1;
+  useEffect(() => {
+    setExpensesPerDay(createDateArray(dataExpenses));
+    setExpensesPerMonth(createMonthArray(dataExpenses));
+    setExpensesPerCategory(createCategoryArray(dataExpenses));
+  }, [dataExpenses]);
 
-  /* Ausgaben pro Tag */
-  const valueDateArray = createDateArray(data);
-  /* Ausgaben pro Tag Ende */
-
-  /* Ausgaben pro Monat */
-  const chartMonthArray = createMonthArray(data);
-  /* Ausgaben pro Monat Ende */
-
-  /* Ausgaben pro Kategorie */
-  const chartCategoryArray = createCategoryArray(data);
-  /* Ausgaben pro Kategorie Ende */
-
-  const chartWidth = Dimensions.get("window").width * 0.95;
-  const chartHeight = 250;
-
-  const chartConfig2 = {
+  const chartConfig = {
     backgroundColor: "#e26a00",
     backgroundGradientFrom: "#fb8c00",
     backgroundGradientTo: "#ffa726",
@@ -66,50 +91,66 @@ export default function Analysis(props) {
   return (
     <AppSafeAreaView title="Analyse">
       <ScrollView style={styles.container}>
+        <Text style={styles.text}>
+          Es liegen Daten für den Zeitraum zwischen{" "}
+          {dataStartDate.toDateString()} und {dataEndDate.toDateString()} vor
+        </Text>
+
+        <Hr />
+
+        <Text style={styles.text}>Summe aller Einnahmen: {sumEarnings}€</Text>
+        <Text style={styles.text}>Summe aller Ausgaben: {sumExpenses}€</Text>
+
+        <Hr />
+
         <Text style={styles.chartDescription}>
           Übersicht der Ausgaben pro Tag
         </Text>
-        <ContributionGraph
-          values={valueDateArray}
-          endDate={dataEndDate}
-          numDays={diffDays}
-          width={chartWidth}
-          height={chartHeight}
-          chartConfig={chartConfig2}
-          style={styles.chartSelf}
-        />
+        {expensesPerDay.data.length > 0 && (
+          <ContributionGraph
+            values={expensesPerDay.data}
+            endDate={expensesPerDay.endDate}
+            numDays={expensesPerDay.numDays}
+            width={Dimensions.get("window").width}
+            height={chartHeight}
+            chartConfig={chartConfig}
+            style={styles.chartSelf}
+          />
+        )}
 
         <Hr />
 
         <Text style={styles.chartDescription}>Übersicht der Ausgaben</Text>
-        <LineChart
-          data={{
-            labels: chartMonthArray.labels,
-            datasets: [{ data: chartMonthArray.values }],
-          }}
-          width={chartWidth} // from react-native
-          height={chartHeight}
-          yAxisLabel=""
-          yAxisSuffix="€"
-          yAxisInterval={10}
-          chartConfig={chartConfig2}
-          style={styles.chartSelf}
-          bezier
-        />
+        {expensesPerMonth.values.length > 0 && (
+          <LineChart
+            data={{
+              labels: expensesPerMonth.labels,
+              datasets: [{ data: expensesPerMonth.values }],
+            }}
+            width={Dimensions.get("window").width}
+            height={chartHeight}
+            yAxisLabel=""
+            yAxisSuffix="€"
+            yAxisInterval={1}
+            chartConfig={chartConfig}
+            style={styles.chartSelf}
+            bezier
+          />
+        )}
 
         <Hr />
 
         <Text style={styles.chartDescription}>Übersicht der Kategorien</Text>
-        <PieChart
-          data={chartCategoryArray}
-          accessor={"value"}
-          width={chartWidth}
-          height={chartHeight}
-          chartConfig={chartConfig2}
-          style={styles.chartSelf}
-        />
-        <Text>Ausgaben pro Geschäft</Text>
-        <Text>Komponente kommt hier</Text>
+        {expensesPerCategory.length > 0 && (
+          <PieChart
+            data={expensesPerCategory}
+            accessor={"value"}
+            width={Dimensions.get("window").width}
+            height={chartHeight}
+            chartConfig={chartConfig}
+            style={styles.chartSelf}
+          />
+        )}
       </ScrollView>
     </AppSafeAreaView>
   );
@@ -136,10 +177,10 @@ function createDateArray(data) {
         value = value + data[index].amount;
       }
     }
-    element.count = value;
+    element.count = Math.abs(value);
   });
 
-  return array;
+  return { data: array, numDays: days, endDate: endDate };
 
   function addDays(date, days) {
     let result = new Date(date);
@@ -151,7 +192,8 @@ function createDateArray(data) {
 function createMonthArray(data) {
   const startDate = new Date(Math.min(...data.map((el) => el.date)));
   const endDate = new Date(Math.max(...data.map((el) => el.date)));
-  const months = monthDiff(startDate, endDate);
+  const months = monthDiff(startDate, endDate) + 1;
+
   const monthNames = [
     "Jan",
     "Feb",
@@ -322,4 +364,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 20,
   },
+  text: {
+    marginHorizontal: 10,
+    marginVertical: 5,
+    fontSize: 16,
+  },
 });
+
+const mapStateToProps = (state) => {
+  return { financeData: state.finance };
+};
+
+export default connect(mapStateToProps)(Analysis);
