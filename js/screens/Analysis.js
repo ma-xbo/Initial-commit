@@ -13,6 +13,8 @@ function Analysis(props) {
   const [dataStartDate, setDataStartDate] = useState(new Date());
   const [dataEndDate, setDataEndDate] = useState(new Date());
   const [chartHeight, setChartHeight] = useState(250);
+  const [sumExpenses, setSumExpenses] = useState(0);
+  const [sumEarnings, setSumEarnings] = useState(0);
   const [expensesPerDay, setExpensesPerDay] = useState({ data: [] });
   const [expensesPerMonth, setExpensesPerMonth] = useState({
     labels: [],
@@ -36,17 +38,22 @@ function Analysis(props) {
 
     const expenses = [];
     const earnings = [];
-
+    let sumEarn = 0;
+    let sumEx = 0;
     dataArray.forEach((element) => {
       if (element.amount < 0) {
         expenses.push(element);
+        sumEx += element.amount;
       } else {
         earnings.push(element);
+        sumEarn += element.amount;
       }
     });
 
     setDataExpenses(expenses);
     setDataEarnings(earnings);
+    setSumExpenses(parseFloat(sumEx).toFixed(2));
+    setSumEarnings(parseFloat(sumEarn).toFixed(2));
 
     setData(dataArray);
     setDataStartDate(
@@ -90,7 +97,12 @@ function Analysis(props) {
         </Text>
 
         <Hr />
-        
+
+        <Text style={styles.text}>Summe aller Einnahmen: {sumEarnings}€</Text>
+        <Text style={styles.text}>Summe aller Ausgaben: {sumExpenses}€</Text>
+
+        <Hr />
+
         <Text style={styles.chartDescription}>
           Übersicht der Ausgaben pro Tag
         </Text>
