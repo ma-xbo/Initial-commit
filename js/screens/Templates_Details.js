@@ -12,13 +12,13 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { deleteTemplate } from "../redux/actions/User";
 import firebase from "../Firebase";
-import PaymentMethodIcon from "../components/PaymentMethodIcon";
-import PaymentAmountText from "../components/PaymentAmountText";
+import { selectablePaymentMethods } from "../Helper";
 import {
   OverflowMenuContainer,
   OverflowMenuItem,
 } from "../components/OverflowMenu";
 import Hr from "../components/HorizontalRule";
+import DetailsContainer from "../components/DetailsContainer";
 const colorDefinitions = require("../../assets/colorDefinition.json");
 
 function Templates_Details(props) {
@@ -88,21 +88,21 @@ function Templates_Details(props) {
           style={styles.contentContainer}
           onPress={() => setDisplayHeaderMenu(false)}
         >
-          <View
-            style={{
-              flex: 1,
-              margin: 8,
-              padding: 5,
-            }}
-          >
-            <CardItem title="Titel" text={item.title} />
-            <CardItem title="Betrag" text={item.amount + item.currency} />
-            <CardItem title="Geschäft" text={item.store} />
-            <CardItem title="Kategorie" text={item.category} />
-            {item.description !== "" && (
-              <CardItem title="Beschreibung" text={item.description} />
-            )}
-          </View>
+          <DetailsContainer title="Titel" text={item.title} />
+          <DetailsContainer title="Betrag" text={item.amount + item.currency} />
+          <DetailsContainer
+            title="Bezahlmethode"
+            text={
+              selectablePaymentMethods.find(
+                (el) => el.value === item.paymentMethod
+              ).label
+            }
+          />
+          <DetailsContainer title="Geschäft" text={item.store} />
+          <DetailsContainer title="Kategorie" text={item.category} />
+          {item.description !== "" && (
+            <DetailsContainer title="Beschreibung" text={item.description} />
+          )}
         </Pressable>
       </ScrollView>
 
@@ -121,48 +121,13 @@ function Templates_Details(props) {
   );
 }
 
-function CardItem(props) {
-  const { title, text, children } = props;
-
-  return (
-    <View
-      style={{
-        backgroundColor: colorDefinitions.light.gray5,
-        padding: 10,
-        marginVertical: 5,
-        marginHorizontal: 2,
-        borderRadius: 10,
-      }}
-    >
-      <Text
-        style={{
-          color: colorDefinitions.light.black,
-          fontSize: 20,
-          fontWeight: "bold",
-          marginBottom: 4,
-        }}
-      >
-        {title}
-      </Text>
-      <Text
-        style={{
-          color: colorDefinitions.light.black,
-          fontSize: 18,
-        }}
-      >
-        {text}
-      </Text>
-      {children}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   contentContainer: {
     flex: 1,
+    padding: 10,
   },
   bottomContainer: {
     width: "100%",
