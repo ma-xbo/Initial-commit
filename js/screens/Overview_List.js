@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
-import { connect } from "react-redux";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import SegmentedControl from "@react-native-community/segmented-control";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { deleteFinanceItem } from "../redux/actions/Finance";
+import firebase from "../Firebase";
 import { getWeekNumber } from "../Helper";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import SwipeableActionItem from "../components/SwipeableActionItem";
@@ -53,6 +56,35 @@ function Overview_List(props) {
     setAllData(allData);
   }, [props.financeData]);
 
+  const onPressEdit = (item) => {
+    navigation.navigate("Bearbeiten", {
+      itemObject: JSON.stringify(item),
+    });
+  };
+
+  const onPressDelete = (item) => {
+    props.deleteFinanceItem(item.docId);
+
+    firebase.db
+      .collection("financialData")
+      .doc(item.docId)
+      .delete()
+      .then(() => {
+        Alert.alert(
+          "Löschen erfolgreich 🗑️",
+          "Der Eintrag " + item.title + " wurde gelöscht"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+        );
+      });
+
+    navigation.navigate("Übersicht");
+  };
+
   return (
     <AppSafeAreaView title="Übersicht">
       <View style={styles.container}>
@@ -82,18 +114,14 @@ function Overview_List(props) {
                       color={colorDefinitions.light.yellow}
                       x={128}
                       progress={progress}
-                      onPress={() => {
-                        alert(item.docId);
-                      }}
+                      onPress={() => onPressEdit(item)}
                     />
                     <SwipeableActionItem
                       text="Delete"
                       color={colorDefinitions.light.red}
                       x={64}
                       progress={progress}
-                      onPress={() => {
-                        alert(item.docId);
-                      }}
+                      onPress={() => onPressDelete(item)}
                     />
                   </View>
                 )}
@@ -128,18 +156,14 @@ function Overview_List(props) {
                       color={colorDefinitions.light.yellow}
                       x={128}
                       progress={progress}
-                      onPress={() => {
-                        alert(item.docId);
-                      }}
+                      onPress={() => onPressEdit(item)}
                     />
                     <SwipeableActionItem
                       text="Delete"
                       color={colorDefinitions.light.red}
                       x={64}
                       progress={progress}
-                      onPress={() => {
-                        alert(item.docId);
-                      }}
+                      onPress={() => onPressDelete(item)}
                     />
                   </View>
                 )}
@@ -174,18 +198,14 @@ function Overview_List(props) {
                       color={colorDefinitions.light.yellow}
                       x={128}
                       progress={progress}
-                      onPress={() => {
-                        alert(item.docId);
-                      }}
+                      onPress={() => onPressEdit(item)}
                     />
                     <SwipeableActionItem
                       text="Delete"
                       color={colorDefinitions.light.red}
                       x={64}
                       progress={progress}
-                      onPress={() => {
-                        alert(item.docId);
-                      }}
+                      onPress={() => onPressDelete(item)}
                     />
                   </View>
                 )}
@@ -215,4 +235,7 @@ const mapStateToProps = (state) => {
   return { financeData: state.finance };
 };
 
-export default connect(mapStateToProps)(Overview_List);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ deleteFinanceItem }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Overview_List);
