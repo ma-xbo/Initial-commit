@@ -53,34 +53,6 @@ function Overview_List(props) {
     setAllData(allData);
   }, [props.financeData]);
 
-  const renderRightActions = (progress, itemId) => (
-    <View
-      style={{
-        flexDirection: "row",
-        width: 192,
-      }}
-    >
-      <SwipeableActionItem
-        text="Edit"
-        color={colorDefinitions.light.yellow}
-        x={128}
-        progress={progress}
-        onPress={() => {
-          alert(itemId);
-        }}
-      />
-      <SwipeableActionItem
-        text="Delete"
-        color={colorDefinitions.light.red}
-        x={64}
-        progress={progress}
-        onPress={() => {
-          alert("text");
-        }}
-      />
-    </View>
-  );
-
   return (
     <AppSafeAreaView title="Übersicht">
       <View style={styles.container}>
@@ -97,7 +69,35 @@ function Overview_List(props) {
             data={weekData}
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={renderRightActions}>
+              <Swipeable
+                renderRightActions={(progress, itemId) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: 192,
+                    }}
+                  >
+                    <SwipeableActionItem
+                      text="Edit"
+                      color={colorDefinitions.light.yellow}
+                      x={128}
+                      progress={progress}
+                      onPress={() => {
+                        alert(item.docId);
+                      }}
+                    />
+                    <SwipeableActionItem
+                      text="Delete"
+                      color={colorDefinitions.light.red}
+                      x={64}
+                      progress={progress}
+                      onPress={() => {
+                        alert(item.docId);
+                      }}
+                    />
+                  </View>
+                )}
+              >
                 <OverviewListItem
                   itemObject={item}
                   onPress={() =>
@@ -115,7 +115,35 @@ function Overview_List(props) {
             data={monthData}
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={renderRightActions}>
+              <Swipeable
+                renderRightActions={(progress, itemId) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: 192,
+                    }}
+                  >
+                    <SwipeableActionItem
+                      text="Edit"
+                      color={colorDefinitions.light.yellow}
+                      x={128}
+                      progress={progress}
+                      onPress={() => {
+                        alert(item.docId);
+                      }}
+                    />
+                    <SwipeableActionItem
+                      text="Delete"
+                      color={colorDefinitions.light.red}
+                      x={64}
+                      progress={progress}
+                      onPress={() => {
+                        alert(item.docId);
+                      }}
+                    />
+                  </View>
+                )}
+              >
                 <OverviewListItem
                   itemObject={item}
                   onPress={() =>
@@ -133,7 +161,35 @@ function Overview_List(props) {
             data={allData}
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={renderRightActions}>
+              <Swipeable
+                renderRightActions={(progress, itemId) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: 192,
+                    }}
+                  >
+                    <SwipeableActionItem
+                      text="Edit"
+                      color={colorDefinitions.light.yellow}
+                      x={128}
+                      progress={progress}
+                      onPress={() => {
+                        alert(item.docId);
+                      }}
+                    />
+                    <SwipeableActionItem
+                      text="Delete"
+                      color={colorDefinitions.light.red}
+                      x={64}
+                      progress={progress}
+                      onPress={() => {
+                        alert(item.docId);
+                      }}
+                    />
+                  </View>
+                )}
+              >
                 <OverviewListItem
                   itemObject={item}
                   onPress={() =>
