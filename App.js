@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { LogBox } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -15,6 +16,8 @@ import NewEntry from "./js/screens/NewEntry";
 import Analysis from "./js/screens/Analysis";
 import Login from "./js/screens/Login";
 import SignUp from "./js/screens/SignUp";
+
+LogBox.ignoreLogs(['Setting a timer']);
 const colorDefinitions = require("./assets/colorDefinition.json");
 
 export default function App() {

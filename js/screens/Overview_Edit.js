@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
   Alert,
+  Button,
   Image,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -27,6 +29,7 @@ function Overview_Edit(props) {
   const route = props.route;
   const navigation = props.navigation;
 
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(Platform.OS === 'ios');
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
@@ -90,6 +93,13 @@ function Overview_Edit(props) {
     }
   }, [isExpense, amount]);
 
+  const onTimeChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+
+    setIsDatePickerVisible();
+    setDate(currentDate);
+  };
+
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -140,7 +150,7 @@ function Overview_Edit(props) {
         Alert.alert(
           "Fehler",
           "Beim Speichern in der Cloud ist ein Fehler aufgetreten: " +
-            error.message
+          error.message
         );
       });
 
@@ -170,13 +180,17 @@ function Overview_Edit(props) {
             <View style={styles.inputView}>
               <Text style={styles.inputView_text}>Datum</Text>
               {/* https://github.com/react-native-datetimepicker/datetimepicker */}
-              <DateTimePicker
-                testID="dateTimePicker"
-                is24Hour={true}
+              {Platform.OS === "android" && <Button
+                title="Datum auswählen"
+                style={styles.button}
+                onPress={() => setIsDatePickerVisible(true)}
+              />}
+              {isDatePickerVisible && <DateTimePicker
+                mode="date"
                 display="default"
-                onChange={(event, date) => setDate(date)}
+                onChange={onTimeChange}
                 value={date}
-              />
+              />}
             </View>
 
             <View style={styles.inputView}>
