@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -161,18 +162,6 @@ function Templates_Edit(props) {
               style={styles.inputView_textInput}
               onChangeText={(val) => setTitle(val)}
               value={title}
-            />
-          </View>
-
-          <View style={styles.inputView}>
-            <Text style={styles.inputView_text}>Datum</Text>
-            {/* https://github.com/react-native-datetimepicker/datetimepicker */}
-            <DateTimePicker
-              testID="dateTimePicker"
-              is24Hour={true}
-              display="default"
-              onChange={(event, date) => setDate(date)}
-              value={date}
             />
           </View>
 
