@@ -38,6 +38,8 @@ Hinweis: Wenn die Fehlermeldung "npm ERR! Failed at the grpc@1.24.2 install scri
 - [Camera](https://docs.expo.io/versions/latest/sdk/camera/)
 
 ## Offene Punkte/Probleme
+- Problem bei der Verwendung von Firebase in Android (siehe [Link](https://github.com/facebook/react-native/issues/12981))
+- Die Kamera-Funktionalität konnte nicht mit einem Android Smartphone getestet werden (kein Android-Gerät im Besitz, das Kamera Paket unterstützt den Android Emulator nicht)
 
 ## Ideen/Erweiterungen für zukünftige Versionen
 - Verbesserung der Animationen durch den Einsatz von Reanimated und/oder Lottie
