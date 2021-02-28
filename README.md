@@ -7,6 +7,10 @@ Applikation wird im Zuge des Moduls Mobile Computing erstellt und soll als Einst
 - `npm install --global expo-cli` zum Installieren der Expo CLI
 - `npm install` im Ordner finance-app
 
+Hinweis: Wenn die Fehlermeldung "npm ERR! Failed at the grpc@1.24.2 install script." auftritt muss zunächst firebase auf den aktuellen Stand gebracht werden. [Link](https://github.com/grpc/grpc-node/issues/1183#issuecomment-596956959)
+- Löschen des node_modules Ordners und der package-lock.json
+- Ausführen des Befehls `npm install --save-exact --save firebase@latest`
+
 ## Starten der Anwendung
 
 - Öffnen des Terminal im Ordner finance-app
