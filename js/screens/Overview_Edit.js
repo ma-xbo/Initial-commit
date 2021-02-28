@@ -185,6 +185,9 @@ function Overview_Edit(props) {
                 style={styles.button}
                 onPress={() => setIsDatePickerVisible(true)}
               />}
+              {Platform.OS === "android" && (
+                <Text style={styles.inputView_textInput}>{date.toDateString()}</Text>
+              )}
               {isDatePickerVisible && <DateTimePicker
                 mode="date"
                 display="default"
