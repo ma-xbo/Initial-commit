@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
-import { connect } from "react-redux";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import SegmentedControl from "@react-native-community/segmented-control";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { deleteFinanceItem } from "../redux/actions/Finance";
+import firebase from "../Firebase";
 import { getWeekNumber } from "../Helper";
 import AppSafeAreaView from "../components/AppSafeAreaView";
 import SwipeableActionItem from "../components/SwipeableActionItem";
@@ -53,33 +56,34 @@ function Overview_List(props) {
     setAllData(allData);
   }, [props.financeData]);
 
-  const renderRightActions = (progress, itemId) => (
-    <View
-      style={{
-        flexDirection: "row",
-        width: 192,
-      }}
-    >
-      <SwipeableActionItem
-        text="Edit"
-        color={colorDefinitions.light.yellow}
-        x={128}
-        progress={progress}
-        onPress={() => {
-          alert(itemId);
-        }}
-      />
-      <SwipeableActionItem
-        text="Delete"
-        color={colorDefinitions.light.red}
-        x={64}
-        progress={progress}
-        onPress={() => {
-          alert("text");
-        }}
-      />
-    </View>
-  );
+  const onPressEdit = (item) => {
+    navigation.navigate("Bearbeiten", {
+      itemObject: JSON.stringify(item),
+    });
+  };
+
+  const onPressDelete = (item) => {
+    props.deleteFinanceItem(item.docId);
+
+    firebase.db
+      .collection("financialData")
+      .doc(item.docId)
+      .delete()
+      .then(() => {
+        Alert.alert(
+          "Löschen erfolgreich 🗑️",
+          "Der Eintrag " + item.title + " wurde gelöscht"
+        );
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Fehler",
+          "Beim Löschen ist ein Fehler aufgetreten: " + error.message
+        );
+      });
+
+    navigation.navigate("Übersicht");
+  };
 
   return (
     <AppSafeAreaView title="Übersicht">
@@ -97,7 +101,31 @@ function Overview_List(props) {
             data={weekData}
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={renderRightActions}>
+              <Swipeable
+                renderRightActions={(progress, itemId) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: 192,
+                    }}
+                  >
+                    <SwipeableActionItem
+                      text="Edit"
+                      color={colorDefinitions.light.yellow}
+                      x={128}
+                      progress={progress}
+                      onPress={() => onPressEdit(item)}
+                    />
+                    <SwipeableActionItem
+                      text="Delete"
+                      color={colorDefinitions.light.red}
+                      x={64}
+                      progress={progress}
+                      onPress={() => onPressDelete(item)}
+                    />
+                  </View>
+                )}
+              >
                 <OverviewListItem
                   itemObject={item}
                   onPress={() =>
@@ -115,7 +143,31 @@ function Overview_List(props) {
             data={monthData}
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={renderRightActions}>
+              <Swipeable
+                renderRightActions={(progress, itemId) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: 192,
+                    }}
+                  >
+                    <SwipeableActionItem
+                      text="Edit"
+                      color={colorDefinitions.light.yellow}
+                      x={128}
+                      progress={progress}
+                      onPress={() => onPressEdit(item)}
+                    />
+                    <SwipeableActionItem
+                      text="Delete"
+                      color={colorDefinitions.light.red}
+                      x={64}
+                      progress={progress}
+                      onPress={() => onPressDelete(item)}
+                    />
+                  </View>
+                )}
+              >
                 <OverviewListItem
                   itemObject={item}
                   onPress={() =>
@@ -133,7 +185,31 @@ function Overview_List(props) {
             data={allData}
             keyExtractor={(item) => item.docId}
             renderItem={({ item }) => (
-              <Swipeable renderRightActions={renderRightActions}>
+              <Swipeable
+                renderRightActions={(progress, itemId) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: 192,
+                    }}
+                  >
+                    <SwipeableActionItem
+                      text="Edit"
+                      color={colorDefinitions.light.yellow}
+                      x={128}
+                      progress={progress}
+                      onPress={() => onPressEdit(item)}
+                    />
+                    <SwipeableActionItem
+                      text="Delete"
+                      color={colorDefinitions.light.red}
+                      x={64}
+                      progress={progress}
+                      onPress={() => onPressDelete(item)}
+                    />
+                  </View>
+                )}
+              >
                 <OverviewListItem
                   itemObject={item}
                   onPress={() =>
@@ -159,4 +235,7 @@ const mapStateToProps = (state) => {
   return { financeData: state.finance };
 };
 
-export default connect(mapStateToProps)(Overview_List);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ deleteFinanceItem }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Overview_List);
