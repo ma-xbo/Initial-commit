@@ -68,7 +68,7 @@ function NewEntry(props) {
   const onTimeChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
 
-    setIsDatePickerVisible();
+    setIsDatePickerVisible(Platform.OS === 'ios');
     setDate(currentDate);
   };
 
