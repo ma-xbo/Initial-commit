@@ -126,7 +126,7 @@ function NewEntry(props) {
         Alert.alert(
           "Fehler",
           "Beim Speichern in der Cloud ist ein Fehler aufgetreten: " +
-            error.message
+          error.message
         );
       });
   };
@@ -167,7 +167,7 @@ function NewEntry(props) {
         Alert.alert(
           "Fehler",
           "Beim Speichern in der Cloud ist ein Fehler aufgetreten: " +
-            error.message
+          error.message
         );
       });
   };
@@ -225,7 +225,9 @@ function NewEntry(props) {
 
             <View style={styles.inputView}>
               <Text style={styles.inputView_text}>Datum</Text>
-
+              {Platform.OS === "android" && (
+                <Text style={[styles.inputView_textInput, { marginBottom: 10 }]}>{date.toDateString()}</Text>
+              )}
               {/* https://github.com/react-native-datetimepicker/datetimepicker */}
               {Platform.OS === "android" && (
                 <Button
@@ -234,9 +236,7 @@ function NewEntry(props) {
                   onPress={() => setIsDatePickerVisible(true)}
                 />
               )}
-              {Platform.OS === "android" && (
-                <Text style={styles.inputView_textInput}>{date.toDateString()}</Text>
-              )}
+
               {isDatePickerVisible && (
                 <DateTimePicker
                   mode="date"
