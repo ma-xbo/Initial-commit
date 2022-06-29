@@ -1,6 +1,18 @@
-# finance-app
+# T3M40401.1 Mobile Computing - Finance App
 
-Applikation wird im Zuge des Moduls Mobile Computing erstellt und soll als Einstieg in die Entwicklung mobiler Anwendung dienen.
+Die im Zuge der Vorlesung „Mobile Computing“ entwickelte mobile App, soll bei der Verwaltung der Finanzen einer Person bzw. eines ganzen Haushalts helfen. 
+Wie ein klassisches Haushaltsbuch soll die App dafür genutzt werden die Einnahmen und Ausgaben eines Haushalts zu dokumentieren. 
+Neben dem jeweiligen Betrag der Ein- bzw. Ausgabe werden Informationen zum Datum, der Kategorie und der Bezahlmethode hinzugefügt. 
+In einer Liste werden alle Einträge aufgeführt, wodurch es möglich ist, regelmäßige und unregelmäßige Ausgaben genau festzustellen. 
+Durch den Einsatz der integrierten Kamera eines Smartphones bietet sich zusätzlich die Möglichkeit den Kassenzettel oder eine Rechnung eines Einkaufs abzufotografieren und an einen Eintrag im digitalen Haushaltsbuch anzuheften.
+
+<table>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/38072209/176488567-f389e5dd-6089-4721-a349-3e7dca2d13fb.png" height=480></td>
+    <td><img src="https://user-images.githubusercontent.com/38072209/176488393-5657a4e3-699a-40c2-8b13-ec31bbdc59ea.png" height=480></td>
+    <td><img src="https://user-images.githubusercontent.com/38072209/176488611-ac6edaed-14c0-4907-ae2d-56b4e1c88f7a.png" height=480></td>
+  </tr>
+ </table>
 
 ## Vorbereitungen zum Starten der Anwendung
 ### Expo managed workflow
